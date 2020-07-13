@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:luftcare_flutter_app/theme/theme_colors.dart';
+import 'package:flutter/services.dart';
+import 'package:luftcare_flutter_app/routes.dart';
+import 'package:luftcare_flutter_app/theme.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitDown,
+    DeviceOrientation.portraitUp,
+  ]);
   runApp(MyApp());
 }
 
@@ -9,14 +16,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.teal,
-        accentColor: Color(0xFF5C6AC4),
-        errorColor: Color(0xFFFE6364),
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
-      home: Text('Flutter Demo Home Page'),
+      debugShowCheckedModeBanner: false,
+      color: Colors.indigo[400],
+      title: 'Luftcare',
+      theme: AppTheme.light,
+      darkTheme: AppTheme.dark,
+      initialRoute: '/welcome',
+      routes: routes,
     );
   }
 }
