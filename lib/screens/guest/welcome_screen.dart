@@ -1,31 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:luftcare_flutter_app/screens/guest/login_screen.dart';
+import 'package:luftcare_flutter_app/widgets/atoms/brand_logo.dart';
 
-class LoginScreenArgs {}
+class WelcomeScreenArgs {}
 
-class LoginScreen extends StatelessWidget {
-  const LoginScreen({Key key}) : super(key: key);
+class WelcomeScreen extends StatelessWidget {
+  const WelcomeScreen({Key key}) : super(key: key);
 
-  static const RouteName = '/login';
+  static const RouteName = '/welcome';
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final navigator = Navigator.of(context);
 
     return Scaffold(
       body: SafeArea(
         child: Container(
           width: double.infinity,
-          // height: containerHeight,
           alignment: Alignment.bottomCenter,
-          padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 40),
+          padding: const EdgeInsets.all(30),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              buildLogo(theme),
+              BrandLogo(),
               Spacer(),
-              buildTitle(theme),
-              buildSubtitle(theme),
+              _buildTitle(theme),
+              _buildSubtitle(theme),
+              _buildSignInButton(theme, navigator),
+              _buildContactButton(theme, navigator),
             ],
           ),
         ),
@@ -33,22 +36,7 @@ class LoginScreen extends StatelessWidget {
     );
   }
 
-  void goToSignIn() {
-    print('go to signin');
-  }
-
-  Widget buildLogo(ThemeData theme) {
-    final isThemeDark = theme.brightness == Brightness.dark;
-    final imagePath = isThemeDark
-        ? 'assets/images/logo-white.png'
-        : 'assets/images/logo-black.png';
-    return Padding(
-      padding: const EdgeInsets.only(top: 20),
-      child: Image.asset(imagePath, height: 32),
-    );
-  }
-
-  Widget buildTitle(ThemeData theme) {
+  Widget _buildTitle(ThemeData theme) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 20),
       child: Text(
@@ -62,7 +50,7 @@ class LoginScreen extends StatelessWidget {
     );
   }
 
-  Widget buildSubtitle(ThemeData theme) {
+  Widget _buildSubtitle(ThemeData theme) {
     return Padding(
       padding: const EdgeInsets.only(right: 32, bottom: 64),
       child: Text(
@@ -75,12 +63,12 @@ class LoginScreen extends StatelessWidget {
     );
   }
 
-  Widget buildSignInButton(ThemeData theme, Function pressedHandler) {
+  Widget _buildSignInButton(ThemeData theme, NavigatorState navigator) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.only(bottom: 10),
       child: FlatButton(
-        onPressed: pressedHandler,
+        onPressed: () => navigator.pushNamed(LoginScreen.RouteName),
         color: theme.primaryColor,
         child: const Text(
           'Entrar na minha conta',
@@ -90,15 +78,13 @@ class LoginScreen extends StatelessWidget {
     );
   }
 
-  Widget buildContactButton(ThemeData theme, Function pressedHandler) {
+  Widget _buildContactButton(ThemeData theme, NavigatorState navigator) {
     return Container(
       width: double.infinity,
       child: FlatButton(
         textColor: theme.primaryColor,
         color: theme.primaryColor.withOpacity(0.15),
-        onPressed: () {
-          print('AAAAAA');
-        },
+        onPressed: () {},
         child: Text(
           'Quero solicitar acesso',
           style: TextStyle(fontWeight: FontWeight.w600),

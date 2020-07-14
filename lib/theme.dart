@@ -6,7 +6,6 @@ class AppTheme {
   static const _coral = Color(0xFFFE6364);
 
   static final _buttonTheme = ButtonThemeData(
-    // height: 40,
     buttonColor: _lapis,
     textTheme: ButtonTextTheme.primary,
     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
