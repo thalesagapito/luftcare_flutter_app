@@ -1,0 +1,200 @@
+"""
+Direct the client to resolve this field locally, either from the cache or local resolvers.
+"""
+directive @client(
+  """
+  When true, the client will never use the cache for this value. See
+  https://www.apollographql.com/docs/react/essentials/local-state/#forcing-resolvers-with-clientalways-true
+  """
+  always: Boolean
+) on FIELD | FRAGMENT_DEFINITION | INLINE_FRAGMENT
+
+"""
+Export this locally resolved field as a variable to be used in the remainder of this query. See
+https://www.apollographql.com/docs/react/essentials/local-state/#using-client-fields-as-variables
+"""
+directive @export(
+  """The variable name to export this field as."""
+  as: String!
+) on FIELD
+
+"""
+Specify a custom store key for this result. See
+https://www.apollographql.com/docs/react/advanced/caching/#the-connection-directive
+"""
+directive @connection(
+  """Specify the store key."""
+  key: String!
+
+  """
+  An array of query argument names to include in the generated custom store key.
+  """
+  filter: [String!]
+) on FIELD
+
+type User {
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+  id: ID!
+  name: String!
+
+  """Unique email address used for logging in"""
+  email: String!
+
+  """Has to contain special characters: +55 (41) 98765-4321"""
+  phoneNumber: String!
+  role: UserRole!
+}
+
+"""
+The javascript `Date` as string. Type represents date and time as the ISO Date string.
+"""
+scalar DateTime
+
+enum UserRole {
+  ADMIN
+  NON_ADMIN
+}
+
+type SymptomQuestionnaireQuestionChoice {
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+  id: ID!
+
+  """
+  Choice name only for internal use. Only questionnaire-creator admins will see this.
+  """
+  nameForManagement: String!
+
+  """
+  Choice text, what will be shown to the user. Localization is not a concern.
+  """
+  text: String!
+
+  """
+  When the questionnaire is answered, this field is used to calculate the result.
+  """
+  value: Int!
+  presentationOrder: Int!
+}
+
+type SymptomQuestionnaireQuestion {
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+  id: ID!
+
+  """Question name only for internal use. Only admins will see this."""
+  nameForManagement: String!
+
+  """
+  Question text, what will be shown to the user. Localization is not a concern.
+  """
+  text: String!
+  kind: SymptomQuestionnaireQuestionKind!
+  possibleChoices: [SymptomQuestionnaireQuestionChoice!]
+  presentationOrder: Int!
+}
+
+enum SymptomQuestionnaireQuestionKind {
+  MULTIPLE_CHOICE
+  FREE_RESPONSE
+}
+
+type SymptomQuestionnaire {
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+  id: ID!
+  nameForManagement: String!
+  nameForPresentation: String!
+  version: Int!
+  isPublished: Boolean!
+  questions: [SymptomQuestionnaireQuestion!]!
+}
+
+type TokenSet {
+  authorization: String!
+  refresh: String!
+}
+
+"""
+Response padrão informativo para quando não se espera dados como resposta
+"""
+type GenericResponse {
+  userFriendlyMessage: String!
+}
+
+type PaginatedSymptomQuestionnaireResponse {
+  totalResultsCount: Int!
+  hasMorePages: Boolean!
+  results: [SymptomQuestionnaire!]!
+}
+
+input OrderByClause {
+  columnName: String!
+  direction: OrderByClauseDirection = DESC
+  nulls: OrderByClauseNullsPosition = NULLS_LAST
+}
+
+enum OrderByClauseDirection {
+  ASC
+  DESC
+}
+
+enum OrderByClauseNullsPosition {
+  NULLS_FIRST
+  NULLS_LAST
+}
+
+input SymptomQuestionnaireQuestionChoiceInput {
+  nameForManagement: String!
+  text: String!
+  value: Int!
+  presentationOrder: Int!
+}
+
+input SymptomQuestionnaireQuestionInput {
+  nameForManagement: String!
+  text: String!
+  kind: SymptomQuestionnaireQuestionKind!
+  possibleChoices: [SymptomQuestionnaireQuestionChoiceInput!]
+  presentationOrder: Int!
+}
+
+input SymptomQuestionnaireInput {
+  nameForManagement: String!
+  nameForPresentation: String!
+  isPublished: Boolean = false
+  questions: [SymptomQuestionnaireQuestionInput!]!
+}
+
+"""Required data to register an application user from the register form"""
+input RegisterUserInput {
+  name: String!
+  email: String!
+  password: String!
+  phoneNumber: String!
+}
+
+type Query {
+  authorizationToken(refreshToken: String!): String!
+  symptomQuestionnaires(pageNumber: Int = 1, resultsPerPage: Int = 10, orderBy: [OrderByClause!], nameForManagement: String, isPublished: Boolean, currentVersionsOnly: Boolean, withDeleted: Boolean = false): PaginatedSymptomQuestionnaireResponse!
+  symptomQuestionnaire(id: ID!): SymptomQuestionnaire!
+  currentUser: User
+  user(id: ID!): User
+  users: [User!]
+}
+
+type Mutation {
+  login(email: String!, password: String!): TokenSet!
+  createSymptomQuestionnaire(questionnaire: SymptomQuestionnaireInput!): SymptomQuestionnaire!
+  updateSymptomQuestionnaire(id: ID!, questionnaire: SymptomQuestionnaireInput!): SymptomQuestionnaire!
+  publishSymptomQuestionnaire(id: ID!): GenericResponse!
+  unpublishSymptomQuestionnaire(id: ID!): GenericResponse!
+  changeSymptomQuestionnairePublishStatus(isPublished: Boolean!, id: ID!): GenericResponse!
+  deleteSymptomQuestionnaire(id: ID!): GenericResponse!
+  registerUser(userData: RegisterUserInput!): User!
+}
