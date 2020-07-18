@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:validators/sanitizers.dart';
+import 'package:validators/validators.dart';
 import 'package:luftcare_flutter_app/widgets/atoms/brand_logo.dart';
 
 class LoginScreenArgs {}
@@ -108,6 +110,8 @@ class _LoginScreenState extends State<LoginScreen> {
             icon: CupertinoIcons.mail,
             child: TextFormField(
               focusNode: emailFocusNode,
+              validator: _emailValidator,
+              onSaved: onEmailSaved,
               keyboardAppearance: theme.brightness,
               textInputAction: TextInputAction.next,
               onFieldSubmitted: (_) => passwordFocusNode.requestFocus(),
@@ -128,14 +132,10 @@ class _LoginScreenState extends State<LoginScreen> {
             child: TextFormField(
               obscureText: true,
               focusNode: passwordFocusNode,
-              textInputAction: TextInputAction.done,
+              validator: _passwordValidator,
               keyboardAppearance: theme.brightness,
-              validator: (value) {
-                if (value.isEmpty) {
-                  return 'Obrigatório';
-                }
-                return null;
-              },
+              onSaved: onPasswordSaved,
+              textInputAction: TextInputAction.done,
               decoration: InputDecoration(
                 labelText: 'Senha',
                 focusColor: theme.primaryColor,
@@ -212,10 +212,31 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _validateAndSubmitForm(BuildContext context) {
-    final isFormValid = _formKey.currentState.validate();
-    if (isFormValid) {
-      Scaffold.of(context).showSnackBar(SnackBar(content: Text('beleza')));
-    }
-    // _formKey.currentState.save();
+    final isFormInvalid = !_formKey.currentState.validate();
+    if (isFormInvalid) return;
+
+    Scaffold.of(context).showSnackBar(SnackBar(content: Text('beleza')));
+    _formKey.currentState.save();
+  }
+
+  String _sanitizeEmail(String value) => normalizeEmail(trim(value));
+  String _emailValidator(String value) {
+    final sanitizedEmail = _sanitizeEmail(value);
+    if (sanitizedEmail.isEmpty) return 'Insira um endereço de email válido';
+    return null;
+  }
+
+  String _passwordValidator(String value) {
+    final sanitizedPassword = trim(value);
+    if (sanitizedPassword.isEmpty) return 'Insira uma senha';
+    return null;
+  }
+
+  void onEmailSaved(String value) {
+    print('email: $value');
+  }
+
+  void onPasswordSaved(String value) {
+    print('password: $value');
   }
 }
