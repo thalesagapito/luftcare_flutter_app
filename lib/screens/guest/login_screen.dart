@@ -135,6 +135,7 @@ class _LoginScreenState extends State<LoginScreen> {
               validator: _passwordValidator,
               keyboardAppearance: theme.brightness,
               onSaved: onPasswordSaved,
+              onFieldSubmitted: (_) => _validateAndSubmitForm(context),
               textInputAction: TextInputAction.done,
               decoration: InputDecoration(
                 labelText: 'Senha',
