@@ -1,22 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:luftcare_flutter_app/models/graphql/api.graphql.dart';
+import 'package:luftcare_flutter_app/secure_storage.dart';
 import 'package:luftcare_flutter_app/widgets/atoms/brand_logo.dart';
+import 'package:luftcare_flutter_app/models/graphql/api.graphql.dart';
+import 'package:luftcare_flutter_app/screens/patient/home_screen.dart';
 import 'package:luftcare_flutter_app/widgets/organisms/auth/login_form.dart';
 
-class LoginScreenArgs {}
-
-class LoginScreen extends StatefulWidget {
-  LoginScreen({Key key}) : super(key: key);
-
+class LoginScreen extends StatelessWidget {
   static const RouteName = '/login';
 
-  @override
-  _LoginScreenState createState() => _LoginScreenState();
-}
+  const LoginScreen({Key key}) : super(key: key);
 
-class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
@@ -78,7 +73,6 @@ class _LoginScreenState extends State<LoginScreen> {
     final loginMutation = MutationOptions(
       documentNode: LoginMutation().document,
       variables: loginArgs.toJson(),
-      onError: (error) => print(error),
     );
 
     final QueryResult result = await client.mutate(loginMutation);
@@ -91,6 +85,15 @@ class _LoginScreenState extends State<LoginScreen> {
       Scaffold.of(context).showSnackBar(SnackBar(
         content: Text(message),
       ));
+      return;
     }
+
+    final res = Login$Mutation.fromJson(result.data).login;
+    await SecureStorage().login(auth: res.authorization, refresh: res.refresh);
+
+    Navigator.of(context).pushNamedAndRemoveUntil(
+      HomeScreen.RouteName,
+      (_) => false,
+    );
   }
 }

@@ -2,9 +2,9 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:luftcare_flutter_app/graphql_provider.dart';
 import 'package:luftcare_flutter_app/routes.dart';
 import 'package:luftcare_flutter_app/theme.dart';
+import 'package:luftcare_flutter_app/graphql_provider.dart';
 
 String get host => Platform.isAndroid ? '10.0.2.2' : 'localhost';
 final String graphqlEndpoint = 'http://$host:5000';

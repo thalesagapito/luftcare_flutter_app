@@ -1,5 +1,6 @@
-import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:luftcare_flutter_app/secure_storage.dart';
 
 String uuidFromObject(Object object) {
   if (object is Map<String, Object>) {
@@ -21,6 +22,7 @@ ValueNotifier<GraphQLClient> clientFor({
   String subscriptionUri,
 }) {
   Link link = HttpLink(uri: uri);
+  // if has subscriptionUri should concat a websocket link
   if (subscriptionUri != null) {
     final WebSocketLink websocketLink = WebSocketLink(
       url: subscriptionUri,
@@ -32,6 +34,11 @@ ValueNotifier<GraphQLClient> clientFor({
 
     link = link.concat(websocketLink);
   }
+  AuthLink authLink = AuthLink(getToken: () async {
+    final token = await SecureStorage().read(SecureStorageKey.API_AUTH_TOKEN);
+    return 'Bearer $token';
+  });
+  link = authLink.concat(link);
 
   return ValueNotifier<GraphQLClient>(
     GraphQLClient(
@@ -41,8 +48,6 @@ ValueNotifier<GraphQLClient> clientFor({
   );
 }
 
-/// Wraps the root application with the `graphql_flutter` client.
-/// We use the cache for all state management.
 class GraphqlProvider extends StatelessWidget {
   GraphqlProvider({
     @required this.child,
