@@ -37,4 +37,14 @@ class SecureStorage {
       write(key: SecureStorageKey.API_REFRESH_TOKEN, value: refresh),
     ]);
   }
+
+  Future<void> logout() async {
+    Future.wait([
+      delete(SecureStorageKey.API_AUTH_TOKEN),
+      delete(SecureStorageKey.API_REFRESH_TOKEN),
+    ]);
+  }
+
+  Future<bool> get isLoggedIn =>
+      read(SecureStorageKey.API_AUTH_TOKEN).then((v) => (v ?? '').isNotEmpty);
 }
