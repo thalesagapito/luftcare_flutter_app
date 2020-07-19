@@ -1,13 +1,14 @@
 targets:
   $default:
+    sources:
+      - lib/**
+      - graphql/**
+      - schema.graphql
     builders:
       artemis:
         options:
           schema_mapping:
-            - output: lib/graphql/output/api.graphql.dart
-              schema: lib/graphql/schema.graphql
-              queries_glob: lib/graphql/queries/**.graphql
-          scalar_mapping:
-            - graphql_type: DateTime
-              dart_type: DateTime
-              use_custom_parser: true
+            - schema: schema.graphql
+              queries_glob: graphql/**.graphql
+              output: lib/models/graphql/api.graphql.dart
+              naming_scheme: pathedWithFields

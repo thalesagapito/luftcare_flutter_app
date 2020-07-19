@@ -18,5 +18,11 @@ development, and a full API reference.
 
 ```bash
 yarn global add apollo
-apollo client:download-schema --endpoint=http://localhost:5000 lib/graphql/schema.graphql
+apollo client:download-schema --endpoint=http://localhost:5000 schema.graphql
+```
+
+## Generating the types
+
+```bash
+flutter pub run build_runner build --delete-conflicting-outputs
 ```
