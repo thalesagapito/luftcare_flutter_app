@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:luftcare_flutter_app/theme.dart';
 import 'package:luftcare_flutter_app/routes.dart';
 import 'package:luftcare_flutter_app/secure_storage.dart';
@@ -21,6 +23,9 @@ void main() async {
   SystemChrome.setSystemUIOverlayStyle(
     SystemUiOverlayStyle(statusBarBrightness: Brightness.light),
   );
+  await initializeDateFormatting('pt_BR');
+  Intl.defaultLocale = 'pt_BR';
+
   final isLoggedIn = await SecureStorage().isLoggedIn;
   final loggedInRoute = HomeScreen.RouteName;
   final notLoggedInRoute = WelcomeScreen.RouteName;

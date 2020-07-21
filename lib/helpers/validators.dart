@@ -19,3 +19,10 @@ class Validators {
     return null;
   }
 }
+
+class Transformers {
+  static String capitalize(String string) {
+    if (string == null || string.isEmpty) return string;
+    return string[0].toUpperCase() + string.substring(1);
+  }
+}

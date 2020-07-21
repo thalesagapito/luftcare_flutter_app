@@ -30,13 +30,15 @@ class BottomNavbar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final fontSize = Theme.of(context).textTheme.bodyText2.fontSize;
+
     return BottomNavigationBar(
       onTap: onTap,
       items: _items,
       currentIndex: selectedIndex,
       elevation: 12,
-      selectedFontSize: 12,
-      unselectedFontSize: 12,
+      selectedFontSize: fontSize,
+      unselectedFontSize: fontSize,
       type: BottomNavigationBarType.fixed,
     );
   }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:luftcare_flutter_app/screens/patient/home_screen/overview.dart';
 import 'package:luftcare_flutter_app/widgets/organisms/layout/bottom_navbar.dart';
 import 'package:luftcare_flutter_app/widgets/organisms/layout/top_navbar.dart';
 
@@ -15,7 +16,7 @@ class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
 
   static const List<Widget> _widgetOptions = <Widget>[
-    Text('Index 0: Home'),
+    Overview(),
     Text('Index 1: questionarios'),
     Text('Index 2: historico'),
   ];
@@ -30,18 +31,15 @@ class _HomeScreenState extends State<HomeScreen> {
     final visibleWidget = _widgetOptions.elementAt(_selectedIndex);
 
     return Scaffold(
+      extendBodyBehindAppBar: true,
+      drawerScrimColor: Colors.white60,
       appBar: TopNavbar(),
       bottomNavigationBar: BottomNavbar(
         selectedIndex: _selectedIndex,
         onTap: _onNavbarItemTapped,
       ),
       drawer: Text('sidebar'),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: visibleWidget,
-        ),
-      ),
+      body: visibleWidget,
     );
   }
 }
