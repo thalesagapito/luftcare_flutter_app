@@ -25,6 +25,11 @@ class AppTheme {
 
     textTheme: TextTheme(
       button: TextStyle(fontSize: 16),
+      headline4: TextStyle(
+        fontSize: 36,
+        color: Colors.black87,
+        fontWeight: FontWeight.bold,
+      ),
     ),
 
     buttonTheme: _buttonTheme,

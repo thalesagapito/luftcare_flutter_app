@@ -1,9 +1,12 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:luftcare_flutter_app/helpers/validators.dart';
+import 'package:luftcare_flutter_app/providers/current_user_provider.dart';
+import 'package:provider/provider.dart';
 
 class Overview extends StatelessWidget {
   const Overview({Key key}) : super(key: key);
@@ -11,30 +14,92 @@ class Overview extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Container(
-      color: theme.primaryColor.withOpacity(0.2),
-      child: SingleChildScrollView(
-        padding: EdgeInsets.only(top: 72),
-        child: Container(
-          width: double.infinity,
-          child: Column(
-            children: <Widget>[
-              Text('test', style: TextStyle(fontSize: 180)),
-              Text('test', style: TextStyle(fontSize: 180)),
-              _HorizontalDateCards(),
-              _RecentQuestionnaires(),
-            ],
-          ),
+    final headerColor = theme.primaryColor.withOpacity(0.2);
+    final backgroundColor = theme.primaryColor.withOpacity(0.1);
+    return LayoutBuilder(
+      builder: (_, constraints) => Container(
+        color: backgroundColor,
+        child: Column(
+          children: <Widget>[
+            Container(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  _PageTitle(color: headerColor),
+                  _HorizontalDateCards(color: headerColor),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
+                    child: Text(
+                      'Questionários',
+                      textAlign: TextAlign.left,
+                      style: theme.textTheme.headline4.copyWith(fontSize: 30),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: _RecentQuestionnaires(),
+            ),
+          ],
         ),
       ),
     );
   }
 }
 
+class _PageTitle extends StatelessWidget {
+  final Color color;
+  const _PageTitle({Key key, this.color}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final appBarHeight = Scaffold.of(context).appBarMaxHeight;
+    final currentUser = Provider.of<CurrentUser>(context).user;
+
+    final currentUserName = currentUser.name;
+
+    final title = FittedBox(
+      child: Text(
+        'Olá, $currentUserName',
+        textAlign: TextAlign.left,
+        style: theme.textTheme.headline4,
+      ),
+    );
+
+    final boldTextStyle = TextStyle(fontWeight: FontWeight.bold);
+    final subtitle = RichText(
+      text: TextSpan(
+        style: theme.textTheme.headline5,
+        text: 'Você tem ',
+        children: [
+          TextSpan(text: '4 ações', style: boldTextStyle),
+          TextSpan(text: ' hoje!'),
+        ],
+      ),
+    );
+
+    return Container(
+      color: color,
+      width: double.infinity,
+      padding: EdgeInsets.fromLTRB(24, appBarHeight + 10, 20, 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          title,
+          SizedBox(height: 10),
+          subtitle,
+        ],
+      ),
+    );
+  }
+}
+
 class _HorizontalDateCards extends StatefulWidget {
-  const _HorizontalDateCards({
-    Key key,
-  }) : super(key: key);
+  final Color color;
+  const _HorizontalDateCards({Key key, this.color}) : super(key: key);
 
   @override
   __HorizontalDateCardsState createState() => __HorizontalDateCardsState();
@@ -42,14 +107,15 @@ class _HorizontalDateCards extends StatefulWidget {
 
 class __HorizontalDateCardsState extends State<_HorizontalDateCards> {
   static const DAYS_TO_SUBTRACT_TO_GET_INITIAL_DATE = 14;
-  static const CARD_WIDTH = 76.0;
+  static const CARD_WIDTH = 70.0;
+  static const CARD_LEFT_MARGIN = 0.6;
   static const NUMBER_OF_CARDS = 21;
   static const CARDS_CONTAINER_WIDTH = CARD_WIDTH * NUMBER_OF_CARDS;
 
   var _selectedIndex = DAYS_TO_SUBTRACT_TO_GET_INITIAL_DATE;
   var _scrollController = ScrollController(
-    initialScrollOffset:
-        DAYS_TO_SUBTRACT_TO_GET_INITIAL_DATE * CARD_WIDTH - (CARD_WIDTH * 0.5),
+    initialScrollOffset: DAYS_TO_SUBTRACT_TO_GET_INITIAL_DATE * CARD_WIDTH -
+        (CARD_WIDTH * CARD_LEFT_MARGIN),
   );
 
   @override
@@ -60,12 +126,25 @@ class __HorizontalDateCardsState extends State<_HorizontalDateCards> {
 
   @override
   Widget build(BuildContext context) {
+    final cardsContainerDecoration = BoxDecoration(
+      gradient: LinearGradient(
+        colors: [widget.color, Colors.transparent],
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        stops: [0.5, 0.5],
+      ),
+    );
+
     return LayoutBuilder(
       builder: (context, constraints) => SingleChildScrollView(
+        physics: ClampingScrollPhysics(),
         scrollDirection: Axis.horizontal,
         controller: _scrollController,
-        child: Row(
-          children: _generateDateCards(constraints.maxWidth),
+        child: Container(
+          decoration: cardsContainerDecoration,
+          child: Row(
+            children: _generateDateCards(constraints.maxWidth),
+          ),
         ),
       ),
     );
@@ -76,7 +155,7 @@ class __HorizontalDateCardsState extends State<_HorizontalDateCards> {
   }
 
   double _getOffsetToScrollCardIntoView(int cardIndex, double visibleWidth) {
-    final leftMargin = CARD_WIDTH * 0.5;
+    final leftMargin = CARD_WIDTH * CARD_LEFT_MARGIN;
     final cardX = cardIndex * CARD_WIDTH;
     final widthToFillContainer = visibleWidth - CARD_WIDTH;
     final maxOffset = CARDS_CONTAINER_WIDTH - widthToFillContainer - CARD_WIDTH;
@@ -91,7 +170,6 @@ class __HorizontalDateCardsState extends State<_HorizontalDateCards> {
     final offset = _getOffsetToScrollCardIntoView(cardIndex, visibleWidth);
     final duration = Duration(milliseconds: 300);
     final curve = Curves.easeInOut;
-    // print(cardsContainerWidth);
     _scrollController.animateTo(offset, duration: duration, curve: curve);
   }
 
@@ -192,18 +270,14 @@ class _RecentQuestionnaires extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.white70,
       width: double.infinity,
-      padding: const EdgeInsets.fromLTRB(20, 60, 20, 0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          Text(
-            'Questionários',
-            textAlign: TextAlign.left,
-            style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold),
-          ),
-        ],
+      padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
+      child: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            Placeholder(fallbackHeight: 70),
+          ],
+        ),
       ),
     );
   }

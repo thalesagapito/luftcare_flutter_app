@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:luftcare_flutter_app/screens/patient/home_screen/overview.dart';
 import 'package:luftcare_flutter_app/widgets/organisms/layout/bottom_navbar.dart';
+import 'package:luftcare_flutter_app/widgets/organisms/layout/side_drawer.dart';
 import 'package:luftcare_flutter_app/widgets/organisms/layout/top_navbar.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -32,13 +33,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
       extendBodyBehindAppBar: true,
-      drawerScrimColor: Colors.white60,
       appBar: TopNavbar(),
       bottomNavigationBar: BottomNavbar(
         selectedIndex: _selectedIndex,
         onTap: _onNavbarItemTapped,
       ),
-      drawer: Text('sidebar'),
+      drawer: SideDrawer(),
       body: visibleWidget,
     );
   }
