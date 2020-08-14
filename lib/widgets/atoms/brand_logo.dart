@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class BrandLogo extends StatelessWidget {
   static const LIGHT_LOGO_PATH = 'assets/images/logo-white.png';
-  static const DARK_LOGO_PATH = 'assets/images/logo-white.png';
+  static const DARK_LOGO_PATH = 'assets/images/logo-black.png';
 
   final double height;
   final Brightness brightness;

@@ -1,12 +1,12 @@
 import 'dart:math';
 
-import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
-import 'package:luftcare_flutter_app/helpers/validators.dart';
-import 'package:luftcare_flutter_app/providers/current_user_provider.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
+import 'package:luftcare_flutter_app/helpers/validators.dart';
+import 'package:luftcare_flutter_app/providers/auth_provider.dart';
 
 class Overview extends StatelessWidget {
   const Overview({Key key}) : super(key: key);
@@ -68,9 +68,9 @@ class _PageTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final appBarHeight = Scaffold.of(context).appBarMaxHeight;
-    final currentUser = Provider.of<CurrentUser>(context).user;
+    final currentUser = Provider.of<Auth>(context).user;
 
-    final currentUserName = currentUser.name;
+    final currentUserName = currentUser?.name ?? '...';
 
     final title = FittedBox(
       child: Text(

@@ -7,6 +7,7 @@ import 'package:luftcare_flutter_app/screens/guest/welcome_screen.dart';
 import 'package:luftcare_flutter_app/screens/patient/home_screen.dart';
 
 class Auth with ChangeNotifier {
+  SecureStorage _secureStorage = SecureStorage();
   CurrentUser$Query$CurrentUser _user;
 
   CurrentUser$Query$CurrentUser get user => _user;
@@ -16,7 +17,8 @@ class Auth with ChangeNotifier {
     notifyListeners();
   }
 
-  void login(BuildContext context, String email, String password) async {
+  Future<void> login(
+      BuildContext context, String email, String password) async {
     showLoadingDialog(tapDismiss: false);
     final client = GraphQLProvider.of(context).value;
     final loginArgs = LoginArguments(email: email, password: password);
@@ -26,21 +28,21 @@ class Auth with ChangeNotifier {
     );
 
     final QueryResult result = await client.mutate(loginMutation);
-    hideLoadingDialog();
 
     if (result.hasException) {
+      hideLoadingDialog();
       final OperationException exception = result?.exception;
       final GraphQLError error = exception?.graphqlErrors[0];
       final String message = error?.message ?? 'Erro interno';
 
-      Scaffold.of(context).showSnackBar(SnackBar(
-        content: Text(message),
-      ));
+      Scaffold.of(context).showSnackBar(SnackBar(content: Text(message)));
       return;
     }
 
     final res = Login$Mutation.fromJson(result.data).login;
-    await SecureStorage().login(auth: res.authorization, refresh: res.refresh);
+    await _secureStorage.login(auth: res.authorization, refresh: res.refresh);
+    await getUserFromApi(context);
+    hideLoadingDialog();
 
     Navigator.of(context).pushNamedAndRemoveUntil(
       HomeScreen.RouteName,
@@ -48,8 +50,8 @@ class Auth with ChangeNotifier {
     );
   }
 
-  void logout(BuildContext context) async {
-    await SecureStorage().logout();
+  Future<void> logout(BuildContext context) async {
+    await _secureStorage.logout();
 
     Navigator.of(context).pushNamedAndRemoveUntil(
       WelcomeScreen.RouteName,
@@ -57,7 +59,7 @@ class Auth with ChangeNotifier {
     );
   }
 
-  void getUserFromApi(BuildContext context) async {
+  Future<void> getUserFromApi(BuildContext context) async {
     final client = GraphQLProvider.of(context).value;
 
     final currentUserQuery = QueryOptions(
@@ -71,9 +73,7 @@ class Auth with ChangeNotifier {
       final GraphQLError error = exception?.graphqlErrors[0];
       final String message = error?.message ?? 'Erro interno';
 
-      Scaffold.of(context).showSnackBar(SnackBar(
-        content: Text(message),
-      ));
+      Scaffold.of(context).showSnackBar(SnackBar(content: Text(message)));
       return;
     }
 
