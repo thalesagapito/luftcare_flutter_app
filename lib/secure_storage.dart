@@ -45,6 +45,6 @@ class SecureStorage {
     ]);
   }
 
-  Future<bool> get isLoggedIn =>
-      read(SecureStorageKey.API_AUTH_TOKEN).then((v) => (v ?? '').isNotEmpty);
+  Future<bool> get isLoggedIn => read(SecureStorageKey.API_AUTH_TOKEN)
+      .then((token) => (token ?? '').isNotEmpty);
 }
