@@ -16,6 +16,14 @@ class Overview extends StatelessWidget {
     final theme = Theme.of(context);
     final headerColor = theme.primaryColor.withOpacity(0.2);
     final backgroundColor = theme.primaryColor.withOpacity(0.1);
+    final gradientDecoration = BoxDecoration(
+      gradient: LinearGradient(
+        colors: [headerColor, Colors.transparent],
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        stops: [0.5, 0.5],
+      ),
+    );
     return LayoutBuilder(
       builder: (_, constraints) => Container(
         color: backgroundColor,
@@ -27,7 +35,10 @@ class Overview extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
                   _PageTitle(color: headerColor),
-                  _HorizontalDateCards(color: headerColor),
+                  Container(
+                    decoration: gradientDecoration,
+                    child: _HorizontalDateCards(),
+                  ),
                   Padding(
                     padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
                     child: Text(
@@ -98,8 +109,7 @@ class _PageTitle extends StatelessWidget {
 }
 
 class _HorizontalDateCards extends StatefulWidget {
-  final Color color;
-  const _HorizontalDateCards({Key key, this.color}) : super(key: key);
+  const _HorizontalDateCards({Key key}) : super(key: key);
 
   @override
   __HorizontalDateCardsState createState() => __HorizontalDateCardsState();
@@ -126,22 +136,12 @@ class __HorizontalDateCardsState extends State<_HorizontalDateCards> {
 
   @override
   Widget build(BuildContext context) {
-    final cardsContainerDecoration = BoxDecoration(
-      gradient: LinearGradient(
-        colors: [widget.color, Colors.transparent],
-        begin: Alignment.topCenter,
-        end: Alignment.bottomCenter,
-        stops: [0.5, 0.5],
-      ),
-    );
-
     return LayoutBuilder(
       builder: (context, constraints) => SingleChildScrollView(
-        physics: ClampingScrollPhysics(),
+        physics: BouncingScrollPhysics(),
         scrollDirection: Axis.horizontal,
         controller: _scrollController,
         child: Container(
-          decoration: cardsContainerDecoration,
           child: Row(
             children: _generateDateCards(constraints.maxWidth),
           ),
