@@ -57,6 +57,19 @@ enum UserRole {
   NON_ADMIN
 }
 
+type SymptomQuestionnaire {
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+  id: ID!
+  nameForManagement: String!
+  nameForPresentation: String!
+  version: Int!
+  isPublished: Boolean!
+  questions: [SymptomQuestionnaireQuestion!]!
+  responses: [SymptomQuestionnaireResponse!]!
+}
+
 type SymptomQuestionnaireQuestionChoice {
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -103,16 +116,27 @@ enum SymptomQuestionnaireQuestionKind {
   FREE_RESPONSE
 }
 
-type SymptomQuestionnaire {
+type SymptomQuestionnaireResponse {
   createdAt: DateTime!
   updatedAt: DateTime!
   deletedAt: DateTime
   id: ID!
-  nameForManagement: String!
-  nameForPresentation: String!
-  version: Int!
-  isPublished: Boolean!
-  questions: [SymptomQuestionnaireQuestion!]!
+  responseDate: DateTime!
+  patient: User!
+  questionnaire: SymptomQuestionnaire!
+  questionAnswers: [SymptomQuestionnaireResponseAnswer!]!
+  score: Float!
+}
+
+type SymptomQuestionnaireResponseAnswer {
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+  id: ID!
+  response: SymptomQuestionnaireResponse!
+  question: SymptomQuestionnaireQuestion!
+  selectedChoice: SymptomQuestionnaireQuestionChoice
+  writtenText: String
 }
 
 type TokenSet {
@@ -127,10 +151,16 @@ type GenericResponse {
   userFriendlyMessage: String!
 }
 
-type PaginatedSymptomQuestionnaireResponse {
+type PaginatedSymptomQuestionnaires {
   totalResultsCount: Int!
   hasMorePages: Boolean!
   results: [SymptomQuestionnaire!]!
+}
+
+type PaginatedSymptomQuestionnaireResponses {
+  totalResultsCount: Int!
+  hasMorePages: Boolean!
+  results: [SymptomQuestionnaireResponse!]!
 }
 
 input OrderByClause {
@@ -171,6 +201,23 @@ input SymptomQuestionnaireInput {
   questions: [SymptomQuestionnaireQuestionInput!]!
 }
 
+input SymptomQuestionnaireResponseAnswerInput {
+  questionId: ID!
+  choiceId: ID!
+
+  """Can be null, in cases where the answer has multiple choices"""
+  writtenText: String
+}
+
+input SymptomQuestionnaireResponseInput {
+  """DateTime in ISO-8601 format: 2020-12-31T23:59:59+0300"""
+  responseDate: DateTime!
+  userId: ID!
+  questionnaireId: ID!
+  questionnaireVersion: Int!
+  questionAnswers: [SymptomQuestionnaireResponseAnswerInput!]!
+}
+
 """Required data to register an application user from the register form"""
 input RegisterUserInput {
   name: String!
@@ -181,8 +228,23 @@ input RegisterUserInput {
 
 type Query {
   authorizationToken(refreshToken: String!): String!
-  symptomQuestionnaires(pageNumber: Int = 1, resultsPerPage: Int = 10, orderBy: [OrderByClause!], nameForManagement: String, isPublished: Boolean, currentVersionsOnly: Boolean, withDeleted: Boolean = false): PaginatedSymptomQuestionnaireResponse!
+  symptomQuestionnaires(orderBy: [OrderByClause!], nameForManagement: String, isPublished: Boolean, currentVersionsOnly: Boolean, withDeleted: Boolean = false, pageNumber: Int = 1, resultsPerPage: Int = 10): PaginatedSymptomQuestionnaires!
   symptomQuestionnaire(id: ID!): SymptomQuestionnaire!
+  symptomQuestionnaireResponses(
+    orderBy: [OrderByClause!]
+
+    """Gets only responses submitted by this user"""
+    patientId: String
+
+    """Gets only responses with `responseDate` after this value"""
+    responseDateAfter: DateTime
+
+    """Gets only responses with `responseDate` before this value"""
+    responseDateBefore: DateTime
+    withDeleted: Boolean = false
+    pageNumber: Int = 1
+    resultsPerPage: Int = 10
+  ): PaginatedSymptomQuestionnaireResponses!
   currentUser: User
   user(id: ID!): User
   users: [User!]
@@ -196,5 +258,6 @@ type Mutation {
   unpublishSymptomQuestionnaire(id: ID!): GenericResponse!
   changeSymptomQuestionnairePublishStatus(isPublished: Boolean!, id: ID!): GenericResponse!
   deleteSymptomQuestionnaire(id: ID!): GenericResponse!
+  createSymptomQuestionnaireResponse(response: SymptomQuestionnaireResponseInput!): GenericResponse!
   registerUser(userData: RegisterUserInput!): User!
 }

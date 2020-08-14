@@ -1,0 +1,22 @@
+query symptomQuestionnaires {
+    symptomQuestionnaires(isPublished: true, currentVersionsOnly: true, orderBy: [{ columnName: "createdAt", direction: DESC }]) {
+        totalResultsCount
+        hasMorePages
+        results {
+            id
+            nameForPresentation
+            questions {
+                id
+                text
+                kind
+                presentationOrder
+                possibleChoices {
+                    id
+                    text
+                    value
+                    presentationOrder
+                }
+            }
+        }
+    }
+}
