@@ -3,24 +3,25 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:luftcare_flutter_app/models/graphql/api.graphql.dart';
 
 class SymptomQuestionnaires with ChangeNotifier {
-  SymptomQuestionnaires$Query$SymptomQuestionnaires$Results
-      _symptomQuestionnaires =
-      SymptomQuestionnaires$Query$SymptomQuestionnaires$Results.fromJson({});
+  List<SymptomQuestionnaires$Query$SymptomQuestionnaires$Results>
+      _symptomQuestionnaires = [];
+  bool _alreadyQueried = false;
 
-  SymptomQuestionnaires$Query$SymptomQuestionnaires$Results
+  List<SymptomQuestionnaires$Query$SymptomQuestionnaires$Results>
       get questionnaires => _symptomQuestionnaires;
 
-  // void setQuestionnaires(questionnaires) {
-  //   _symptomQuestionnaires = questionnaires;
-  //   notifyListeners();
-  // }
+  bool get alreadyQueried => _alreadyQueried;
 
-  void getQuestionnaires(BuildContext context) async {
+  void setQuestionnaires(questionnaires) {
+    _symptomQuestionnaires = questionnaires;
+    _alreadyQueried = true;
+    notifyListeners();
+  }
+
+  Future<void> getQuestionnaires(BuildContext context) async {
     final client = GraphQLProvider.of(context).value;
-    // final loginArgs = LoginArguments(email: email, password: password);
     final questionnairesQuery = QueryOptions(
       documentNode: SymptomQuestionnairesQuery().document,
-      // variables: loginArgs.toJson(),
     );
 
     final QueryResult result = await client.query(questionnairesQuery);
@@ -36,14 +37,9 @@ class SymptomQuestionnaires with ChangeNotifier {
       return;
     }
 
-    print(result);
-
-    // final res = SymptomQuestionnaires$Query.fromJson(result.data);
-    // await SecureStorage().login(auth: res.authorization, refresh: res.refresh);
-
-    // Navigator.of(context).pushNamedAndRemoveUntil(
-    //   HomeScreen.RouteName,
-    //   (_) => false,
-    // );
+    final questionnaires = SymptomQuestionnaires$Query.fromJson(result.data)
+        .symptomQuestionnaires
+        .results;
+    setQuestionnaires(questionnaires);
   }
 }

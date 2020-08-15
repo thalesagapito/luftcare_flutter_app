@@ -16,33 +16,37 @@ class AvailableQuestionnaires extends StatefulWidget {
 
 class _AvailableQuestionnairesState extends State<AvailableQuestionnaires> {
   @override
-  void didChangeDependencies() {
+  void didChangeDependencies() async {
     super.didChangeDependencies();
-    print('CHANGED DEPENDENCIES');
+    final questionnairesProvider = Provider.of<SymptomQuestionnaires>(context);
+    if (questionnairesProvider.alreadyQueried) return;
+
+    await questionnairesProvider.getQuestionnaires(context);
   }
+
+  Widget _buildLoadingWidget() => Padding(
+        child: CenteredLoadingIndicator(),
+        padding: EdgeInsets.fromLTRB(0, 20, 0, 30),
+      );
+
+  Widget _buildWidget(questionnaire) => _QuestionnaireListTile(
+        questionCount: questionnaire.questions.length,
+        name: questionnaire.nameForPresentation,
+      );
 
   @override
   Widget build(BuildContext context) {
-    final loadingWidget = Padding(
-      child: CenteredLoadingIndicator(),
-      padding: EdgeInsets.fromLTRB(0, 20, 0, 30),
-    );
-
-    final availableQuestionnaires =
-        Provider.of<SymptomQuestionnaires>(context).questionnaires;
-
-    print(availableQuestionnaires);
+    final questionnairesProvider = Provider.of<SymptomQuestionnaires>(context);
+    final questionnaires = questionnairesProvider.questionnaires;
+    final isLoading = !questionnairesProvider.alreadyQueried;
+    final questionnairesWidgets = questionnaires.map(_buildWidget).toList();
 
     return SingleChildScrollView(
       child: Column(
         children: [
           _Title(),
-          _QuestionnaireListTile(),
-          loadingWidget,
-          Placeholder(fallbackHeight: 90),
-          Placeholder(fallbackHeight: 90),
-          Placeholder(fallbackHeight: 90),
-          Placeholder(fallbackHeight: 90),
+          if (isLoading) _buildLoadingWidget(),
+          if (!isLoading) ...questionnairesWidgets,
         ],
       ),
     );
@@ -50,7 +54,14 @@ class _AvailableQuestionnairesState extends State<AvailableQuestionnaires> {
 }
 
 class _QuestionnaireListTile extends StatelessWidget {
-  const _QuestionnaireListTile({Key key}) : super(key: key);
+  final String name;
+  final int questionCount;
+
+  const _QuestionnaireListTile({
+    Key key,
+    this.name,
+    this.questionCount,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -62,14 +73,14 @@ class _QuestionnaireListTile extends StatelessWidget {
 
     return Container(
       decoration: whiteRoundedDecoration,
-      margin: const EdgeInsets.all(10),
+      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       child: Material(
         type: MaterialType.transparency,
         child: Ink(
           decoration: whiteRoundedDecoration,
           child: ListTile(
-            title: Text('Question'),
-            trailing: Text('5 perguntas'),
+            title: Text(name),
+            trailing: Text('$questionCount pergunta(s)'),
             shape: RoundedRectangleBorder(borderRadius: borderRadius),
             onTap: () {},
           ),
@@ -87,7 +98,7 @@ class _Title extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Padding(
-      padding: EdgeInsets.fromLTRB(20, 20, 50, 0),
+      padding: EdgeInsets.fromLTRB(20, 20, 50, 10),
       child: FittedBox(
         child: Text(
           'Questionários disponíveis',
