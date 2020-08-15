@@ -9,7 +9,7 @@ class _MenuButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final icon = Icon(CustomIcons.menu, size: 42);
+    final icon = Icon(CustomIcons.menu, size: 42, color: Colors.white);
 
     return InkWell(
         splashColor: Colors.black12,
@@ -34,7 +34,7 @@ class TopNavbar extends StatelessWidget implements PreferredSizeWidget {
 
     return CupertinoNavigationBar(
       leading: _MenuButton(openDrawer),
-      brightness: Brightness.light,
+      brightness: Brightness.dark,
       backgroundColor: Colors.transparent,
       border: null,
     );

@@ -6,7 +6,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 import 'package:luftcare_flutter_app/helpers/validators.dart';
-import 'package:luftcare_flutter_app/providers/auth_provider.dart';
 import 'package:luftcare_flutter_app/providers/symptom_questionnaires_provider.dart';
 import 'package:luftcare_flutter_app/screens/patient/home_screen/overview/answered_questionnaires.dart';
 import 'package:luftcare_flutter_app/screens/patient/home_screen/overview/available_questionnaires.dart';
@@ -24,7 +23,7 @@ class _OverviewState extends State<Overview> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final backgroundColor = theme.primaryColor.withOpacity(0.1);
+    final backgroundColor = theme.primaryColor.withOpacity(0.04);
 
     return LayoutBuilder(
       builder: (_, constraints) => Container(
@@ -84,7 +83,7 @@ class _PageHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final headerColor = theme.primaryColor.withOpacity(0.2);
+    final headerColor = theme.primaryColor.withOpacity(0.8);
     final selectedIndex = convertDateToIndex(selectedDate);
 
     final gradient = BoxDecoration(
@@ -122,30 +121,22 @@ class _PageHeaderTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final appBarHeight = Scaffold.of(context).appBarMaxHeight;
-    final currentUser = Provider.of<Auth>(context).user;
-
-    final currentUserName = currentUser?.name ?? '...';
-    final firstName = currentUserName.split(' ')[0];
 
     final title = FittedBox(
       child: Text(
-        'Olá, $firstName',
+        'Agenda',
         textAlign: TextAlign.left,
-        style: theme.textTheme.headline4,
+        style: theme.textTheme.headline4.copyWith(color: Colors.white),
       ),
     );
 
-    // final boldTextStyle = TextStyle(fontWeight: FontWeight.bold);
-    // final subtitle = RichText(
-    //   text: TextSpan(
-    //     style: theme.textTheme.headline5,
-    //     text: 'Você tem ',
-    //     children: [
-    //       TextSpan(text: '4 ações', style: boldTextStyle),
-    //       TextSpan(text: ' hoje!'),
-    //     ],
-    //   ),
-    // );
+    final today = DateFormat('d \'de\' MMMM \'de\' y').format(DateTime.now());
+    final subtitle = FittedBox(
+      child: Text(
+        'Hoje é $today',
+        style: theme.textTheme.headline5.copyWith(color: Colors.white),
+      ),
+    );
 
     return Container(
       color: color,
@@ -156,7 +147,8 @@ class _PageHeaderTitle extends StatelessWidget {
         children: <Widget>[
           title,
           SizedBox(height: 10),
-          // subtitle,
+          subtitle,
+          SizedBox(height: 5),
         ],
       ),
     );
@@ -280,16 +272,27 @@ class _DateCard extends StatelessWidget {
     final weekDay = DateFormat('E').format(date);
     final monthDay = DateFormat('d').format(date);
 
-    final cardColor = isSelected ? theme.primaryColor : theme.cardColor;
+    final cardColor = isSelected ? theme.accentColor : theme.cardColor;
     final borderRadius = BorderRadius.circular(12);
     final outer = BoxDecoration(borderRadius: borderRadius);
-    final inner = BoxDecoration(borderRadius: borderRadius, color: cardColor);
+    final inner = BoxDecoration(
+      borderRadius: borderRadius,
+      color: cardColor,
+      boxShadow: [
+        BoxShadow(
+          blurRadius: 5,
+          color: Colors.black12,
+          offset: Offset.fromDirection(90, 3),
+        )
+      ],
+    );
     const padding = const EdgeInsets.symmetric(horizontal: 8);
 
     return Container(
       height: 80,
       width: width,
       padding: padding,
+      margin: EdgeInsets.only(bottom: 10),
       decoration: outer,
       child: Container(
         decoration: inner,

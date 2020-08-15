@@ -72,8 +72,16 @@ class _QuestionnaireListTile extends StatelessWidget {
     );
 
     return Container(
-      decoration: whiteRoundedDecoration,
-      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      decoration: whiteRoundedDecoration.copyWith(
+        boxShadow: [
+          BoxShadow(
+            blurRadius: 2,
+            color: Colors.black12,
+            offset: Offset.fromDirection(90, 2),
+          )
+        ],
+      ),
+      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       child: Material(
         type: MaterialType.transparency,
         child: Ink(
