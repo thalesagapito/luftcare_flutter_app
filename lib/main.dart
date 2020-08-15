@@ -13,8 +13,9 @@ import 'package:luftcare_flutter_app/graphql_provider.dart';
 import 'package:luftcare_flutter_app/providers/auth_provider.dart';
 import 'package:luftcare_flutter_app/screens/patient/home_screen.dart';
 import 'package:luftcare_flutter_app/screens/guest/welcome_screen.dart';
+import 'package:luftcare_flutter_app/widgets/atoms/centered_loading_indicator.dart';
 
-String get host => Platform.isAndroid ? '10.0.2.2' : 'localhost';
+String get host => Platform.isAndroid ? '10.0.2.2' : '192.168.0.14';
 final String graphqlEndpoint = 'http://$host:5000';
 
 void main() async {
@@ -47,11 +48,7 @@ class MyApp extends StatelessWidget {
       backgroundColor: Colors.white70,
       loadingBackgroundColor: Colors.transparent,
     );
-    final loadingWidget = Center(
-      child: CircularProgressIndicator(
-        valueColor: AlwaysStoppedAnimation(Colors.indigo[300]),
-      ),
-    );
+    final loadingWidget = CenteredLoadingIndicator();
 
     return LoadingProvider(
       themeData: loadingTheme,
