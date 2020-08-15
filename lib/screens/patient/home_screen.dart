@@ -16,7 +16,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int _selectedIndex = 0;
+  int _selectedNavbarIndex = 0;
 
   @override
   void didChangeDependencies() async {
@@ -36,18 +36,18 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _onNavbarItemTapped(int index) {
     HapticFeedback.selectionClick();
-    setState(() => _selectedIndex = index);
+    setState(() => _selectedNavbarIndex = index);
   }
 
   @override
   Widget build(BuildContext context) {
-    final visibleWidget = _widgetOptions.elementAt(_selectedIndex);
+    final visibleWidget = _widgetOptions.elementAt(_selectedNavbarIndex);
 
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: TopNavbar(),
       bottomNavigationBar: BottomNavbar(
-        selectedIndex: _selectedIndex,
+        selectedIndex: _selectedNavbarIndex,
         onTap: _onNavbarItemTapped,
       ),
       drawer: SideDrawer(),
