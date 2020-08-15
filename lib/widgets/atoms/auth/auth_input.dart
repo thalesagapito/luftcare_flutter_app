@@ -10,7 +10,9 @@ class AuthInput extends StatelessWidget {
     return InputDecoration(
       labelText: labelText,
       focusColor: theme.primaryColor,
-      border: OutlineInputBorder(),
+      border: OutlineInputBorder(
+        borderRadius: const BorderRadius.all(Radius.circular(6)),
+      ),
     );
   }
 

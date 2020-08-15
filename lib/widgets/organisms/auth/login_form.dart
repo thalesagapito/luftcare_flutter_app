@@ -57,6 +57,7 @@ class _LoginFormState extends State<LoginForm> {
             TextFormField(
               onSaved: _onEmailSaved,
               focusNode: _emailFocusNode,
+              autocorrect: false,
               validator: Validators.emailValidator,
               keyboardAppearance: theme.brightness,
               textInputAction: TextInputAction.next,
@@ -72,6 +73,7 @@ class _LoginFormState extends State<LoginForm> {
             CupertinoIcons.padlock,
             TextFormField(
               obscureText: true,
+              autocorrect: false,
               onSaved: _onPasswordSaved,
               focusNode: _passwordFocusNode,
               keyboardAppearance: theme.brightness,
