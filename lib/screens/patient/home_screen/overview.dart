@@ -11,8 +11,15 @@ import 'package:luftcare_flutter_app/providers/symptom_questionnaires_provider.d
 import 'package:luftcare_flutter_app/screens/patient/home_screen/overview/answered_questionnaires.dart';
 import 'package:luftcare_flutter_app/screens/patient/home_screen/overview/available_questionnaires.dart';
 
-class Overview extends StatelessWidget {
+class Overview extends StatefulWidget {
   const Overview({Key key}) : super(key: key);
+
+  @override
+  _OverviewState createState() => _OverviewState();
+}
+
+class _OverviewState extends State<Overview> {
+  DateTime _selectedDate = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +31,12 @@ class Overview extends StatelessWidget {
         color: backgroundColor,
         child: Column(
           children: <Widget>[
-            _PageHeader(),
+            _PageHeader(
+              selectedDate: _selectedDate,
+              onSelectedDateChange: (selectedDate) {
+                setState(() => _selectedDate = selectedDate);
+              },
+            ),
             Expanded(
               child: SingleChildScrollView(
                 child: Column(
@@ -47,12 +59,33 @@ class Overview extends StatelessWidget {
 }
 
 class _PageHeader extends StatelessWidget {
-  const _PageHeader({Key key}) : super(key: key);
+  final DateTime selectedDate;
+  final void Function(DateTime selectedDate) onSelectedDateChange;
+
+  const _PageHeader({
+    Key key,
+    @required this.selectedDate,
+    @required this.onSelectedDateChange,
+  }) : super(key: key);
+
+  void convertIndexToDateAndSubmitChange(int index) {
+    final selectedDate = DateTime.now().add(Duration(days: index));
+    onSelectedDateChange(selectedDate);
+  }
+
+  int convertDateToIndex(DateTime date) {
+    final getDayOfYear = (date) => int.parse(DateFormat('D').format(date));
+
+    final currentDayInYear = getDayOfYear(DateTime.now());
+    final selectedDayInYear = getDayOfYear(date);
+    return selectedDayInYear - currentDayInYear;
+  }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final headerColor = theme.primaryColor.withOpacity(0.2);
+    final selectedIndex = convertDateToIndex(selectedDate);
 
     final gradient = BoxDecoration(
       gradient: LinearGradient(
@@ -69,7 +102,12 @@ class _PageHeader extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           _PageHeaderTitle(color: headerColor),
-          Container(decoration: gradient, child: _HorizontalDateCards()),
+          Container(
+              decoration: gradient,
+              child: _HorizontalDateCards(
+                onSelectedIndexChange: convertIndexToDateAndSubmitChange,
+                selectedIndex: selectedIndex,
+              )),
         ],
       ),
     );
@@ -126,23 +164,29 @@ class _PageHeaderTitle extends StatelessWidget {
 }
 
 class _HorizontalDateCards extends StatefulWidget {
-  const _HorizontalDateCards({Key key}) : super(key: key);
+  final int selectedIndex;
+  final void Function(int selectedIndex) onSelectedIndexChange;
+
+  const _HorizontalDateCards({
+    Key key,
+    @required this.selectedIndex,
+    @required this.onSelectedIndexChange,
+  }) : super(key: key);
 
   @override
   __HorizontalDateCardsState createState() => __HorizontalDateCardsState();
 }
 
 class __HorizontalDateCardsState extends State<_HorizontalDateCards> {
-  static const DAYS_TO_SUBTRACT_TO_GET_INITIAL_DATE = 14;
+  static const NUMBER_OF_PREVIOUS_DATES = 14;
   static const CARD_WIDTH = 70.0;
   static const CARD_LEFT_MARGIN = 0.6;
   static const NUMBER_OF_CARDS = 21;
   static const CARDS_CONTAINER_WIDTH = CARD_WIDTH * NUMBER_OF_CARDS;
 
-  var _selectedIndex = DAYS_TO_SUBTRACT_TO_GET_INITIAL_DATE;
   var _scrollController = ScrollController(
-    initialScrollOffset: DAYS_TO_SUBTRACT_TO_GET_INITIAL_DATE * CARD_WIDTH -
-        (CARD_WIDTH * CARD_LEFT_MARGIN),
+    initialScrollOffset:
+        NUMBER_OF_PREVIOUS_DATES * CARD_WIDTH - (CARD_WIDTH * CARD_LEFT_MARGIN),
   );
 
   @override
@@ -182,7 +226,9 @@ class __HorizontalDateCardsState extends State<_HorizontalDateCards> {
   }
 
   void _onDateCardTap(int cardIndex, double visibleWidth) {
-    setState(() => _selectedIndex = cardIndex);
+    if (widget.selectedIndex != cardIndex - NUMBER_OF_PREVIOUS_DATES) {
+      widget.onSelectedIndexChange(cardIndex - NUMBER_OF_PREVIOUS_DATES);
+    }
 
     final offset = _getOffsetToScrollCardIntoView(cardIndex, visibleWidth);
     final duration = Duration(milliseconds: 300);
@@ -191,11 +237,12 @@ class __HorizontalDateCardsState extends State<_HorizontalDateCards> {
   }
 
   List<_DateCard> _generateDateCards(double visibleWidth) {
-    const startingDay = -DAYS_TO_SUBTRACT_TO_GET_INITIAL_DATE;
+    const startingDay = -NUMBER_OF_PREVIOUS_DATES;
+    final selectedIndex = widget.selectedIndex + NUMBER_OF_PREVIOUS_DATES;
     return List.generate(NUMBER_OF_CARDS, (cardIndex) {
       final daysToAddToCurrent = Duration(days: cardIndex + startingDay);
       final dateOfCard = DateTime.now().add(daysToAddToCurrent);
-      final isSelected = _selectedIndex == cardIndex;
+      final isSelected = selectedIndex == cardIndex;
       final onTap = () => _onDateCardTap(cardIndex, visibleWidth);
 
       return _DateCard(
