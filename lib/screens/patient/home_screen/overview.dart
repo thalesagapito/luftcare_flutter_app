@@ -7,6 +7,9 @@ import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 import 'package:luftcare_flutter_app/helpers/validators.dart';
 import 'package:luftcare_flutter_app/providers/auth_provider.dart';
+import 'package:luftcare_flutter_app/providers/symptom_questionnaires_provider.dart';
+import 'package:luftcare_flutter_app/screens/patient/home_screen/overview/answered_questionnaires.dart';
+import 'package:luftcare_flutter_app/screens/patient/home_screen/overview/available_questionnaires.dart';
 
 class Overview extends StatelessWidget {
   const Overview({Key key}) : super(key: key);
@@ -14,45 +17,28 @@ class Overview extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final headerColor = theme.primaryColor.withOpacity(0.2);
     final backgroundColor = theme.primaryColor.withOpacity(0.1);
-    final gradientDecoration = BoxDecoration(
-      gradient: LinearGradient(
-        colors: [headerColor, Colors.transparent],
-        begin: Alignment.topCenter,
-        end: Alignment.bottomCenter,
-        stops: [0.5, 0.5],
-      ),
-    );
+
     return LayoutBuilder(
       builder: (_, constraints) => Container(
         color: backgroundColor,
         child: Column(
           children: <Widget>[
-            Container(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  _PageTitle(color: headerColor),
-                  Container(
-                    decoration: gradientDecoration,
-                    child: _HorizontalDateCards(),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
-                    child: Text(
-                      'Questionários',
-                      textAlign: TextAlign.left,
-                      style: theme.textTheme.headline4.copyWith(fontSize: 30),
+            _PageHeader(),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    AnsweredQuestionnaires(),
+                    ChangeNotifierProvider(
+                      create: (ctx) => SymptomQuestionnaires(),
+                      child: AvailableQuestionnaires(),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-            Expanded(
-              child: _RecentQuestionnaires(),
-            ),
+            //   child: _RecentQuestionnaires(),
           ],
         ),
       ),
@@ -60,9 +46,39 @@ class Overview extends StatelessWidget {
   }
 }
 
-class _PageTitle extends StatelessWidget {
+class _PageHeader extends StatelessWidget {
+  const _PageHeader({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final headerColor = theme.primaryColor.withOpacity(0.2);
+
+    final gradient = BoxDecoration(
+      gradient: LinearGradient(
+        colors: [headerColor, Colors.transparent],
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        stops: [0.5, 0.5],
+      ),
+    );
+
+    return Container(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          _PageHeaderTitle(color: headerColor),
+          Container(decoration: gradient, child: _HorizontalDateCards()),
+        ],
+      ),
+    );
+  }
+}
+
+class _PageHeaderTitle extends StatelessWidget {
   final Color color;
-  const _PageTitle({Key key, this.color}) : super(key: key);
+  const _PageHeaderTitle({Key key, this.color}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -71,26 +87,27 @@ class _PageTitle extends StatelessWidget {
     final currentUser = Provider.of<Auth>(context).user;
 
     final currentUserName = currentUser?.name ?? '...';
+    final firstName = currentUserName.split(' ')[0];
 
     final title = FittedBox(
       child: Text(
-        'Olá, $currentUserName',
+        'Olá, $firstName',
         textAlign: TextAlign.left,
         style: theme.textTheme.headline4,
       ),
     );
 
-    final boldTextStyle = TextStyle(fontWeight: FontWeight.bold);
-    final subtitle = RichText(
-      text: TextSpan(
-        style: theme.textTheme.headline5,
-        text: 'Você tem ',
-        children: [
-          TextSpan(text: '4 ações', style: boldTextStyle),
-          TextSpan(text: ' hoje!'),
-        ],
-      ),
-    );
+    // final boldTextStyle = TextStyle(fontWeight: FontWeight.bold);
+    // final subtitle = RichText(
+    //   text: TextSpan(
+    //     style: theme.textTheme.headline5,
+    //     text: 'Você tem ',
+    //     children: [
+    //       TextSpan(text: '4 ações', style: boldTextStyle),
+    //       TextSpan(text: ' hoje!'),
+    //     ],
+    //   ),
+    // );
 
     return Container(
       color: color,
@@ -101,7 +118,7 @@ class _PageTitle extends StatelessWidget {
         children: <Widget>[
           title,
           SizedBox(height: 10),
-          subtitle,
+          // subtitle,
         ],
       ),
     );
@@ -258,27 +275,6 @@ class _DateCard extends StatelessWidget {
         Text(Transformers.capitalize(weekDay), style: weekDayStyle),
         Text(monthDay, style: monthDayStyle),
       ],
-    );
-  }
-}
-
-class _RecentQuestionnaires extends StatelessWidget {
-  const _RecentQuestionnaires({
-    Key key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
-      child: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            Placeholder(fallbackHeight: 70),
-          ],
-        ),
-      ),
     );
   }
 }
