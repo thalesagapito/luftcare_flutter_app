@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:luftcare_flutter_app/screens/guest/login_screen.dart';
 import 'package:luftcare_flutter_app/widgets/atoms/brand_logo.dart';
+import 'package:luftcare_flutter_app/screens/guest/login_screen.dart';
+import 'package:luftcare_flutter_app/widgets/organisms/layout/empty_appbar.dart';
 
 class WelcomeScreenArgs {}
 
@@ -15,6 +16,7 @@ class WelcomeScreen extends StatelessWidget {
     final navigator = Navigator.of(context);
 
     return Scaffold(
+      appBar: EmptyAppbar(brightness: Brightness.light),
       body: SafeArea(
         child: Container(
           width: double.infinity,

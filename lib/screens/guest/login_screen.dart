@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:luftcare_flutter_app/providers/auth_provider.dart';
 import 'package:luftcare_flutter_app/widgets/atoms/brand_logo.dart';
 import 'package:luftcare_flutter_app/widgets/organisms/auth/login_form.dart';
-import 'package:provider/provider.dart';
+import 'package:luftcare_flutter_app/widgets/organisms/layout/empty_appbar.dart';
 
 class LoginScreen extends StatelessWidget {
   static const RouteName = '/login';
@@ -21,6 +22,7 @@ class LoginScreen extends StatelessWidget {
     );
 
     return Scaffold(
+      appBar: EmptyAppbar(brightness: Brightness.light),
       body: SafeArea(
         child: Container(
           padding: pagePadding,
