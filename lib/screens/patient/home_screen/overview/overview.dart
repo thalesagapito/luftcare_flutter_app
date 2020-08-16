@@ -126,15 +126,17 @@ class _PageHeaderTitle extends StatelessWidget {
       child: Text(
         'Agenda',
         textAlign: TextAlign.left,
-        style: theme.textTheme.headline4.copyWith(color: Colors.white),
+        style: theme.textTheme.headline4
+            .copyWith(color: Colors.white, fontWeight: FontWeight.w700),
       ),
     );
 
     final today = DateFormat('d \'de\' MMMM \'de\' y').format(DateTime.now());
     final subtitle = FittedBox(
       child: Text(
-        'Hoje é $today',
-        style: theme.textTheme.headline5.copyWith(color: Colors.white),
+        '$today',
+        style: theme.textTheme.headline5
+            .copyWith(color: Colors.white, fontWeight: FontWeight.w500),
       ),
     );
 
@@ -315,11 +317,15 @@ class _DateCard extends StatelessWidget {
   Widget _buildCardTexts(bool isSelected, String weekDay, String monthDay) {
     final textColor = isSelected ? Colors.white : Colors.black87;
 
-    final weekDayStyle = TextStyle(color: textColor);
-    final monthDayStyle = TextStyle(
-      fontWeight: FontWeight.bold,
+    final weekDayStyle = TextStyle(
+      fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
       color: textColor,
-      fontSize: 26,
+      fontSize: 14,
+    );
+    final monthDayStyle = TextStyle(
+      fontWeight: isSelected ? FontWeight.w800 : FontWeight.w700,
+      color: textColor,
+      fontSize: 28,
     );
 
     return Column(

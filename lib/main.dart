@@ -11,8 +11,8 @@ import 'package:luftcare_flutter_app/routes.dart';
 import 'package:luftcare_flutter_app/secure_storage.dart';
 import 'package:luftcare_flutter_app/graphql_provider.dart';
 import 'package:luftcare_flutter_app/providers/auth_provider.dart';
-import 'package:luftcare_flutter_app/screens/patient/home_screen.dart';
 import 'package:luftcare_flutter_app/screens/guest/welcome_screen.dart';
+import 'package:luftcare_flutter_app/screens/patient/home_screen/home_screen.dart';
 import 'package:luftcare_flutter_app/widgets/atoms/centered_loading_indicator.dart';
 
 String get host => Platform.isAndroid ? '10.0.2.2' : '192.168.0.14';

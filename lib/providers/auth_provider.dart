@@ -4,7 +4,7 @@ import 'package:load/load.dart';
 import 'package:luftcare_flutter_app/secure_storage.dart';
 import 'package:luftcare_flutter_app/models/graphql/api.graphql.dart';
 import 'package:luftcare_flutter_app/screens/guest/welcome_screen.dart';
-import 'package:luftcare_flutter_app/screens/patient/home_screen.dart';
+import 'package:luftcare_flutter_app/screens/patient/home_screen/home_screen.dart';
 
 class Auth with ChangeNotifier {
   SecureStorage _secureStorage = SecureStorage();

@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:luftcare_flutter_app/providers/auth_provider.dart';
 import 'package:luftcare_flutter_app/widgets/organisms/layout/top_navbar.dart';
 import 'package:luftcare_flutter_app/widgets/organisms/layout/side_drawer.dart';
-import 'package:luftcare_flutter_app/screens/patient/home_screen/overview.dart';
+import 'package:luftcare_flutter_app/screens/patient/home_screen/overview/overview.dart';
 import 'package:luftcare_flutter_app/widgets/organisms/layout/bottom_navbar.dart';
 
 class HomeScreen extends StatefulWidget {
