@@ -19,7 +19,7 @@ class AppTheme {
     primarySwatch: Colors.indigo,
     primaryColor: _lapis,
     // accentColor: _avocado,
-    accentColor: Colors.orange[500],
+    accentColor: Colors.orange[400],
     // highlightColor: Color(0xFF895CC4),
     errorColor: _coral,
     visualDensity: VisualDensity.adaptivePlatformDensity,

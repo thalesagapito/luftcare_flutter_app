@@ -279,18 +279,27 @@ class _DateCard extends StatelessWidget {
     final monthDay = DateFormat('d').format(date);
 
     final cardColor = isSelected ? theme.accentColor : theme.cardColor;
+    final selectedShadow = [
+      BoxShadow(
+        blurRadius: 6,
+        spreadRadius: 2.5,
+        offset: Offset.fromDirection(90, 2),
+        color: theme.accentColor.withOpacity(0.4),
+      ),
+    ];
+    final notSelectedShadow = [
+      BoxShadow(
+        blurRadius: 5,
+        offset: Offset.fromDirection(90, 3),
+        color: theme.primaryColor.withOpacity(0.2),
+      ),
+    ];
     final borderRadius = BorderRadius.circular(12);
     final outer = BoxDecoration(borderRadius: borderRadius);
     final inner = BoxDecoration(
       borderRadius: borderRadius,
       color: cardColor,
-      boxShadow: [
-        BoxShadow(
-          blurRadius: 5,
-          color: Colors.black12,
-          offset: Offset.fromDirection(90, 3),
-        )
-      ],
+      boxShadow: isSelected ? selectedShadow : notSelectedShadow,
     );
     const padding = const EdgeInsets.symmetric(horizontal: 9);
 
@@ -307,6 +316,8 @@ class _DateCard extends StatelessWidget {
           child: InkWell(
             borderRadius: borderRadius,
             onTap: _feedbackThenTriggerOnTap,
+            splashColor: theme.accentColor.withOpacity(0.6),
+            highlightColor: theme.accentColor.withOpacity(0.2),
             child: _buildCardTexts(isSelected, weekDay, monthDay),
           ),
         ),

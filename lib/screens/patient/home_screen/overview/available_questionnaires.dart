@@ -88,10 +88,10 @@ class _QuestionnaireListTile extends StatelessWidget {
       decoration: whiteRoundedDecoration.copyWith(
         boxShadow: [
           BoxShadow(
-            blurRadius: 2,
-            color: Colors.black12,
-            offset: Offset.fromDirection(90, 2),
-          )
+            blurRadius: 5,
+            offset: Offset.fromDirection(90, 3),
+            color: Theme.of(context).primaryColor.withOpacity(0.2),
+          ),
         ],
       ),
       margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
