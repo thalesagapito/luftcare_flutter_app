@@ -11,17 +11,24 @@ class _MenuButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final icon = Icon(CustomIcons.menu, size: 42, color: Colors.white);
 
-    return InkWell(
-        splashColor: Colors.black12,
-        borderRadius: BorderRadius.circular(190),
-        child: Container(
-          padding: EdgeInsets.fromLTRB(10, 0, 30, 0),
-          child: icon,
+    return Container(
+      width: 60,
+      child: Material(
+        type: MaterialType.transparency,
+        child: InkWell(
+          splashColor: Theme.of(context).primaryColor,
+          borderRadius: BorderRadius.circular(10),
+          child: Container(
+            alignment: Alignment.center,
+            child: icon,
+          ),
+          onTap: () {
+            HapticFeedback.lightImpact();
+            onTap();
+          },
         ),
-        onTap: () {
-          HapticFeedback.lightImpact();
-          onTap();
-        });
+      ),
+    );
   }
 }
 
