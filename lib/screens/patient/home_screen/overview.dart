@@ -85,14 +85,9 @@ class _PageHeader extends StatelessWidget {
     final theme = Theme.of(context);
     final headerColor = theme.primaryColor.withOpacity(0.8);
     final selectedIndex = convertDateToIndex(selectedDate);
-
-    final gradient = BoxDecoration(
-      gradient: LinearGradient(
-        colors: [headerColor, Colors.transparent],
-        begin: Alignment.topCenter,
-        end: Alignment.bottomCenter,
-        stops: [0.5, 0.5],
-      ),
+    final decoration = BoxDecoration(
+      borderRadius: BorderRadius.vertical(bottom: Radius.circular(30)),
+      color: headerColor,
     );
 
     return Container(
@@ -102,11 +97,16 @@ class _PageHeader extends StatelessWidget {
         children: <Widget>[
           _PageHeaderTitle(color: headerColor),
           Container(
-              decoration: gradient,
-              child: _HorizontalDateCards(
-                onSelectedIndexChange: convertIndexToDateAndSubmitChange,
-                selectedIndex: selectedIndex,
-              )),
+            child: Stack(
+              children: [
+                Container(height: 40, decoration: decoration),
+                _HorizontalDateCards(
+                  onSelectedIndexChange: convertIndexToDateAndSubmitChange,
+                  selectedIndex: selectedIndex,
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );
@@ -171,14 +171,17 @@ class _HorizontalDateCards extends StatefulWidget {
 
 class __HorizontalDateCardsState extends State<_HorizontalDateCards> {
   static const NUMBER_OF_PREVIOUS_DATES = 14;
-  static const CARD_WIDTH = 70.0;
+  static const CARD_WIDTH = 74.0;
   static const CARD_LEFT_MARGIN = 0.6;
   static const NUMBER_OF_CARDS = 21;
-  static const CARDS_CONTAINER_WIDTH = CARD_WIDTH * NUMBER_OF_CARDS;
+  static const SV_PADDING = 30.0;
+  static const CARDS_CONTAINER_WIDTH =
+      CARD_WIDTH * NUMBER_OF_CARDS + (SV_PADDING * 2);
 
   var _scrollController = ScrollController(
-    initialScrollOffset:
-        NUMBER_OF_PREVIOUS_DATES * CARD_WIDTH - (CARD_WIDTH * CARD_LEFT_MARGIN),
+    initialScrollOffset: NUMBER_OF_PREVIOUS_DATES * CARD_WIDTH -
+        (CARD_WIDTH * CARD_LEFT_MARGIN) +
+        SV_PADDING,
   );
 
   @override
@@ -194,6 +197,7 @@ class __HorizontalDateCardsState extends State<_HorizontalDateCards> {
         physics: BouncingScrollPhysics(),
         scrollDirection: Axis.horizontal,
         controller: _scrollController,
+        padding: EdgeInsets.symmetric(horizontal: SV_PADDING),
         child: Container(
           child: Row(
             children: _generateDateCards(constraints.maxWidth),
@@ -209,7 +213,7 @@ class __HorizontalDateCardsState extends State<_HorizontalDateCards> {
 
   double _getOffsetToScrollCardIntoView(int cardIndex, double visibleWidth) {
     final leftMargin = CARD_WIDTH * CARD_LEFT_MARGIN;
-    final cardX = cardIndex * CARD_WIDTH;
+    final cardX = cardIndex * CARD_WIDTH + SV_PADDING;
     final widthToFillContainer = visibleWidth - CARD_WIDTH;
     final maxOffset = CARDS_CONTAINER_WIDTH - widthToFillContainer - CARD_WIDTH;
     final unboundedOffset = cardX - leftMargin;
@@ -286,7 +290,7 @@ class _DateCard extends StatelessWidget {
         )
       ],
     );
-    const padding = const EdgeInsets.symmetric(horizontal: 8);
+    const padding = const EdgeInsets.symmetric(horizontal: 9);
 
     return Container(
       height: 80,
