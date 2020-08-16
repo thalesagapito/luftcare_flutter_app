@@ -45,27 +45,27 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final loadingTheme = LoadingThemeData(
-      backgroundColor: Colors.white70,
       loadingBackgroundColor: Colors.transparent,
+      backgroundColor: Colors.white70,
     );
-    final loadingWidget = CenteredLoadingIndicator();
 
-    return LoadingProvider(
-      themeData: loadingTheme,
-      loadingWidgetBuilder: (context, data) => loadingWidget,
-      child: GraphqlProvider(
-        uri: graphqlEndpoint,
-        child: ChangeNotifierProvider(
-          create: (ctx) => Auth(),
-          child: MaterialApp(
-            debugShowCheckedModeBanner: false,
-            color: Colors.indigo[400],
-            title: 'Luftcare',
-            theme: AppTheme.light,
-            darkTheme: AppTheme.dark,
-            themeMode: ThemeMode.light,
-            initialRoute: initialRoute,
-            routes: routes,
+    return GraphqlProvider(
+      uri: graphqlEndpoint,
+      child: ChangeNotifierProvider(
+        create: (ctx) => Auth(),
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          color: Colors.indigo[400],
+          title: 'Luftcare',
+          theme: AppTheme.light,
+          darkTheme: AppTheme.dark,
+          themeMode: ThemeMode.light,
+          initialRoute: initialRoute,
+          routes: routes,
+          builder: (context, child) => LoadingProvider(
+            loadingWidgetBuilder: (context, data) => CenteredLoadingIndicator(),
+            themeData: loadingTheme,
+            child: child,
           ),
         ),
       ),
