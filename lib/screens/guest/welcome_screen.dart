@@ -3,8 +3,6 @@ import 'package:luftcare_flutter_app/widgets/atoms/brand_logo.dart';
 import 'package:luftcare_flutter_app/screens/guest/login_screen.dart';
 import 'package:luftcare_flutter_app/widgets/organisms/layout/empty_appbar.dart';
 
-class WelcomeScreenArgs {}
-
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({Key key}) : super(key: key);
 

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:luftcare_flutter_app/providers/symptom_questionnaires_provider.dart';
 import 'package:luftcare_flutter_app/widgets/atoms/centered_loading_indicator.dart';
+import 'package:luftcare_flutter_app/providers/symptom_questionnaires_provider.dart';
+import 'package:luftcare_flutter_app/screens/patient/respond_questionnaire_screen/respond_questionnaire_screen.dart';
 
 class AvailableQuestionnaires extends StatefulWidget {
   const AvailableQuestionnaires({
@@ -24,14 +25,22 @@ class _AvailableQuestionnairesState extends State<AvailableQuestionnaires> {
     await questionnairesProvider.getQuestionnaires(context);
   }
 
+  void _openQuestionnaire(String id, BuildContext context) {
+    final navigator = Navigator.of(context);
+    final args = RespondQuestionnaireScreenArgs(questionnaireId: id);
+    navigator.pushNamed(RespondQuestionnaireScreen.RouteName, arguments: args);
+  }
+
   Widget _buildLoadingWidget() => Padding(
         child: CenteredLoadingIndicator(),
         padding: EdgeInsets.fromLTRB(0, 20, 0, 30),
       );
 
-  Widget _buildWidget(questionnaire) => _QuestionnaireListTile(
+  Widget _buildWidget(questionnaire, BuildContext context) =>
+      _QuestionnaireListTile(
         questionCount: questionnaire.questions.length,
         name: questionnaire.nameForPresentation,
+        onTap: () => _openQuestionnaire(questionnaire.id, context),
       );
 
   @override
@@ -39,7 +48,9 @@ class _AvailableQuestionnairesState extends State<AvailableQuestionnaires> {
     final questionnairesProvider = Provider.of<SymptomQuestionnaires>(context);
     final questionnaires = questionnairesProvider.questionnaires;
     final isLoading = !questionnairesProvider.alreadyQueried;
-    final questionnairesWidgets = questionnaires.map(_buildWidget).toList();
+    final questionnairesWidgets = questionnaires
+        .map((questionnaire) => _buildWidget(questionnaire, context))
+        .toList();
 
     return SingleChildScrollView(
       child: Column(
@@ -55,12 +66,14 @@ class _AvailableQuestionnairesState extends State<AvailableQuestionnaires> {
 
 class _QuestionnaireListTile extends StatelessWidget {
   final String name;
+  final Function onTap;
   final int questionCount;
 
   const _QuestionnaireListTile({
     Key key,
-    this.name,
-    this.questionCount,
+    @required this.name,
+    @required this.onTap,
+    @required this.questionCount,
   }) : super(key: key);
 
   @override
@@ -87,10 +100,10 @@ class _QuestionnaireListTile extends StatelessWidget {
         child: Ink(
           decoration: whiteRoundedDecoration,
           child: ListTile(
+            onTap: onTap,
             title: Text(name),
             trailing: Text('$questionCount pergunta(s)'),
             shape: RoundedRectangleBorder(borderRadius: borderRadius),
-            onTap: () {},
           ),
         ),
       ),
