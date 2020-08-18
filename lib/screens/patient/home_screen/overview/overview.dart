@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 import 'package:luftcare_flutter_app/helpers/validators.dart';
+import 'package:luftcare_flutter_app/widgets/atoms/toggleable_container.dart';
 import 'package:luftcare_flutter_app/providers/symptom_questionnaires_provider.dart';
 import 'package:luftcare_flutter_app/screens/patient/home_screen/overview/answered_questionnaires.dart';
 import 'package:luftcare_flutter_app/screens/patient/home_screen/overview/available_questionnaires.dart';
@@ -277,50 +278,19 @@ class _DateCard extends StatelessWidget {
     final theme = Theme.of(context);
     final weekDay = DateFormat('E').format(date);
     final monthDay = DateFormat('d').format(date);
-
-    final cardColor = isSelected ? theme.accentColor : theme.cardColor;
-    final selectedShadow = [
-      BoxShadow(
-        blurRadius: 6,
-        spreadRadius: 2.5,
-        offset: Offset.fromDirection(90, 2),
-        color: theme.accentColor.withOpacity(0.4),
-      ),
-    ];
-    final notSelectedShadow = [
-      BoxShadow(
-        blurRadius: 5,
-        offset: Offset.fromDirection(90, 3),
-        color: theme.primaryColor.withOpacity(0.2),
-      ),
-    ];
-    final borderRadius = BorderRadius.circular(12);
-    final outer = BoxDecoration(borderRadius: borderRadius);
-    final inner = BoxDecoration(
-      borderRadius: borderRadius,
-      color: cardColor,
-      boxShadow: isSelected ? selectedShadow : notSelectedShadow,
-    );
+    const margin = const EdgeInsets.only(bottom: 10);
     const padding = const EdgeInsets.symmetric(horizontal: 9);
 
     return Container(
       height: 80,
       width: width,
+      margin: margin,
       padding: padding,
-      margin: EdgeInsets.only(bottom: 10),
-      decoration: outer,
-      child: Container(
-        decoration: inner,
-        child: Material(
-          type: MaterialType.transparency,
-          child: InkWell(
-            borderRadius: borderRadius,
-            onTap: _feedbackThenTriggerOnTap,
-            splashColor: theme.accentColor.withOpacity(0.6),
-            highlightColor: theme.accentColor.withOpacity(0.2),
-            child: _buildCardTexts(isSelected, weekDay, monthDay),
-          ),
-        ),
+      child: ToggleableContainer(
+        isToggled: isSelected,
+        toggledColor: theme.accentColor,
+        onTap: _feedbackThenTriggerOnTap,
+        child: _buildCardTexts(isSelected, weekDay, monthDay),
       ),
     );
   }
