@@ -23,17 +23,18 @@ class AppTheme {
     // highlightColor: Color(0xFF895CC4),
     errorColor: _coral,
     visualDensity: VisualDensity.adaptivePlatformDensity,
-
     textTheme: TextTheme(
       button: TextStyle(fontSize: 16),
       headline4: TextStyle(
         fontSize: 36,
-        color: Colors.indigo[900],
+        color: Colors.black87,
         fontWeight: FontWeight.bold,
       ),
     ),
-
     buttonTheme: _buttonTheme,
+    snackBarTheme: SnackBarThemeData(
+      behavior: SnackBarBehavior.floating,
+    ),
   );
 
   static final dark = ThemeData(
