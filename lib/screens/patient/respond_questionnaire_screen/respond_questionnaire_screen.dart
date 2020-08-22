@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:luftcare_flutter_app/widgets/atoms/centered_loading_indicator.dart';
 import 'package:luftcare_flutter_app/widgets/atoms/controls/previous_and_next_buttons.dart';
 import 'package:luftcare_flutter_app/widgets/atoms/toggleable_container.dart';
 import 'package:provider/provider.dart';
@@ -31,30 +32,99 @@ class RespondQuestionnaireScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final headerColor = theme.primaryColor.withOpacity(0.8);
     final questionnaireId = _getQuestionnaireIdFromArgs(context);
 
     return ChangeNotifierProvider(
       create: (ctx) => SymptomQuestionnaire(),
       child: Scaffold(
-        // bottomNavigationBar: BottomNavbar(
-        //   selectedIndex: _selectedNavbarIndex,
-        //   onTap: _onNavbarItemTapped,
-        // ),
-        body: Column(
-          children: [
-            _PageHeader(),
-            _Questionnaire(id: questionnaireId),
-          ],
-        ),
+        body: _RespondScreenBody(id: questionnaireId),
       ),
     );
   }
 }
 
+class _RespondScreenBody extends StatefulWidget {
+  const _RespondScreenBody({@required this.id});
+
+  final String id;
+
+  @override
+  __RespondScreenBodyState createState() => __RespondScreenBodyState();
+}
+
+class __RespondScreenBodyState extends State<_RespondScreenBody> {
+  var _currentPage = 0;
+  var _pageController = PageController();
+
+  void _goToPage(int page) {
+    const curve = Curves.easeOutCubic;
+    const duration = Duration(milliseconds: 500);
+
+    setState(() => _currentPage = page);
+    _pageController.animateToPage(page, duration: duration, curve: curve);
+  }
+
+  void _goToPrevPage() => _goToPage(_currentPage - 1);
+  void _goToNextPage() => _goToPage(_currentPage + 1);
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    final questionnaireProvider = Provider.of<SymptomQuestionnaire>(context);
+    if (!questionnaireProvider.finishedQuery) {
+      questionnaireProvider.getQuestionnaire(context, widget.id);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final questionnaireProvider = Provider.of<SymptomQuestionnaire>(context);
+    final finishedQuery = questionnaireProvider.finishedQuery;
+    final questionnaire = questionnaireProvider.questionnaire;
+    final isLoading = !finishedQuery && questionnaire == null;
+    final questions = questionnaire?.questions ?? [];
+    final questionCount = questions.length;
+
+    final hasPreviousPage = _currentPage > 0;
+    final goToPrevPage = hasPreviousPage ? _goToPrevPage : null;
+
+    final hasNextPage = _currentPage < questionCount - 1;
+    final goToNextPage = hasNextPage ? _goToNextPage : null;
+
+    return Column(
+      children: [
+        if (isLoading) Expanded(child: CenteredLoadingIndicator()),
+        if (!isLoading) ...[
+          _PageHeader(
+            goToPage: _goToPage,
+            currentPage: _currentPage,
+            questionCount: questionCount,
+            // questionCount: questionCount + 20,
+          ),
+          _Questionnaire(
+            currentPage: _currentPage,
+            goToNextPage: goToNextPage,
+            goToPrevPage: goToPrevPage,
+            pageController: _pageController,
+          ),
+        ],
+      ],
+    );
+  }
+}
+
 class _PageHeader extends StatelessWidget {
-  const _PageHeader({Key key}) : super(key: key);
+  const _PageHeader({
+    Key key,
+    @required this.goToPage,
+    @required this.currentPage,
+    @required this.questionCount,
+  }) : super(key: key);
+
+  final int currentPage;
+  final int questionCount;
+  final void Function(int) goToPage;
 
   @override
   Widget build(BuildContext context) {
@@ -65,14 +135,18 @@ class _PageHeader extends StatelessWidget {
     final questionnaireName = questionnaire?.nameForPresentation;
 
     return Container(
-      color: headerColor,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.vertical(bottom: Radius.circular(50)),
+        color: headerColor,
+      ),
+      padding: const EdgeInsets.only(bottom: 40),
       width: double.infinity,
       child: SafeArea(
         child: Column(
           children: [
             _buildTitle(questionnaireName, theme),
             SizedBox(height: 10),
-            // _buildQuestionButtons(),
+            _buildQuestionButtons(),
           ],
         ),
         bottom: false,
@@ -81,21 +155,44 @@ class _PageHeader extends StatelessWidget {
   }
 
   Widget _buildQuestionButtons() {
+    final buttons = List.generate(
+      questionCount,
+      (index) {
+        final text = (index + 1).toString();
+        final isToggled = currentPage == index;
+        final textStyle = TextStyle(
+          fontSize: 28,
+          color: isToggled ? Colors.white : Colors.black87,
+          fontWeight: isToggled ? FontWeight.w700 : FontWeight.w500,
+        );
+
+        return Container(
+          width: 50,
+          height: 80,
+          padding: const EdgeInsets.only(bottom: 10),
+          margin: const EdgeInsets.symmetric(horizontal: 10),
+          child: ToggleableContainer(
+            isToggled: isToggled,
+            onTap: () => goToPage(index),
+            child: Center(child: Text(text, style: textStyle)),
+          ),
+        );
+      },
+    );
+
     return LayoutBuilder(
       builder: (context, constraints) => Container(
         width: constraints.maxWidth,
         child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          padding: const EdgeInsets.symmetric(horizontal: 10),
           scrollDirection: Axis.horizontal,
-          child: Row(
-            children: [
-              ToggleableContainer(
-                child: Text('aaaa\nawdahgwada'),
-                onTap: () {},
-              ),
-              Placeholder(fallbackWidth: 300),
-              Placeholder(fallbackWidth: 300),
-              Placeholder(fallbackWidth: 300),
-            ],
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minWidth: constraints.maxWidth),
+            child: Row(
+              children: buttons,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            ),
           ),
         ),
       ),
@@ -103,7 +200,7 @@ class _PageHeader extends StatelessWidget {
   }
 
   Widget _buildTitle(String questionnaireName, ThemeData theme) => Padding(
-        padding: const EdgeInsets.fromLTRB(20, 10, 20, 5),
+        padding: const EdgeInsets.fromLTRB(20, 8, 20, 5),
         child: Text(
           questionnaireName ?? '',
           textAlign: TextAlign.center,
@@ -115,74 +212,25 @@ class _PageHeader extends StatelessWidget {
       );
 }
 
-class _Questionnaire extends StatefulWidget {
-  final String id;
-  const _Questionnaire({Key key, @required this.id}) : super(key: key);
+class _Questionnaire extends StatelessWidget {
+  _Questionnaire({
+    Key key,
+    @required this.currentPage,
+    @required this.pageController,
+    @required this.goToNextPage,
+    @required this.goToPrevPage,
+  }) : super(key: key);
 
-  @override
-  __QuestionnaireState createState() => __QuestionnaireState();
-}
-
-class __QuestionnaireState extends State<_Questionnaire> {
-  static const _defaultDuration = const Duration(milliseconds: 500);
-  static const _defaultCurve = Curves.easeOutCubic;
-
-  var _pageController = PageController();
-  var _currentPage = 0;
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _pageController.dispose();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-
-    final questionnaireProvider = Provider.of<SymptomQuestionnaire>(context);
-    if (!questionnaireProvider.alreadyQueried) {
-      questionnaireProvider.getQuestionnaire(context, widget.id);
-    }
-  }
-
-  void _incrementCurrentPage() => setState(() => _currentPage += 1);
-  void _goToNextPage() {
-    _incrementCurrentPage();
-    _pageController.nextPage(
-      duration: _defaultDuration,
-      curve: _defaultCurve,
-    );
-  }
-
-  void _decrementCurrentPage() => setState(() => _currentPage -= 1);
-  void _goToPreviousPage() {
-    _decrementCurrentPage();
-    _pageController.previousPage(
-      duration: _defaultDuration,
-      curve: _defaultCurve,
-    );
-  }
+  final PageController pageController;
+  final int currentPage;
+  final Function goToNextPage;
+  final Function goToPrevPage;
 
   @override
   Widget build(BuildContext context) {
     final questionnaireProvider = Provider.of<SymptomQuestionnaire>(context);
-    final alreadyQueried = questionnaireProvider.alreadyQueried;
     final questionnaire = questionnaireProvider.questionnaire;
     final questions = questionnaire?.questions ?? [];
-
-    final isLoading = alreadyQueried && questionnaire == null;
-
-    final hasPreviousPage = _currentPage > 0;
-    final goToPreviousPage = hasPreviousPage ? _goToPreviousPage : null;
-
-    final hasNextPage = _currentPage < (questions.length - 1);
-    final goToNextPage = hasNextPage ? _goToNextPage : null;
 
     return Expanded(
       child: SafeArea(
@@ -191,13 +239,16 @@ class __QuestionnaireState extends State<_Questionnaire> {
           children: [
             Expanded(
               child: PageView(
-                controller: _pageController,
+                controller: pageController,
                 scrollDirection: Axis.horizontal,
                 physics: const NeverScrollableScrollPhysics(),
                 children: questions
                     .map(
                       (q) => Container(
-                        child: Text(q.text),
+                        child: Text(
+                          q.text,
+                          style: Theme.of(context).textTheme.headline5,
+                        ),
                       ),
                     )
                     .toList(),
@@ -206,13 +257,10 @@ class __QuestionnaireState extends State<_Questionnaire> {
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
               child: PreviousAndNextButtons(
-                onPreviousTap: goToPreviousPage,
+                onPreviousTap: goToPrevPage,
                 onNextTap: goToNextPage,
               ),
             )
-            // Container(
-            //   child: Text(questionnaire?.toJson()?.toString() ?? ''),
-            // ),
           ],
         ),
       ),

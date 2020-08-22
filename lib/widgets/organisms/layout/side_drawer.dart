@@ -10,7 +10,7 @@ class SideDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Drawer(
       child: CustomScrollView(
-        physics: ClampingScrollPhysics(),
+        physics: const ClampingScrollPhysics(),
         slivers: <Widget>[
           SliverAppBar(
             title: BrandLogo(height: 20, brightness: Brightness.light),
