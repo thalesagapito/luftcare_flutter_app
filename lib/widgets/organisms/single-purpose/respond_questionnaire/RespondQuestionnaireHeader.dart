@@ -30,14 +30,13 @@ class RespondQuestionnaireHeader extends StatelessWidget {
       decoration: BoxDecoration(color: headerColor),
       width: double.infinity,
       child: SafeArea(
+        bottom: false,
         child: Column(
           children: [
             _buildTitle(questionnaireName, theme),
-            SizedBox(height: 10),
             _buildQuestionButtons(),
           ],
         ),
-        bottom: false,
       ),
     );
   }
@@ -58,25 +57,37 @@ class RespondQuestionnaireHeader extends StatelessWidget {
     );
   }
 
+  BorderRadius _getButtonBorderRadius({bool isFirst, bool isLast}) {
+    const roundedRadius = const Radius.circular(15);
+
+    if (isFirst) return BorderRadius.horizontal(left: roundedRadius);
+    if (isLast) return BorderRadius.horizontal(right: roundedRadius);
+    return BorderRadius.circular(0);
+  }
+
   Widget _buildQuestionButtons() {
     final buttons = List.generate(
       questionCount,
       (index) {
         final text = (index + 1).toString();
         final isToggled = currentPage == index;
+        final borderRadius = _getButtonBorderRadius(
+          isFirst: index == 0,
+          isLast: index == questionCount - 1,
+        );
         final textStyle = TextStyle(
-          fontSize: 28,
+          fontSize: 24,
           color: isToggled ? Colors.white : Colors.black87,
           fontWeight: isToggled ? FontWeight.w700 : FontWeight.w500,
         );
 
         return Container(
-          width: 50,
-          height: 80,
-          padding: const EdgeInsets.only(bottom: 10),
-          margin: const EdgeInsets.symmetric(horizontal: 10),
+          width: 56,
+          height: 64,
+          padding: const EdgeInsets.fromLTRB(0, 5, 0, 10),
           child: ToggleableContainer(
             isToggled: isToggled,
+            borderRadius: borderRadius,
             onTap: () => goToPage(index),
             child: Center(child: Text(text, style: textStyle)),
           ),
@@ -95,7 +106,7 @@ class RespondQuestionnaireHeader extends StatelessWidget {
             constraints: BoxConstraints(minWidth: constraints.maxWidth),
             child: Row(
               children: buttons,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.center,
             ),
           ),
         ),

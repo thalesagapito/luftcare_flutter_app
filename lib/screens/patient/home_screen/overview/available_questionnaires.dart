@@ -119,7 +119,7 @@ class _Title extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Padding(
-      padding: EdgeInsets.fromLTRB(20, 10, 50, 10),
+      padding: EdgeInsets.fromLTRB(20, 0, 50, 10),
       child: FittedBox(
         child: Text(
           'Questionários disponíveis',

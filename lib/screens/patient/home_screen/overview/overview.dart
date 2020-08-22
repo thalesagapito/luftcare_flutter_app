@@ -42,6 +42,7 @@ class _OverviewState extends State<Overview> {
                 child: Column(
                   children: [
                     AnsweredQuestionnaires(),
+                    SizedBox(height: 5),
                     ChangeNotifierProvider(
                       create: (ctx) => SymptomQuestionnaires(),
                       child: AvailableQuestionnaires(),
@@ -144,7 +145,7 @@ class _PageHeaderTitle extends StatelessWidget {
     return Container(
       color: color,
       width: double.infinity,
-      padding: EdgeInsets.fromLTRB(24, appBarHeight + 10, 20, 20),
+      padding: EdgeInsets.fromLTRB(24, appBarHeight + 10, 20, 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -200,7 +201,7 @@ class __HorizontalDateCardsState extends State<_HorizontalDateCards> {
         physics: BouncingScrollPhysics(),
         scrollDirection: Axis.horizontal,
         controller: _scrollController,
-        padding: EdgeInsets.symmetric(horizontal: SV_PADDING),
+        padding: EdgeInsets.symmetric(horizontal: SV_PADDING, vertical: 5),
         child: Container(
           child: Row(
             children: _generateDateCards(constraints.maxWidth),

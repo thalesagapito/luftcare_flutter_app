@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class ToggleableContainer extends StatelessWidget {
   final BorderRadius borderRadius;
   final Color toggledColor;
+  final Color notToggledColor;
   final bool isToggled;
   final Widget child;
   final Function onTap;
@@ -11,6 +12,7 @@ class ToggleableContainer extends StatelessWidget {
     Key key,
     this.borderRadius,
     this.toggledColor,
+    this.notToggledColor,
     this.isToggled = false,
     @required this.child,
     @required this.onTap,
@@ -19,17 +21,17 @@ class ToggleableContainer extends StatelessWidget {
   List<BoxShadow> _getToggledShadow(Color toggledColor) => [
         BoxShadow(
           blurRadius: 6,
-          spreadRadius: 2.5,
-          offset: Offset.fromDirection(90, 2),
+          spreadRadius: 2,
+          offset: Offset.fromDirection(90, 2.4),
           color: toggledColor.withOpacity(0.4),
         ),
       ];
 
-  List<BoxShadow> _getNotToggledShadow(Color notToggledColor) => [
+  List<BoxShadow> _getNotToggledShadow(Color primaryColor) => [
         BoxShadow(
           blurRadius: 5,
           offset: Offset.fromDirection(90, 3),
-          color: notToggledColor.withOpacity(0.2),
+          color: primaryColor.withOpacity(0.2),
         ),
       ];
 
@@ -38,7 +40,8 @@ class ToggleableContainer extends StatelessWidget {
     final theme = Theme.of(context);
 
     final actualToggledColor = toggledColor ?? theme.accentColor;
-    final cardColor = isToggled ? actualToggledColor : theme.cardColor;
+    final actualNotToggledColor = notToggledColor ?? theme.cardColor;
+    final cardColor = isToggled ? actualToggledColor : actualNotToggledColor;
     final boxShadow = isToggled
         ? _getToggledShadow(actualToggledColor)
         : _getNotToggledShadow(theme.primaryColor);
