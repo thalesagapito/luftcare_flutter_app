@@ -12,8 +12,33 @@ class RespondQuestionnaireQuestion extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final text = question.toJson().toString();
-    final floatingCardDecoration = BoxDecoration(
+    final choices = question.possibleChoices ?? [];
+
+    return Container(
+      decoration: _getFloatingCardDecoration(theme),
+      margin: const EdgeInsets.fromLTRB(20, 0, 20, 10),
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        children: [
+          _QuestionText(
+            questionText: question.text,
+            questionNumber: question.presentationOrder,
+          ),
+          SizedBox(height: 15),
+          ...choices
+              .map((c) => _ChoiceContainer(
+                    text: c.text,
+                    isSelected: c.presentationOrder == 2,
+                    onTap: () {},
+                  ))
+              .toList(),
+        ],
+      ),
+    );
+  }
+
+  BoxDecoration _getFloatingCardDecoration(ThemeData theme) {
+    return BoxDecoration(
       borderRadius: BorderRadius.circular(15),
       color: Colors.white,
       boxShadow: [
@@ -21,15 +46,124 @@ class RespondQuestionnaireQuestion extends StatelessWidget {
           color: theme.primaryColor.withOpacity(0.2),
           spreadRadius: 1,
           blurRadius: 8,
-        )
+        ),
       ],
     );
+  }
+}
+
+class _QuestionText extends StatelessWidget {
+  const _QuestionText({
+    Key key,
+    @required this.questionText,
+    @required this.questionNumber,
+  }) : super(key: key);
+
+  final String questionText;
+  final int questionNumber;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    final number = (questionNumber ?? 0).toString();
+    final text = '$number. $questionText';
+
+    return Align(
+      alignment: Alignment.topLeft,
+      child: Text(
+        text,
+        textAlign: TextAlign.justify,
+        style: theme.textTheme.headline6,
+      ),
+    );
+  }
+}
+
+class _ChoiceContainer extends StatelessWidget {
+  const _ChoiceContainer({
+    Key key,
+    @required this.text,
+    @required this.onTap,
+    @required this.isSelected,
+  }) : super(key: key);
+
+  final String text;
+  final Function onTap;
+  final bool isSelected;
+
+  static final _borderRadius = BorderRadius.circular(10);
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final selectedColor = theme.primaryColor;
+    final decoration = _getContainerDecoration(theme);
 
     return Container(
-      decoration: floatingCardDecoration,
-      margin: const EdgeInsets.fromLTRB(20, 0, 20, 10),
-      padding: const EdgeInsets.all(20),
-      child: Text(text),
+      width: double.infinity,
+      margin: EdgeInsets.only(bottom: 15),
+      decoration: decoration,
+      child: Material(
+        type: MaterialType.transparency,
+        child: InkWell(
+          child: Container(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                _buildChoiceText(theme),
+                _buildSelectedIndicator(theme),
+              ],
+            ),
+            padding: EdgeInsets.all(18),
+          ),
+          onTap: onTap,
+          borderRadius: _borderRadius,
+          splashColor: selectedColor.withOpacity(0.1),
+          highlightColor: selectedColor.withOpacity(0.1),
+        ),
+      ),
+    );
+  }
+
+  BoxDecoration _getContainerDecoration(ThemeData theme) {
+    final cardColor =
+        isSelected ? theme.primaryColor.withOpacity(0.2) : theme.cardColor;
+
+    return BoxDecoration(
+      borderRadius: _borderRadius,
+      color: cardColor,
+    );
+  }
+
+  Widget _buildChoiceText(ThemeData theme) {
+    return Text(
+      text,
+      style: theme.textTheme.button.copyWith(
+        color: theme.primaryColor,
+        fontWeight: FontWeight.w600,
+      ),
+    );
+  }
+
+  Widget _buildSelectedIndicator(ThemeData theme) {
+    final primaryColor = theme.primaryColor;
+    final bgColor = isSelected ? primaryColor : Colors.transparent;
+    final checkColor = isSelected ? Colors.white : Colors.transparent;
+
+    return Container(
+      width: 20,
+      height: 20,
+      decoration: BoxDecoration(
+        color: bgColor,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: primaryColor, width: 2),
+      ),
+      child: Icon(
+        Icons.check,
+        size: 14,
+        color: checkColor,
+      ),
     );
   }
 }

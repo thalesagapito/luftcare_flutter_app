@@ -58,8 +58,8 @@ class __RespondScreenBodyState extends State<_RespondScreenBody> {
   var _pageController = PageController();
 
   void _goToPage(int page) {
-    const curve = Curves.easeOutCubic;
-    const duration = Duration(milliseconds: 500);
+    const curve = Curves.easeOutQuart;
+    const duration = Duration(milliseconds: 600);
 
     setState(() => _currentPage = page);
     _pageController.animateToPage(page, duration: duration, curve: curve);
