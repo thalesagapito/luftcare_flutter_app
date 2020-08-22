@@ -15,20 +15,19 @@ class RespondQuestionnaireHeader extends StatelessWidget {
   final int questionCount;
   final void Function(int) goToPage;
 
+  static Color getHeaderColor(BuildContext ctx) =>
+      Theme.of(ctx).primaryColor.withOpacity(0.8);
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final headerColor = theme.primaryColor.withOpacity(0.8);
+    final headerColor = getHeaderColor(context);
     final questionnaireProvider = Provider.of<SymptomQuestionnaire>(context);
     final questionnaire = questionnaireProvider.questionnaire;
     final questionnaireName = questionnaire?.nameForPresentation;
 
     return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.vertical(bottom: Radius.circular(50)),
-        color: headerColor,
-      ),
-      padding: const EdgeInsets.only(bottom: 40),
+      decoration: BoxDecoration(color: headerColor),
       width: double.infinity,
       child: SafeArea(
         child: Column(
@@ -39,6 +38,22 @@ class RespondQuestionnaireHeader extends StatelessWidget {
           ],
         ),
         bottom: false,
+      ),
+    );
+  }
+
+  Widget _buildTitle(String questionnaireName, ThemeData theme) {
+    final text = questionnaireName ?? '';
+    final padding = const EdgeInsets.fromLTRB(20, 8, 20, 5);
+    return Padding(
+      padding: padding,
+      child: Text(
+        text,
+        textAlign: TextAlign.center,
+        style: theme.textTheme.headline5.copyWith(
+          fontWeight: FontWeight.w600,
+          color: Colors.white,
+        ),
       ),
     );
   }
@@ -74,7 +89,7 @@ class RespondQuestionnaireHeader extends StatelessWidget {
         width: constraints.maxWidth,
         child: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
-          padding: const EdgeInsets.symmetric(horizontal: 10),
+          padding: const EdgeInsets.fromLTRB(10, 0, 10, 5),
           scrollDirection: Axis.horizontal,
           child: ConstrainedBox(
             constraints: BoxConstraints(minWidth: constraints.maxWidth),
@@ -87,16 +102,4 @@ class RespondQuestionnaireHeader extends StatelessWidget {
       ),
     );
   }
-
-  Widget _buildTitle(String questionnaireName, ThemeData theme) => Padding(
-        padding: const EdgeInsets.fromLTRB(20, 8, 20, 5),
-        child: Text(
-          questionnaireName ?? '',
-          textAlign: TextAlign.center,
-          style: theme.textTheme.headline5.copyWith(
-            color: Colors.white,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      );
 }

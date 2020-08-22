@@ -1,11 +1,11 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:luftcare_flutter_app/widgets/atoms/centered_loading_indicator.dart';
-import 'package:luftcare_flutter_app/widgets/atoms/controls/previous_and_next_buttons.dart';
-import 'package:luftcare_flutter_app/widgets/atoms/toggleable_container.dart';
-import 'package:luftcare_flutter_app/widgets/organisms/single-purpose/respond_questionnaire/RespondQuestionnaireHeader.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:luftcare_flutter_app/providers/symptom_questionnaire_provider.dart';
+import 'package:luftcare_flutter_app/widgets/atoms/centered_loading_indicator.dart';
+import 'package:luftcare_flutter_app/widgets/atoms/controls/previous_and_next_buttons.dart';
+import 'package:luftcare_flutter_app/widgets/organisms/single-purpose/respond_questionnaire/RespondQuestionnaireHeader.dart';
+import 'package:luftcare_flutter_app/widgets/organisms/single-purpose/respond_questionnaire/RespondQuestionnaireQuestion.dart';
 
 class RespondQuestionnaireScreenArgs {
   final String questionnaireId;
@@ -134,36 +134,40 @@ class _Questionnaire extends StatelessWidget {
     final questionnaireProvider = Provider.of<SymptomQuestionnaire>(context);
     final questionnaire = questionnaireProvider.questionnaire;
     final questions = questionnaire?.questions ?? [];
+    final questionsWidgets = questions
+        .map((q) => RespondQuestionnaireQuestion(question: q, key: Key(q.id)))
+        .toList();
+    final headerColor = RespondQuestionnaireHeader.getHeaderColor(context);
+    final underlayDecoration = BoxDecoration(
+      color: headerColor,
+      borderRadius: const BorderRadius.vertical(bottom: Radius.circular(20)),
+    );
 
     return Expanded(
       child: SafeArea(
         top: false,
-        child: Column(
+        child: Stack(
           children: [
-            Expanded(
-              child: PageView(
-                controller: pageController,
-                scrollDirection: Axis.horizontal,
-                physics: const NeverScrollableScrollPhysics(),
-                children: questions
-                    .map(
-                      (q) => Container(
-                        child: Text(
-                          q.text,
-                          style: Theme.of(context).textTheme.headline5,
-                        ),
-                      ),
-                    )
-                    .toList(),
-              ),
+            Container(decoration: underlayDecoration, height: 30),
+            Column(
+              children: [
+                Expanded(
+                  child: PageView(
+                    controller: pageController,
+                    scrollDirection: Axis.horizontal,
+                    physics: const NeverScrollableScrollPhysics(),
+                    children: questionsWidgets,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
+                  child: PreviousAndNextButtons(
+                    onPreviousTap: goToPrevPage,
+                    onNextTap: goToNextPage,
+                  ),
+                )
+              ],
             ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-              child: PreviousAndNextButtons(
-                onPreviousTap: goToPrevPage,
-                onNextTap: goToNextPage,
-              ),
-            )
           ],
         ),
       ),

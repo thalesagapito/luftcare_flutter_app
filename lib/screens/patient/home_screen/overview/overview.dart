@@ -87,7 +87,7 @@ class _PageHeader extends StatelessWidget {
     final headerColor = theme.primaryColor.withOpacity(0.8);
     final selectedIndex = convertDateToIndex(selectedDate);
     final decoration = BoxDecoration(
-      borderRadius: BorderRadius.vertical(bottom: Radius.circular(30)),
+      borderRadius: const BorderRadius.vertical(bottom: Radius.circular(30)),
       color: headerColor,
     );
 
