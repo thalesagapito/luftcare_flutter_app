@@ -1,4 +1,4 @@
-query symptomQuestionnaires {
+query questionnaires {
     symptomQuestionnaires(isPublished: true, currentVersionsOnly: true, orderBy: [{ columnName: "createdAt", direction: DESC }]) {
         totalResultsCount
         hasMorePages

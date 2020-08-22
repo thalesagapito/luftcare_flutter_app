@@ -1,0 +1,18 @@
+query questionnaire($id: ID!) {
+    symptomQuestionnaire(id: $id) {
+        id
+        nameForPresentation
+        questions {
+            id
+            text
+            presentationOrder
+            kind
+            possibleChoices {
+                id
+                text
+                value
+                presentationOrder
+            }
+        }
+    }
+}

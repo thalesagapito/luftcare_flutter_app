@@ -3,12 +3,12 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:luftcare_flutter_app/models/graphql/api.graphql.dart';
 
 class SymptomQuestionnaires with ChangeNotifier {
-  List<SymptomQuestionnaires$Query$SymptomQuestionnaires$Results>
+  List<Questionnaires$Query$SymptomQuestionnaires$Results>
       _symptomQuestionnaires = [];
   bool _alreadyQueried = false;
 
-  List<SymptomQuestionnaires$Query$SymptomQuestionnaires$Results>
-      get questionnaires => _symptomQuestionnaires;
+  List<Questionnaires$Query$SymptomQuestionnaires$Results> get questionnaires =>
+      _symptomQuestionnaires;
 
   bool get alreadyQueried => _alreadyQueried;
 
@@ -21,7 +21,7 @@ class SymptomQuestionnaires with ChangeNotifier {
   Future<void> getQuestionnaires(BuildContext context) async {
     final client = GraphQLProvider.of(context).value;
     final questionnairesQuery = QueryOptions(
-      documentNode: SymptomQuestionnairesQuery().document,
+      documentNode: QuestionnairesQuery().document,
     );
 
     final QueryResult result = await client.query(questionnairesQuery);
@@ -31,13 +31,11 @@ class SymptomQuestionnaires with ChangeNotifier {
       final GraphQLError error = exception?.graphqlErrors[0];
       final String message = error?.message ?? 'Erro interno';
 
-      Scaffold.of(context).showSnackBar(SnackBar(
-        content: Text(message),
-      ));
+      Scaffold.of(context).showSnackBar(SnackBar(content: Text(message)));
       return;
     }
 
-    final questionnaires = SymptomQuestionnaires$Query.fromJson(result.data)
+    final questionnaires = Questionnaires$Query.fromJson(result.data)
         .symptomQuestionnaires
         .results;
     setQuestionnaires(questionnaires);

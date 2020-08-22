@@ -39,13 +39,13 @@ class Login$Mutation with EquatableMixin {
 }
 
 @JsonSerializable(explicitToJson: true)
-class SymptomQuestionnaires$Query$SymptomQuestionnaires$Results$Questions$PossibleChoices
+class Questionnaire$Query$SymptomQuestionnaire$Questions$PossibleChoices
     with EquatableMixin {
-  SymptomQuestionnaires$Query$SymptomQuestionnaires$Results$Questions$PossibleChoices();
+  Questionnaire$Query$SymptomQuestionnaire$Questions$PossibleChoices();
 
-  factory SymptomQuestionnaires$Query$SymptomQuestionnaires$Results$Questions$PossibleChoices.fromJson(
+  factory Questionnaire$Query$SymptomQuestionnaire$Questions$PossibleChoices.fromJson(
           Map<String, dynamic> json) =>
-      _$SymptomQuestionnaires$Query$SymptomQuestionnaires$Results$Questions$PossibleChoicesFromJson(
+      _$Questionnaire$Query$SymptomQuestionnaire$Questions$PossibleChoicesFromJson(
           json);
 
   String id;
@@ -59,18 +59,104 @@ class SymptomQuestionnaires$Query$SymptomQuestionnaires$Results$Questions$Possib
   @override
   List<Object> get props => [id, text, value, presentationOrder];
   Map<String, dynamic> toJson() =>
-      _$SymptomQuestionnaires$Query$SymptomQuestionnaires$Results$Questions$PossibleChoicesToJson(
+      _$Questionnaire$Query$SymptomQuestionnaire$Questions$PossibleChoicesToJson(
           this);
 }
 
 @JsonSerializable(explicitToJson: true)
-class SymptomQuestionnaires$Query$SymptomQuestionnaires$Results$Questions
-    with EquatableMixin {
-  SymptomQuestionnaires$Query$SymptomQuestionnaires$Results$Questions();
+class Questionnaire$Query$SymptomQuestionnaire$Questions with EquatableMixin {
+  Questionnaire$Query$SymptomQuestionnaire$Questions();
 
-  factory SymptomQuestionnaires$Query$SymptomQuestionnaires$Results$Questions.fromJson(
+  factory Questionnaire$Query$SymptomQuestionnaire$Questions.fromJson(
           Map<String, dynamic> json) =>
-      _$SymptomQuestionnaires$Query$SymptomQuestionnaires$Results$QuestionsFromJson(
+      _$Questionnaire$Query$SymptomQuestionnaire$QuestionsFromJson(json);
+
+  String id;
+
+  String text;
+
+  int presentationOrder;
+
+  @JsonKey(unknownEnumValue: SymptomQuestionnaireQuestionKind.artemisUnknown)
+  SymptomQuestionnaireQuestionKind kind;
+
+  List<Questionnaire$Query$SymptomQuestionnaire$Questions$PossibleChoices>
+      possibleChoices;
+
+  @override
+  List<Object> get props =>
+      [id, text, presentationOrder, kind, possibleChoices];
+  Map<String, dynamic> toJson() =>
+      _$Questionnaire$Query$SymptomQuestionnaire$QuestionsToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class Questionnaire$Query$SymptomQuestionnaire with EquatableMixin {
+  Questionnaire$Query$SymptomQuestionnaire();
+
+  factory Questionnaire$Query$SymptomQuestionnaire.fromJson(
+          Map<String, dynamic> json) =>
+      _$Questionnaire$Query$SymptomQuestionnaireFromJson(json);
+
+  String id;
+
+  String nameForPresentation;
+
+  List<Questionnaire$Query$SymptomQuestionnaire$Questions> questions;
+
+  @override
+  List<Object> get props => [id, nameForPresentation, questions];
+  Map<String, dynamic> toJson() =>
+      _$Questionnaire$Query$SymptomQuestionnaireToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class Questionnaire$Query with EquatableMixin {
+  Questionnaire$Query();
+
+  factory Questionnaire$Query.fromJson(Map<String, dynamic> json) =>
+      _$Questionnaire$QueryFromJson(json);
+
+  Questionnaire$Query$SymptomQuestionnaire symptomQuestionnaire;
+
+  @override
+  List<Object> get props => [symptomQuestionnaire];
+  Map<String, dynamic> toJson() => _$Questionnaire$QueryToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class Questionnaires$Query$SymptomQuestionnaires$Results$Questions$PossibleChoices
+    with EquatableMixin {
+  Questionnaires$Query$SymptomQuestionnaires$Results$Questions$PossibleChoices();
+
+  factory Questionnaires$Query$SymptomQuestionnaires$Results$Questions$PossibleChoices.fromJson(
+          Map<String, dynamic> json) =>
+      _$Questionnaires$Query$SymptomQuestionnaires$Results$Questions$PossibleChoicesFromJson(
+          json);
+
+  String id;
+
+  String text;
+
+  int value;
+
+  int presentationOrder;
+
+  @override
+  List<Object> get props => [id, text, value, presentationOrder];
+  Map<String, dynamic> toJson() =>
+      _$Questionnaires$Query$SymptomQuestionnaires$Results$Questions$PossibleChoicesToJson(
+          this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class Questionnaires$Query$SymptomQuestionnaires$Results$Questions
+    with EquatableMixin {
+  Questionnaires$Query$SymptomQuestionnaires$Results$Questions();
+
+  factory Questionnaires$Query$SymptomQuestionnaires$Results$Questions.fromJson(
+          Map<String, dynamic> json) =>
+      _$Questionnaires$Query$SymptomQuestionnaires$Results$QuestionsFromJson(
           json);
 
   String id;
@@ -82,71 +168,69 @@ class SymptomQuestionnaires$Query$SymptomQuestionnaires$Results$Questions
 
   int presentationOrder;
 
-  List<SymptomQuestionnaires$Query$SymptomQuestionnaires$Results$Questions$PossibleChoices>
+  List<Questionnaires$Query$SymptomQuestionnaires$Results$Questions$PossibleChoices>
       possibleChoices;
 
   @override
   List<Object> get props =>
       [id, text, kind, presentationOrder, possibleChoices];
   Map<String, dynamic> toJson() =>
-      _$SymptomQuestionnaires$Query$SymptomQuestionnaires$Results$QuestionsToJson(
+      _$Questionnaires$Query$SymptomQuestionnaires$Results$QuestionsToJson(
           this);
 }
 
 @JsonSerializable(explicitToJson: true)
-class SymptomQuestionnaires$Query$SymptomQuestionnaires$Results
-    with EquatableMixin {
-  SymptomQuestionnaires$Query$SymptomQuestionnaires$Results();
+class Questionnaires$Query$SymptomQuestionnaires$Results with EquatableMixin {
+  Questionnaires$Query$SymptomQuestionnaires$Results();
 
-  factory SymptomQuestionnaires$Query$SymptomQuestionnaires$Results.fromJson(
+  factory Questionnaires$Query$SymptomQuestionnaires$Results.fromJson(
           Map<String, dynamic> json) =>
-      _$SymptomQuestionnaires$Query$SymptomQuestionnaires$ResultsFromJson(json);
+      _$Questionnaires$Query$SymptomQuestionnaires$ResultsFromJson(json);
 
   String id;
 
   String nameForPresentation;
 
-  List<SymptomQuestionnaires$Query$SymptomQuestionnaires$Results$Questions>
-      questions;
+  List<Questionnaires$Query$SymptomQuestionnaires$Results$Questions> questions;
 
   @override
   List<Object> get props => [id, nameForPresentation, questions];
   Map<String, dynamic> toJson() =>
-      _$SymptomQuestionnaires$Query$SymptomQuestionnaires$ResultsToJson(this);
+      _$Questionnaires$Query$SymptomQuestionnaires$ResultsToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
-class SymptomQuestionnaires$Query$SymptomQuestionnaires with EquatableMixin {
-  SymptomQuestionnaires$Query$SymptomQuestionnaires();
+class Questionnaires$Query$SymptomQuestionnaires with EquatableMixin {
+  Questionnaires$Query$SymptomQuestionnaires();
 
-  factory SymptomQuestionnaires$Query$SymptomQuestionnaires.fromJson(
+  factory Questionnaires$Query$SymptomQuestionnaires.fromJson(
           Map<String, dynamic> json) =>
-      _$SymptomQuestionnaires$Query$SymptomQuestionnairesFromJson(json);
+      _$Questionnaires$Query$SymptomQuestionnairesFromJson(json);
 
   int totalResultsCount;
 
   bool hasMorePages;
 
-  List<SymptomQuestionnaires$Query$SymptomQuestionnaires$Results> results;
+  List<Questionnaires$Query$SymptomQuestionnaires$Results> results;
 
   @override
   List<Object> get props => [totalResultsCount, hasMorePages, results];
   Map<String, dynamic> toJson() =>
-      _$SymptomQuestionnaires$Query$SymptomQuestionnairesToJson(this);
+      _$Questionnaires$Query$SymptomQuestionnairesToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
-class SymptomQuestionnaires$Query with EquatableMixin {
-  SymptomQuestionnaires$Query();
+class Questionnaires$Query with EquatableMixin {
+  Questionnaires$Query();
 
-  factory SymptomQuestionnaires$Query.fromJson(Map<String, dynamic> json) =>
-      _$SymptomQuestionnaires$QueryFromJson(json);
+  factory Questionnaires$Query.fromJson(Map<String, dynamic> json) =>
+      _$Questionnaires$QueryFromJson(json);
 
-  SymptomQuestionnaires$Query$SymptomQuestionnaires symptomQuestionnaires;
+  Questionnaires$Query$SymptomQuestionnaires symptomQuestionnaires;
 
   @override
   List<Object> get props => [symptomQuestionnaires];
-  Map<String, dynamic> toJson() => _$SymptomQuestionnaires$QueryToJson(this);
+  Map<String, dynamic> toJson() => _$Questionnaires$QueryToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -285,15 +369,148 @@ class LoginMutation extends GraphQLQuery<Login$Mutation, LoginArguments> {
       Login$Mutation.fromJson(json);
 }
 
-class SymptomQuestionnairesQuery
-    extends GraphQLQuery<SymptomQuestionnaires$Query, JsonSerializable> {
-  SymptomQuestionnairesQuery();
+@JsonSerializable(explicitToJson: true)
+class QuestionnaireArguments extends JsonSerializable with EquatableMixin {
+  QuestionnaireArguments({@required this.id});
+
+  factory QuestionnaireArguments.fromJson(Map<String, dynamic> json) =>
+      _$QuestionnaireArgumentsFromJson(json);
+
+  final String id;
+
+  @override
+  List<Object> get props => [id];
+  Map<String, dynamic> toJson() => _$QuestionnaireArgumentsToJson(this);
+}
+
+class QuestionnaireQuery
+    extends GraphQLQuery<Questionnaire$Query, QuestionnaireArguments> {
+  QuestionnaireQuery({this.variables});
 
   @override
   final DocumentNode document = DocumentNode(definitions: [
     OperationDefinitionNode(
         type: OperationType.query,
-        name: NameNode(value: 'symptomQuestionnaires'),
+        name: NameNode(value: 'questionnaire'),
+        variableDefinitions: [
+          VariableDefinitionNode(
+              variable: VariableNode(name: NameNode(value: 'id')),
+              type: NamedTypeNode(name: NameNode(value: 'ID'), isNonNull: true),
+              defaultValue: DefaultValueNode(value: null),
+              directives: [])
+        ],
+        directives: [],
+        selectionSet: SelectionSetNode(selections: [
+          FieldNode(
+              name: NameNode(value: 'symptomQuestionnaire'),
+              alias: null,
+              arguments: [
+                ArgumentNode(
+                    name: NameNode(value: 'id'),
+                    value: VariableNode(name: NameNode(value: 'id')))
+              ],
+              directives: [],
+              selectionSet: SelectionSetNode(selections: [
+                FieldNode(
+                    name: NameNode(value: 'id'),
+                    alias: null,
+                    arguments: [],
+                    directives: [],
+                    selectionSet: null),
+                FieldNode(
+                    name: NameNode(value: 'nameForPresentation'),
+                    alias: null,
+                    arguments: [],
+                    directives: [],
+                    selectionSet: null),
+                FieldNode(
+                    name: NameNode(value: 'questions'),
+                    alias: null,
+                    arguments: [],
+                    directives: [],
+                    selectionSet: SelectionSetNode(selections: [
+                      FieldNode(
+                          name: NameNode(value: 'id'),
+                          alias: null,
+                          arguments: [],
+                          directives: [],
+                          selectionSet: null),
+                      FieldNode(
+                          name: NameNode(value: 'text'),
+                          alias: null,
+                          arguments: [],
+                          directives: [],
+                          selectionSet: null),
+                      FieldNode(
+                          name: NameNode(value: 'presentationOrder'),
+                          alias: null,
+                          arguments: [],
+                          directives: [],
+                          selectionSet: null),
+                      FieldNode(
+                          name: NameNode(value: 'kind'),
+                          alias: null,
+                          arguments: [],
+                          directives: [],
+                          selectionSet: null),
+                      FieldNode(
+                          name: NameNode(value: 'possibleChoices'),
+                          alias: null,
+                          arguments: [],
+                          directives: [],
+                          selectionSet: SelectionSetNode(selections: [
+                            FieldNode(
+                                name: NameNode(value: 'id'),
+                                alias: null,
+                                arguments: [],
+                                directives: [],
+                                selectionSet: null),
+                            FieldNode(
+                                name: NameNode(value: 'text'),
+                                alias: null,
+                                arguments: [],
+                                directives: [],
+                                selectionSet: null),
+                            FieldNode(
+                                name: NameNode(value: 'value'),
+                                alias: null,
+                                arguments: [],
+                                directives: [],
+                                selectionSet: null),
+                            FieldNode(
+                                name: NameNode(value: 'presentationOrder'),
+                                alias: null,
+                                arguments: [],
+                                directives: [],
+                                selectionSet: null)
+                          ]))
+                    ]))
+              ]))
+        ]))
+  ]);
+
+  @override
+  final String operationName = 'questionnaire';
+
+  @override
+  final QuestionnaireArguments variables;
+
+  @override
+  List<Object> get props => [document, operationName, variables];
+  @override
+  Questionnaire$Query parse(Map<String, dynamic> json) =>
+      Questionnaire$Query.fromJson(json);
+}
+
+class QuestionnairesQuery
+    extends GraphQLQuery<Questionnaires$Query, JsonSerializable> {
+  QuestionnairesQuery();
+
+  @override
+  final DocumentNode document = DocumentNode(definitions: [
+    OperationDefinitionNode(
+        type: OperationType.query,
+        name: NameNode(value: 'questionnaires'),
         variableDefinitions: [],
         directives: [],
         selectionSet: SelectionSetNode(selections: [
@@ -422,13 +639,13 @@ class SymptomQuestionnairesQuery
   ]);
 
   @override
-  final String operationName = 'symptomQuestionnaires';
+  final String operationName = 'questionnaires';
 
   @override
   List<Object> get props => [document, operationName];
   @override
-  SymptomQuestionnaires$Query parse(Map<String, dynamic> json) =>
-      SymptomQuestionnaires$Query.fromJson(json);
+  Questionnaires$Query parse(Map<String, dynamic> json) =>
+      Questionnaires$Query.fromJson(json);
 }
 
 class CurrentUserQuery
