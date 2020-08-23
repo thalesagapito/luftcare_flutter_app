@@ -76,7 +76,7 @@ class RespondQuestionnaireHeader extends StatelessWidget {
           isLast: index == questionCount - 1,
         );
         final textStyle = TextStyle(
-          fontSize: 24,
+          fontSize: 20,
           color: isToggled ? Colors.white : Colors.black87,
           fontWeight: isToggled ? FontWeight.w700 : FontWeight.w500,
         );
