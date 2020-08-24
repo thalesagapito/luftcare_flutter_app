@@ -270,6 +270,99 @@ class CurrentUser$Query with EquatableMixin {
   Map<String, dynamic> toJson() => _$CurrentUser$QueryToJson(this);
 }
 
+@JsonSerializable(explicitToJson: true)
+class CreateResponse$Mutation$CreateSymptomQuestionnaireResponse
+    with EquatableMixin {
+  CreateResponse$Mutation$CreateSymptomQuestionnaireResponse();
+
+  factory CreateResponse$Mutation$CreateSymptomQuestionnaireResponse.fromJson(
+          Map<String, dynamic> json) =>
+      _$CreateResponse$Mutation$CreateSymptomQuestionnaireResponseFromJson(
+          json);
+
+  String userFriendlyMessage;
+
+  @override
+  List<Object> get props => [userFriendlyMessage];
+  Map<String, dynamic> toJson() =>
+      _$CreateResponse$Mutation$CreateSymptomQuestionnaireResponseToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class CreateResponse$Mutation with EquatableMixin {
+  CreateResponse$Mutation();
+
+  factory CreateResponse$Mutation.fromJson(Map<String, dynamic> json) =>
+      _$CreateResponse$MutationFromJson(json);
+
+  CreateResponse$Mutation$CreateSymptomQuestionnaireResponse
+      createSymptomQuestionnaireResponse;
+
+  @override
+  List<Object> get props => [createSymptomQuestionnaireResponse];
+  Map<String, dynamic> toJson() => _$CreateResponse$MutationToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class SymptomQuestionnaireResponseAnswerInput with EquatableMixin {
+  SymptomQuestionnaireResponseAnswerInput(
+      {@required this.questionId, @required this.choiceId, this.writtenText});
+
+  factory SymptomQuestionnaireResponseAnswerInput.fromJson(
+          Map<String, dynamic> json) =>
+      _$SymptomQuestionnaireResponseAnswerInputFromJson(json);
+
+  String questionId;
+
+  String choiceId;
+
+  String writtenText;
+
+  @override
+  List<Object> get props => [questionId, choiceId, writtenText];
+  Map<String, dynamic> toJson() =>
+      _$SymptomQuestionnaireResponseAnswerInputToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class SymptomQuestionnaireResponseInput with EquatableMixin {
+  SymptomQuestionnaireResponseInput(
+      {@required this.responseDate,
+      @required this.userId,
+      @required this.questionnaireId,
+      @required this.questionnaireVersion,
+      @required this.questionAnswers});
+
+  factory SymptomQuestionnaireResponseInput.fromJson(
+          Map<String, dynamic> json) =>
+      _$SymptomQuestionnaireResponseInputFromJson(json);
+
+  @JsonKey(
+    fromJson: fromGraphQLDateTimeToDartDateTime,
+    toJson: fromDartDateTimeToGraphQLDateTime,
+  )
+  DateTime responseDate;
+
+  String userId;
+
+  String questionnaireId;
+
+  int questionnaireVersion;
+
+  List<SymptomQuestionnaireResponseAnswerInput> questionAnswers;
+
+  @override
+  List<Object> get props => [
+        responseDate,
+        userId,
+        questionnaireId,
+        questionnaireVersion,
+        questionAnswers
+      ];
+  Map<String, dynamic> toJson() =>
+      _$SymptomQuestionnaireResponseInputToJson(this);
+}
+
 enum SymptomQuestionnaireQuestionKind {
   @JsonValue("MULTIPLE_CHOICE")
   multipleChoice,
@@ -708,4 +801,71 @@ class CurrentUserQuery
   @override
   CurrentUser$Query parse(Map<String, dynamic> json) =>
       CurrentUser$Query.fromJson(json);
+}
+
+@JsonSerializable(explicitToJson: true)
+class CreateResponseArguments extends JsonSerializable with EquatableMixin {
+  CreateResponseArguments({@required this.response});
+
+  factory CreateResponseArguments.fromJson(Map<String, dynamic> json) =>
+      _$CreateResponseArgumentsFromJson(json);
+
+  final SymptomQuestionnaireResponseInput response;
+
+  @override
+  List<Object> get props => [response];
+  Map<String, dynamic> toJson() => _$CreateResponseArgumentsToJson(this);
+}
+
+class CreateResponseMutation
+    extends GraphQLQuery<CreateResponse$Mutation, CreateResponseArguments> {
+  CreateResponseMutation({this.variables});
+
+  @override
+  final DocumentNode document = DocumentNode(definitions: [
+    OperationDefinitionNode(
+        type: OperationType.mutation,
+        name: NameNode(value: 'createResponse'),
+        variableDefinitions: [
+          VariableDefinitionNode(
+              variable: VariableNode(name: NameNode(value: 'response')),
+              type: NamedTypeNode(
+                  name: NameNode(value: 'SymptomQuestionnaireResponseInput'),
+                  isNonNull: true),
+              defaultValue: DefaultValueNode(value: null),
+              directives: [])
+        ],
+        directives: [],
+        selectionSet: SelectionSetNode(selections: [
+          FieldNode(
+              name: NameNode(value: 'createSymptomQuestionnaireResponse'),
+              alias: null,
+              arguments: [
+                ArgumentNode(
+                    name: NameNode(value: 'response'),
+                    value: VariableNode(name: NameNode(value: 'response')))
+              ],
+              directives: [],
+              selectionSet: SelectionSetNode(selections: [
+                FieldNode(
+                    name: NameNode(value: 'userFriendlyMessage'),
+                    alias: null,
+                    arguments: [],
+                    directives: [],
+                    selectionSet: null)
+              ]))
+        ]))
+  ]);
+
+  @override
+  final String operationName = 'createResponse';
+
+  @override
+  final CreateResponseArguments variables;
+
+  @override
+  List<Object> get props => [document, operationName, variables];
+  @override
+  CreateResponse$Mutation parse(Map<String, dynamic> json) =>
+      CreateResponse$Mutation.fromJson(json);
 }

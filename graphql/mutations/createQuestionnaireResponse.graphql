@@ -1,0 +1,5 @@
+mutation createResponse($response: SymptomQuestionnaireResponseInput!) {
+    createSymptomQuestionnaireResponse(response: $response) {
+        userFriendlyMessage
+    }
+}

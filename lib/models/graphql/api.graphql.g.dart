@@ -305,6 +305,84 @@ Map<String, dynamic> _$CurrentUser$QueryToJson(CurrentUser$Query instance) =>
       'currentUser': instance.currentUser?.toJson(),
     };
 
+CreateResponse$Mutation$CreateSymptomQuestionnaireResponse
+    _$CreateResponse$Mutation$CreateSymptomQuestionnaireResponseFromJson(
+        Map<String, dynamic> json) {
+  return CreateResponse$Mutation$CreateSymptomQuestionnaireResponse()
+    ..userFriendlyMessage = json['userFriendlyMessage'] as String;
+}
+
+Map<String,
+    dynamic> _$CreateResponse$Mutation$CreateSymptomQuestionnaireResponseToJson(
+        CreateResponse$Mutation$CreateSymptomQuestionnaireResponse instance) =>
+    <String, dynamic>{
+      'userFriendlyMessage': instance.userFriendlyMessage,
+    };
+
+CreateResponse$Mutation _$CreateResponse$MutationFromJson(
+    Map<String, dynamic> json) {
+  return CreateResponse$Mutation()
+    ..createSymptomQuestionnaireResponse = json[
+                'createSymptomQuestionnaireResponse'] ==
+            null
+        ? null
+        : CreateResponse$Mutation$CreateSymptomQuestionnaireResponse.fromJson(
+            json['createSymptomQuestionnaireResponse'] as Map<String, dynamic>);
+}
+
+Map<String, dynamic> _$CreateResponse$MutationToJson(
+        CreateResponse$Mutation instance) =>
+    <String, dynamic>{
+      'createSymptomQuestionnaireResponse':
+          instance.createSymptomQuestionnaireResponse?.toJson(),
+    };
+
+SymptomQuestionnaireResponseAnswerInput
+    _$SymptomQuestionnaireResponseAnswerInputFromJson(
+        Map<String, dynamic> json) {
+  return SymptomQuestionnaireResponseAnswerInput(
+    questionId: json['questionId'] as String,
+    choiceId: json['choiceId'] as String,
+    writtenText: json['writtenText'] as String,
+  );
+}
+
+Map<String, dynamic> _$SymptomQuestionnaireResponseAnswerInputToJson(
+        SymptomQuestionnaireResponseAnswerInput instance) =>
+    <String, dynamic>{
+      'questionId': instance.questionId,
+      'choiceId': instance.choiceId,
+      'writtenText': instance.writtenText,
+    };
+
+SymptomQuestionnaireResponseInput _$SymptomQuestionnaireResponseInputFromJson(
+    Map<String, dynamic> json) {
+  return SymptomQuestionnaireResponseInput(
+    responseDate:
+        fromGraphQLDateTimeToDartDateTime(json['responseDate'] as String),
+    userId: json['userId'] as String,
+    questionnaireId: json['questionnaireId'] as String,
+    questionnaireVersion: json['questionnaireVersion'] as int,
+    questionAnswers: (json['questionAnswers'] as List)
+        ?.map((e) => e == null
+            ? null
+            : SymptomQuestionnaireResponseAnswerInput.fromJson(
+                e as Map<String, dynamic>))
+        ?.toList(),
+  );
+}
+
+Map<String, dynamic> _$SymptomQuestionnaireResponseInputToJson(
+        SymptomQuestionnaireResponseInput instance) =>
+    <String, dynamic>{
+      'responseDate': fromDartDateTimeToGraphQLDateTime(instance.responseDate),
+      'userId': instance.userId,
+      'questionnaireId': instance.questionnaireId,
+      'questionnaireVersion': instance.questionnaireVersion,
+      'questionAnswers':
+          instance.questionAnswers?.map((e) => e?.toJson())?.toList(),
+    };
+
 LoginArguments _$LoginArgumentsFromJson(Map<String, dynamic> json) {
   return LoginArguments(
     email: json['email'] as String,
@@ -329,4 +407,20 @@ Map<String, dynamic> _$QuestionnaireArgumentsToJson(
         QuestionnaireArguments instance) =>
     <String, dynamic>{
       'id': instance.id,
+    };
+
+CreateResponseArguments _$CreateResponseArgumentsFromJson(
+    Map<String, dynamic> json) {
+  return CreateResponseArguments(
+    response: json['response'] == null
+        ? null
+        : SymptomQuestionnaireResponseInput.fromJson(
+            json['response'] as Map<String, dynamic>),
+  );
+}
+
+Map<String, dynamic> _$CreateResponseArgumentsToJson(
+        CreateResponseArguments instance) =>
+    <String, dynamic>{
+      'response': instance.response?.toJson(),
     };
