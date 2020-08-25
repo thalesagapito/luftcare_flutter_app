@@ -73,7 +73,7 @@ class __RespondScreenBodyState extends State<_RespondScreenBody> {
     super.didChangeDependencies();
 
     final questionnaireProvider = Provider.of<SymptomQuestionnaire>(context);
-    if (!questionnaireProvider.finishedQuery) {
+    if (!questionnaireProvider.hasFinishedQuery) {
       questionnaireProvider.getQuestionnaire(context, widget.id);
     }
   }
@@ -81,9 +81,9 @@ class __RespondScreenBodyState extends State<_RespondScreenBody> {
   @override
   Widget build(BuildContext context) {
     final questionnaireProvider = Provider.of<SymptomQuestionnaire>(context);
-    final finishedQuery = questionnaireProvider.finishedQuery;
+    final hasFinishedQuery = questionnaireProvider.hasFinishedQuery;
     final questionnaire = questionnaireProvider.questionnaire;
-    final isLoading = !finishedQuery && questionnaire == null;
+    final isLoading = !hasFinishedQuery && questionnaire == null;
     final questions = questionnaire?.questions ?? [];
     final questionCount = questions.length;
 

@@ -4,15 +4,15 @@ import 'package:luftcare_flutter_app/models/graphql/api.graphql.dart';
 
 class SymptomQuestionnaire with ChangeNotifier {
   Questionnaire$Query$SymptomQuestionnaire _questionnaire;
-  bool _finishedQuery = false;
+  bool _hasFinishedQuery = false;
 
   Questionnaire$Query$SymptomQuestionnaire get questionnaire => _questionnaire;
 
-  bool get finishedQuery => _finishedQuery;
+  bool get hasFinishedQuery => _hasFinishedQuery;
 
   void setQuestionnaire(questionnaire) {
     _questionnaire = questionnaire;
-    _finishedQuery = true;
+    _hasFinishedQuery = true;
     notifyListeners();
   }
 
