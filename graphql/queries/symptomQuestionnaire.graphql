@@ -1,6 +1,7 @@
 query questionnaire($id: ID!) {
     symptomQuestionnaire(id: $id) {
         id
+        version
         nameForPresentation
         questions {
             id

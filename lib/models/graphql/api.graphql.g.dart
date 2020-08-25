@@ -124,6 +124,7 @@ Questionnaire$Query$SymptomQuestionnaire
         Map<String, dynamic> json) {
   return Questionnaire$Query$SymptomQuestionnaire()
     ..id = json['id'] as String
+    ..version = json['version'] as int
     ..nameForPresentation = json['nameForPresentation'] as String
     ..questions = (json['questions'] as List)
         ?.map((e) => e == null
@@ -137,6 +138,7 @@ Map<String, dynamic> _$Questionnaire$Query$SymptomQuestionnaireToJson(
         Questionnaire$Query$SymptomQuestionnaire instance) =>
     <String, dynamic>{
       'id': instance.id,
+      'version': instance.version,
       'nameForPresentation': instance.nameForPresentation,
       'questions': instance.questions?.map((e) => e?.toJson())?.toList(),
     };

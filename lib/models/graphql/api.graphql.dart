@@ -100,12 +100,14 @@ class Questionnaire$Query$SymptomQuestionnaire with EquatableMixin {
 
   String id;
 
+  int version;
+
   String nameForPresentation;
 
   List<Questionnaire$Query$SymptomQuestionnaire$Questions> questions;
 
   @override
-  List<Object> get props => [id, nameForPresentation, questions];
+  List<Object> get props => [id, version, nameForPresentation, questions];
   Map<String, dynamic> toJson() =>
       _$Questionnaire$Query$SymptomQuestionnaireToJson(this);
 }
@@ -506,6 +508,12 @@ class QuestionnaireQuery
               selectionSet: SelectionSetNode(selections: [
                 FieldNode(
                     name: NameNode(value: 'id'),
+                    alias: null,
+                    arguments: [],
+                    directives: [],
+                    selectionSet: null),
+                FieldNode(
+                    name: NameNode(value: 'version'),
                     alias: null,
                     arguments: [],
                     directives: [],
