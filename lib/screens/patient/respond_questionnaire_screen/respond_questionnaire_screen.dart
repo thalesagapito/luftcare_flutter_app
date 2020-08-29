@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:luftcare_flutter_app/helpers/error_handlers.dart';
+import 'package:luftcare_flutter_app/models/graphql/api.graphql.dart';
 import 'package:luftcare_flutter_app/providers/symptom_questionnaire_provider.dart';
 import 'package:luftcare_flutter_app/widgets/atoms/centered_loading_indicator.dart';
 import 'package:luftcare_flutter_app/widgets/atoms/controls/previous_and_next_buttons.dart';
+import 'package:luftcare_flutter_app/providers/symptom_questionnaire_response_provider.dart';
 import 'package:luftcare_flutter_app/widgets/organisms/single-purpose/respond_questionnaire/RespondQuestionnaireHeader.dart';
 import 'package:luftcare_flutter_app/widgets/organisms/single-purpose/respond_questionnaire/RespondQuestionnaireQuestion.dart';
 
@@ -35,8 +39,15 @@ class RespondQuestionnaireScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final questionnaireId = _getQuestionnaireIdFromArgs(context);
 
-    return ChangeNotifierProvider(
-      create: (ctx) => SymptomQuestionnaire(),
+    return MultiProvider(
+      providers: [
+        Provider<SymptomQuestionnaire>(
+          create: (_) => SymptomQuestionnaire(),
+        ),
+        Provider<SymptomQuestionnaireResponse>(
+          create: (_) => SymptomQuestionnaireResponse(),
+        ),
+      ],
       child: Scaffold(
         body: _RespondScreenBody(id: questionnaireId),
       ),
@@ -69,48 +80,61 @@ class __RespondScreenBodyState extends State<_RespondScreenBody> {
   void _goToNextPage() => _goToPage(_currentPage + 1);
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-
-    final questionnaireProvider = Provider.of<SymptomQuestionnaire>(context);
-    if (!questionnaireProvider.hasFinishedQuery) {
-      questionnaireProvider.getQuestionnaire(context, widget.id);
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
     final questionnaireProvider = Provider.of<SymptomQuestionnaire>(context);
-    final hasFinishedQuery = questionnaireProvider.hasFinishedQuery;
-    final questionnaire = questionnaireProvider.questionnaire;
-    final isLoading = !hasFinishedQuery && questionnaire == null;
-    final questions = questionnaire?.questions ?? [];
-    final questionCount = questions.length;
 
-    final hasPreviousPage = _currentPage > 0;
-    final goToPrevPage = hasPreviousPage ? _goToPrevPage : null;
+    return GraphQLConsumer(
+      builder: (client) {
+        final getQuestionnaire = questionnaireProvider.getQuestionnaire(
+          client,
+          id: widget.id,
+        );
 
-    final hasNextPage = _currentPage < questionCount - 1;
-    final goToNextPage = hasNextPage ? _goToNextPage : null;
+        return FutureBuilder(
+          future: getQuestionnaire,
+          initialData: QueryResult(loading: true, optimistic: false),
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            final QueryResult result = snapshot.data;
 
-    return Column(
-      children: [
-        if (isLoading) Expanded(child: CenteredLoadingIndicator()),
-        if (!isLoading) ...[
-          RespondQuestionnaireHeader(
-            goToPage: _goToPage,
-            currentPage: _currentPage,
-            questionCount: questionCount,
-            // questionCount: questionCount + 20,
-          ),
-          _Questionnaire(
-            currentPage: _currentPage,
-            goToNextPage: goToNextPage,
-            goToPrevPage: goToPrevPage,
-            pageController: _pageController,
-          ),
-        ],
-      ],
+            if (result.loading) return CenteredLoadingIndicator();
+            if (result.hasException) return ErrorScreen();
+
+            final questionnaire =
+                questionnaireProvider.getQuestionnaireFromQueryResult(result);
+            final questions = questionnaire?.questions ?? [];
+            final questionCount = questions.length;
+            final questionnaireName = questionnaire.nameForPresentation;
+
+            final hasPreviousPage = _currentPage > 0;
+            final goToPrevPage = hasPreviousPage ? _goToPrevPage : null;
+
+            final hasNextPage = _currentPage < questionCount - 1;
+            final goToNextPage = hasNextPage ? _goToNextPage : null;
+
+            return WillPopScope(
+              onWillPop: () async => false,
+              child: Column(
+                children: [
+                  RespondQuestionnaireHeader(
+                    goToPage: _goToPage,
+                    currentPage: _currentPage,
+                    questionCount: questionCount,
+                    questionnaireName: questionnaireName,
+                  ),
+                  _Questionnaire(
+                    goToPage: _goToPage,
+                    goToNextPage: goToNextPage,
+                    goToPrevPage: goToPrevPage,
+                    currentPage: _currentPage,
+                    pageController: _pageController,
+                    questionnaire: questionnaire,
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
     );
   }
 }
@@ -118,21 +142,23 @@ class __RespondScreenBodyState extends State<_RespondScreenBody> {
 class _Questionnaire extends StatelessWidget {
   _Questionnaire({
     Key key,
-    @required this.currentPage,
     @required this.pageController,
     @required this.goToNextPage,
     @required this.goToPrevPage,
+    @required this.goToPage,
+    @required this.currentPage,
+    @required this.questionnaire,
   }) : super(key: key);
 
   final PageController pageController;
+  final void Function() goToNextPage;
+  final void Function() goToPrevPage;
+  final void Function(int) goToPage;
   final int currentPage;
-  final Function goToNextPage;
-  final Function goToPrevPage;
+  final Questionnaire$Query$SymptomQuestionnaire questionnaire;
 
   @override
   Widget build(BuildContext context) {
-    final questionnaireProvider = Provider.of<SymptomQuestionnaire>(context);
-    final questionnaire = questionnaireProvider.questionnaire;
     final questions = questionnaire?.questions ?? [];
     final questionsWidgets = questions
         .map((q) => RespondQuestionnaireQuestion(question: q, key: Key(q.id)))
@@ -155,8 +181,8 @@ class _Questionnaire extends StatelessWidget {
                   child: PageView(
                     controller: pageController,
                     scrollDirection: Axis.horizontal,
-                    physics: const NeverScrollableScrollPhysics(),
                     children: questionsWidgets,
+                    onPageChanged: goToPage,
                   ),
                 ),
                 Padding(

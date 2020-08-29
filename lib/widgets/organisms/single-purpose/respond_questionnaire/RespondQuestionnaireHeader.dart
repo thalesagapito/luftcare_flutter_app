@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:luftcare_flutter_app/widgets/atoms/toggleable_container.dart';
-import 'package:luftcare_flutter_app/providers/symptom_questionnaire_provider.dart';
 
 class RespondQuestionnaireHeader extends StatelessWidget {
   const RespondQuestionnaireHeader({
@@ -9,10 +7,12 @@ class RespondQuestionnaireHeader extends StatelessWidget {
     @required this.goToPage,
     @required this.currentPage,
     @required this.questionCount,
+    @required this.questionnaireName,
   }) : super(key: key);
 
   final int currentPage;
   final int questionCount;
+  final String questionnaireName;
   final void Function(int) goToPage;
 
   static Color getHeaderColor(BuildContext ctx) =>
@@ -22,9 +22,6 @@ class RespondQuestionnaireHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final headerColor = getHeaderColor(context);
-    final questionnaireProvider = Provider.of<SymptomQuestionnaire>(context);
-    final questionnaire = questionnaireProvider.questionnaire;
-    final questionnaireName = questionnaire?.nameForPresentation;
 
     return Container(
       decoration: BoxDecoration(color: headerColor),
