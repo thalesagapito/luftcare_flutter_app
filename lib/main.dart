@@ -11,7 +11,7 @@ import 'package:luftcare_flutter_app/routes.dart';
 import 'package:luftcare_flutter_app/secure_storage.dart';
 import 'package:luftcare_flutter_app/graphql_provider.dart';
 import 'package:luftcare_flutter_app/providers/auth_provider.dart';
-import 'package:luftcare_flutter_app/screens/guest/welcome_screen.dart';
+import 'package:luftcare_flutter_app/screens/guest/guest_welcome_screen.dart';
 import 'package:luftcare_flutter_app/screens/patient/home_screen/home_screen.dart';
 import 'package:luftcare_flutter_app/widgets/atoms/centered_loading_indicator.dart';
 
@@ -32,7 +32,7 @@ void main() async {
 
   final isLoggedIn = await SecureStorage().isLoggedIn;
   final loggedInRoute = HomeScreen.RouteName;
-  final notLoggedInRoute = WelcomeScreen.RouteName;
+  final notLoggedInRoute = GuestWelcomeScreen.RouteName;
   final initialRoute = isLoggedIn ? loggedInRoute : notLoggedInRoute;
 
   runApp(MyApp(initialRoute: initialRoute));

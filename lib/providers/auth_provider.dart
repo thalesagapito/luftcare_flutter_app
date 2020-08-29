@@ -3,7 +3,7 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:load/load.dart';
 import 'package:luftcare_flutter_app/secure_storage.dart';
 import 'package:luftcare_flutter_app/models/graphql/api.graphql.dart';
-import 'package:luftcare_flutter_app/screens/guest/welcome_screen.dart';
+import 'package:luftcare_flutter_app/screens/guest/guest_welcome_screen.dart';
 import 'package:luftcare_flutter_app/screens/patient/home_screen/home_screen.dart';
 
 class Auth with ChangeNotifier {
@@ -11,6 +11,7 @@ class Auth with ChangeNotifier {
   CurrentUser$Query$CurrentUser _user;
 
   CurrentUser$Query$CurrentUser get user => _user;
+  bool get isLoggedIn => _user != null;
 
   void _setUser(user) {
     _user = user;
@@ -44,19 +45,17 @@ class Auth with ChangeNotifier {
     await getUserFromApi(context);
     hideLoadingDialog();
 
-    Navigator.of(context).pushNamedAndRemoveUntil(
-      HomeScreen.RouteName,
-      (_) => false,
-    );
+    final predicate = (_) => false;
+    final routeName = HomeScreen.RouteName;
+    Navigator.pushNamedAndRemoveUntil(context, routeName, predicate);
   }
 
   Future<void> logout(BuildContext context) async {
     await _secureStorage.logout();
 
-    Navigator.of(context).pushNamedAndRemoveUntil(
-      WelcomeScreen.RouteName,
-      (_) => false,
-    );
+    final predicate = (_) => false;
+    final routeName = GuestWelcomeScreen.RouteName;
+    Navigator.pushNamedAndRemoveUntil(context, routeName, predicate);
   }
 
   Future<void> getUserFromApi(BuildContext context) async {
