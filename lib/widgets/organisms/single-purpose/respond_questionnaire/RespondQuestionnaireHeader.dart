@@ -56,6 +56,7 @@ class RespondQuestionnaireHeader extends StatelessWidget {
   BorderRadius _getButtonBorderRadius({bool isFirst, bool isLast}) {
     const roundedRadius = const Radius.circular(15);
 
+    if (isFirst && isLast) return BorderRadius.all(roundedRadius);
     if (isFirst) return BorderRadius.horizontal(left: roundedRadius);
     if (isLast) return BorderRadius.horizontal(right: roundedRadius);
     return BorderRadius.circular(0);

@@ -67,18 +67,24 @@ class _RespondScreenBody extends StatefulWidget {
 
 class __RespondScreenBodyState extends State<_RespondScreenBody> {
   var _currentPage = 0;
+  var _isChangingPages = false;
   var _pageController = PageController(viewportFraction: 0.9);
 
-  void _goToPage(int page) {
+  void _goToPage(int page, {bool triggerIsChangingPages = true}) {
     const curve = Curves.easeOutQuart;
     const duration = Duration(milliseconds: 600);
 
-    setState(() => _currentPage = page);
+    setState(() {
+      _currentPage = page;
+      _isChangingPages = triggerIsChangingPages;
+    });
     _pageController.animateToPage(page, duration: duration, curve: curve);
   }
 
   void _goToPrevPage() => _goToPage(_currentPage - 1);
   void _goToNextPage() => _goToPage(_currentPage + 1);
+
+  void _onPageAnimationEnd() => setState(() => _isChangingPages = false);
 
   @override
   Widget build(BuildContext context) {
@@ -128,6 +134,8 @@ class __RespondScreenBodyState extends State<_RespondScreenBody> {
                     currentPage: _currentPage,
                     pageController: _pageController,
                     questionnaire: questionnaire,
+                    isChangingPages: _isChangingPages,
+                    onPageAnimationEnd: _onPageAnimationEnd,
                   ),
                 ],
               ),
@@ -148,13 +156,17 @@ class _Questionnaire extends StatefulWidget {
     @required this.goToPage,
     @required this.currentPage,
     @required this.questionnaire,
+    @required this.isChangingPages,
+    @required this.onPageAnimationEnd,
   }) : super(key: key);
 
   final PageController pageController;
   final void Function() goToNextPage;
   final void Function() goToPrevPage;
-  final void Function(int) goToPage;
+  final void Function(int page, {bool triggerIsChangingPages}) goToPage;
   final int currentPage;
+  final bool isChangingPages;
+  final void Function() onPageAnimationEnd;
   final Questionnaire$Query$SymptomQuestionnaire questionnaire;
 
   @override
@@ -212,18 +224,31 @@ class __QuestionnaireState extends State<_Questionnaire> {
       color: headerColor,
       borderRadius: const BorderRadius.vertical(bottom: Radius.circular(20)),
     );
+    final underlay = Container(decoration: underlayDecoration, height: 30);
 
     return Expanded(
       child: SafeArea(
         top: false,
         child: Stack(
           children: [
-            Container(decoration: underlayDecoration, height: 30),
+            underlay,
             Column(
               children: [
                 Expanded(
                   child: PageView(
-                    physics: NeverScrollableScrollPhysics(),
+                    physics: widget.isChangingPages
+                        ? NeverScrollableScrollPhysics()
+                        : BouncingScrollPhysics(),
+                    onPageChanged: (pageChangedTo) {
+                      final isChangingPages = widget.isChangingPages;
+                      final currentPageFromParent = widget.currentPage;
+                      final hasArrivedAtPageFromParent = pageChangedTo == currentPageFromParent;
+                      if (isChangingPages) {
+                        if (hasArrivedAtPageFromParent) widget.onPageAnimationEnd();
+                        return;
+                      }
+                      widget.goToPage(pageChangedTo, triggerIsChangingPages: false);
+                    },
                     controller: widget.pageController,
                     children: questionsWidgets,
                   ),
