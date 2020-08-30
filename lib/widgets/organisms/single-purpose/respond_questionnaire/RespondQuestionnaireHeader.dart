@@ -13,10 +13,9 @@ class RespondQuestionnaireHeader extends StatelessWidget {
   final int currentPage;
   final int questionCount;
   final String questionnaireName;
-  final void Function(int) goToPage;
+  final void Function(int page) goToPage;
 
-  static Color getHeaderColor(BuildContext ctx) =>
-      Theme.of(ctx).primaryColor.withOpacity(0.8);
+  static Color getHeaderColor(BuildContext ctx) => Theme.of(ctx).primaryColor.withOpacity(0.8);
 
   @override
   Widget build(BuildContext context) {

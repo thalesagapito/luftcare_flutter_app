@@ -6,9 +6,13 @@ class RespondQuestionnaireQuestion extends StatelessWidget {
   const RespondQuestionnaireQuestion({
     Key key,
     @required this.question,
+    @required this.selectedChoiceId,
+    @required this.onChoiceSelected,
   }) : super(key: key);
 
   final Questionnaire$Query$SymptomQuestionnaire$Questions question;
+  final void Function(String choiceId) onChoiceSelected;
+  final String selectedChoiceId;
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +21,7 @@ class RespondQuestionnaireQuestion extends StatelessWidget {
 
     return Container(
       decoration: _getFloatingCardDecoration(theme),
-      margin: const EdgeInsets.fromLTRB(20, 0, 20, 10),
+      margin: const EdgeInsets.fromLTRB(10, 0, 10, 10),
       padding: const EdgeInsets.all(20),
       child: Column(
         children: [
@@ -29,8 +33,8 @@ class RespondQuestionnaireQuestion extends StatelessWidget {
           ...choices
               .map((c) => RespondQuestionnaireQuestionChoice(
                     text: c.text,
-                    isSelected: c.presentationOrder == 2,
-                    onTap: () {},
+                    onTap: () => onChoiceSelected(c.id),
+                    isSelected: c.id == selectedChoiceId,
                   ))
               .toList(),
         ],

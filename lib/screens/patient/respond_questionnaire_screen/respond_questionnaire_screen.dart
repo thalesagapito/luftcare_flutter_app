@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:luftcare_flutter_app/helpers/error_handlers.dart';
+import 'package:luftcare_flutter_app/providers/auth_provider.dart';
 import 'package:luftcare_flutter_app/models/graphql/api.graphql.dart';
 import 'package:luftcare_flutter_app/providers/symptom_questionnaire_provider.dart';
 import 'package:luftcare_flutter_app/widgets/atoms/centered_loading_indicator.dart';
@@ -66,7 +67,7 @@ class _RespondScreenBody extends StatefulWidget {
 
 class __RespondScreenBodyState extends State<_RespondScreenBody> {
   var _currentPage = 0;
-  var _pageController = PageController();
+  var _pageController = PageController(viewportFraction: 0.9);
 
   void _goToPage(int page) {
     const curve = Curves.easeOutQuart;
@@ -99,8 +100,7 @@ class __RespondScreenBodyState extends State<_RespondScreenBody> {
             if (result.loading) return CenteredLoadingIndicator();
             if (result.hasException) return ErrorScreen();
 
-            final questionnaire =
-                questionnaireProvider.getQuestionnaireFromQueryResult(result);
+            final questionnaire = questionnaireProvider.getQuestionnaireFromQueryResult(result);
             final questions = questionnaire?.questions ?? [];
             final questionCount = questions.length;
             final questionnaireName = questionnaire.nameForPresentation;
@@ -139,7 +139,7 @@ class __RespondScreenBodyState extends State<_RespondScreenBody> {
   }
 }
 
-class _Questionnaire extends StatelessWidget {
+class _Questionnaire extends StatefulWidget {
   _Questionnaire({
     Key key,
     @required this.pageController,
@@ -158,11 +158,55 @@ class _Questionnaire extends StatelessWidget {
   final Questionnaire$Query$SymptomQuestionnaire questionnaire;
 
   @override
+  __QuestionnaireState createState() => __QuestionnaireState();
+}
+
+class __QuestionnaireState extends State<_Questionnaire> {
+  SymptomQuestionnaireResponseInput _response;
+
+  @override
+  void initState() {
+    super.initState();
+    final userId = Provider.of<Auth>(context, listen: false).userId;
+    final questionCount = widget.questionnaire?.questions?.length ?? 0;
+    _response = SymptomQuestionnaireResponseInput(
+      userId: userId,
+      questionAnswers: List.filled(questionCount, null),
+      responseDate: DateTime.now(),
+      questionnaireId: widget.questionnaire.id,
+      questionnaireVersion: widget.questionnaire.version,
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final questions = questionnaire?.questions ?? [];
-    final questionsWidgets = questions
-        .map((q) => RespondQuestionnaireQuestion(question: q, key: Key(q.id)))
-        .toList();
+    final responseProvider = Provider.of<SymptomQuestionnaireResponse>(context, listen: false);
+    final updateResponse = (updatedResponse) => setState(() => _response = updatedResponse);
+
+    final questions = widget.questionnaire?.questions ?? [];
+    final questionCount = questions.length;
+    final questionsWidgets = questions.map(
+      (question) {
+        final selectedChoiceId = responseProvider.getSelectedChoiceId(_response, question.id);
+        final isNotLastQuestion = question.presentationOrder < questionCount;
+        final shouldGoToNextPage = selectedChoiceId == null && isNotLastQuestion;
+
+        return RespondQuestionnaireQuestion(
+            question: question,
+            key: Key(question.id),
+            selectedChoiceId: selectedChoiceId,
+            onChoiceSelected: (choiceId) {
+              final updatedResponse = responseProvider.getUpdatedResponseWithAnswer(
+                questionPresentationOrder: question.presentationOrder,
+                questionId: question.id,
+                response: _response,
+                choiceId: choiceId,
+              );
+              updateResponse(updatedResponse);
+              if (shouldGoToNextPage) widget.goToNextPage();
+            });
+      },
+    ).toList();
     final headerColor = RespondQuestionnaireHeader.getHeaderColor(context);
     final underlayDecoration = BoxDecoration(
       color: headerColor,
@@ -179,17 +223,16 @@ class _Questionnaire extends StatelessWidget {
               children: [
                 Expanded(
                   child: PageView(
-                    controller: pageController,
-                    scrollDirection: Axis.horizontal,
+                    physics: NeverScrollableScrollPhysics(),
+                    controller: widget.pageController,
                     children: questionsWidgets,
-                    onPageChanged: goToPage,
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
                   child: PreviousAndNextButtons(
-                    onPreviousTap: goToPrevPage,
-                    onNextTap: goToNextPage,
+                    onPreviousTap: widget.goToPrevPage,
+                    onNextTap: widget.goToNextPage,
                   ),
                 )
               ],

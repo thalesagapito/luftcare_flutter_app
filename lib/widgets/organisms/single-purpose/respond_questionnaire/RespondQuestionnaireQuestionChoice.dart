@@ -22,7 +22,7 @@ class RespondQuestionnaireQuestionChoice extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      margin: EdgeInsets.only(bottom: 15),
+      margin: EdgeInsets.only(bottom: 10),
       decoration: decoration,
       child: Material(
         type: MaterialType.transparency,
@@ -47,8 +47,7 @@ class RespondQuestionnaireQuestionChoice extends StatelessWidget {
   }
 
   BoxDecoration _getContainerDecoration(ThemeData theme) {
-    final cardColor =
-        isSelected ? theme.primaryColor.withOpacity(0.2) : theme.cardColor;
+    final cardColor = isSelected ? theme.primaryColor.withOpacity(0.2) : theme.cardColor;
 
     return BoxDecoration(
       borderRadius: _borderRadius,

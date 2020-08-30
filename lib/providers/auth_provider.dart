@@ -12,14 +12,14 @@ class Auth with ChangeNotifier {
 
   CurrentUser$Query$CurrentUser get user => _user;
   bool get isLoggedIn => _user != null;
+  String get userId => _user?.id;
 
   void _setUser(user) {
     _user = user;
     notifyListeners();
   }
 
-  Future<void> login(
-      BuildContext context, String email, String password) async {
+  Future<void> login(BuildContext context, String email, String password) async {
     showLoadingDialog(tapDismiss: false);
     final client = GraphQLProvider.of(context).value;
     final loginArgs = LoginArguments(email: email, password: password);
