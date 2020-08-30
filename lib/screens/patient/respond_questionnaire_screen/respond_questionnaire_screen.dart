@@ -86,6 +86,8 @@ class __RespondScreenBodyState extends State<_RespondScreenBody> {
 
   void _onPageAnimationEnd() => setState(() => _isChangingPages = false);
 
+  void _onDiscardResponse(BuildContext ctx) => Navigator.pop(ctx);
+
   @override
   Widget build(BuildContext context) {
     final questionnaireProvider = Provider.of<SymptomQuestionnaire>(context);
@@ -136,6 +138,7 @@ class __RespondScreenBodyState extends State<_RespondScreenBody> {
                     questionnaire: questionnaire,
                     isChangingPages: _isChangingPages,
                     onPageAnimationEnd: _onPageAnimationEnd,
+                    onDiscardResponse: () => _onDiscardResponse(context),
                   ),
                 ],
               ),
@@ -158,6 +161,7 @@ class _Questionnaire extends StatefulWidget {
     @required this.questionnaire,
     @required this.isChangingPages,
     @required this.onPageAnimationEnd,
+    @required this.onDiscardResponse,
   }) : super(key: key);
 
   final PageController pageController;
@@ -167,6 +171,7 @@ class _Questionnaire extends StatefulWidget {
   final int currentPage;
   final bool isChangingPages;
   final void Function() onPageAnimationEnd;
+  final void Function() onDiscardResponse;
   final Questionnaire$Query$SymptomQuestionnaire questionnaire;
 
   @override
@@ -197,6 +202,7 @@ class __QuestionnaireState extends State<_Questionnaire> {
 
     final questions = widget.questionnaire?.questions ?? [];
     final questionCount = questions.length;
+    final isFirstQuestion = widget.currentPage == 0;
     final questionsWidgets = questions.map(
       (question) {
         final selectedChoiceId = responseProvider.getSelectedChoiceId(_response, question.id);
@@ -219,6 +225,7 @@ class __QuestionnaireState extends State<_Questionnaire> {
             });
       },
     ).toList();
+
     final headerColor = RespondQuestionnaireHeader.getHeaderColor(context);
     final underlayDecoration = BoxDecoration(
       color: headerColor,
@@ -256,7 +263,8 @@ class __QuestionnaireState extends State<_Questionnaire> {
                 Padding(
                   padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
                   child: PreviousAndNextButtons(
-                    onPreviousTap: widget.goToPrevPage,
+                    onPreviousTap: isFirstQuestion ? widget.onDiscardResponse : widget.goToPrevPage,
+                    prevText: isFirstQuestion ? Text('Cancelar') : Text('Anterior'),
                     onNextTap: widget.goToNextPage,
                   ),
                 )
