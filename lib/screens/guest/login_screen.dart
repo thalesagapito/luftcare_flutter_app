@@ -1,3 +1,4 @@
+import 'package:load/load.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:luftcare_flutter_app/providers/auth_provider.dart';
@@ -35,8 +36,18 @@ class LoginScreen extends StatelessWidget {
                 ..._buildFormWrapper(
                   constraints: constraints,
                   child: LoginForm(
-                    onSubmit: ({email, password}) =>
-                        login(context, email, password),
+                    onSubmit: ({email, password}) async {
+                      final showLoading = () => showLoadingDialog(tapDismiss: false);
+                      final closeDuration = const Duration(milliseconds: 100);
+                      final closeSoftKeyboard = FocusScope.of(context).unfocus;
+                      final showLoadingAfterClose =
+                          () => Future.delayed(closeDuration, showLoading);
+
+                      closeSoftKeyboard();
+                      showLoadingAfterClose();
+                      await login(context, email, password);
+                      hideLoadingDialog();
+                    },
                   ),
                 ),
               ],

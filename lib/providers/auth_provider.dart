@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:load/load.dart';
 import 'package:luftcare_flutter_app/secure_storage.dart';
 import 'package:luftcare_flutter_app/models/graphql/api.graphql.dart';
 import 'package:luftcare_flutter_app/screens/guest/guest_welcome_screen.dart';
@@ -20,7 +19,6 @@ class Auth with ChangeNotifier {
   }
 
   Future<void> login(BuildContext context, String email, String password) async {
-    showLoadingDialog(tapDismiss: false);
     final client = GraphQLProvider.of(context).value;
     final loginArgs = LoginArguments(email: email, password: password);
     final loginMutation = MutationOptions(
@@ -31,7 +29,6 @@ class Auth with ChangeNotifier {
     final QueryResult result = await client.mutate(loginMutation);
 
     if (result.hasException) {
-      hideLoadingDialog();
       final OperationException exception = result?.exception;
       final GraphQLError error = exception?.graphqlErrors[0];
       final String message = error?.message ?? 'Erro interno';
@@ -43,7 +40,6 @@ class Auth with ChangeNotifier {
     final res = Login$Mutation.fromJson(result.data).login;
     await _secureStorage.login(auth: res.authorization, refresh: res.refresh);
     await getUserFromApi(context);
-    hideLoadingDialog();
 
     final predicate = (_) => false;
     final routeName = HomeScreen.RouteName;
