@@ -5,6 +5,7 @@ class SymptomQuestionnaire {
   Future<QueryResult> getQuestionnaire(GraphQLClient client, {String id}) {
     final queryOptions = QueryOptions(
       documentNode: QuestionnaireQuery().document,
+      fetchPolicy: FetchPolicy.cacheAndNetwork,
       variables: {'id': id},
     );
 

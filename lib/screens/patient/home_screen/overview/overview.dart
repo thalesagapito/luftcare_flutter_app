@@ -4,10 +4,8 @@ import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/rendering.dart';
-import 'package:provider/provider.dart';
 import 'package:luftcare_flutter_app/helpers/validators.dart';
 import 'package:luftcare_flutter_app/widgets/atoms/toggleable_container.dart';
-import 'package:luftcare_flutter_app/providers/symptom_questionnaires_provider.dart';
 import 'package:luftcare_flutter_app/screens/patient/home_screen/overview/answered_questionnaires.dart';
 import 'package:luftcare_flutter_app/screens/patient/home_screen/overview/available_questionnaires.dart';
 
@@ -43,10 +41,7 @@ class _OverviewState extends State<Overview> {
                   children: [
                     AnsweredQuestionnaires(),
                     SizedBox(height: 5),
-                    ChangeNotifierProvider(
-                      create: (ctx) => SymptomQuestionnaires(),
-                      child: AvailableQuestionnaires(),
-                    ),
+                    AvailableQuestionnaires(),
                   ],
                 ),
               ),

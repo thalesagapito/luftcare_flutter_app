@@ -1,5 +1,7 @@
+import 'package:load/load.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:luftcare_flutter_app/helpers/error_handlers.dart';
 import 'package:luftcare_flutter_app/widgets/atoms/centered_loading_indicator.dart';
 import 'package:luftcare_flutter_app/providers/symptom_questionnaires_provider.dart';
 import 'package:luftcare_flutter_app/screens/patient/respond_questionnaire_screen/respond_questionnaire_screen.dart';
@@ -11,20 +13,10 @@ class AvailableQuestionnaires extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _AvailableQuestionnairesState createState() =>
-      _AvailableQuestionnairesState();
+  _AvailableQuestionnairesState createState() => _AvailableQuestionnairesState();
 }
 
 class _AvailableQuestionnairesState extends State<AvailableQuestionnaires> {
-  @override
-  void didChangeDependencies() async {
-    super.didChangeDependencies();
-    final questionnairesProvider = Provider.of<SymptomQuestionnaires>(context);
-    if (questionnairesProvider.alreadyQueried) return;
-
-    await questionnairesProvider.getQuestionnaires(context);
-  }
-
   void _openQuestionnaire(String id, BuildContext context) {
     final navigator = Navigator.of(context);
     final args = RespondQuestionnaireScreenArgs(questionnaireId: id);
@@ -33,33 +25,79 @@ class _AvailableQuestionnairesState extends State<AvailableQuestionnaires> {
 
   Widget _buildLoadingWidget() => Padding(
         child: CenteredLoadingIndicator(),
-        padding: EdgeInsets.fromLTRB(0, 20, 0, 30),
-      );
-
-  Widget _buildWidget(questionnaire, BuildContext context) =>
-      _QuestionnaireListTile(
-        questionCount: questionnaire.questions.length,
-        name: questionnaire.nameForPresentation,
-        onTap: () => _openQuestionnaire(questionnaire.id, context),
+        padding: EdgeInsets.fromLTRB(0, 40, 0, 30),
       );
 
   @override
   Widget build(BuildContext context) {
-    final questionnairesProvider = Provider.of<SymptomQuestionnaires>(context);
-    final questionnaires = questionnairesProvider.questionnaires;
-    final isLoading = !questionnairesProvider.alreadyQueried;
-    final questionnairesWidgets = questionnaires
-        .map((questionnaire) => _buildWidget(questionnaire, context))
-        .toList();
-
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          _Title(),
-          if (isLoading) _buildLoadingWidget(),
-          if (!isLoading) ...questionnairesWidgets,
-        ],
+    return Query(
+      options: QueryOptions(
+        documentNode: SymptomQuestionnaires.getDocumentNode(),
+        fetchPolicy: FetchPolicy.cacheAndNetwork,
       ),
+      builder: (result, {fetchMore, refetch}) {
+        if (result.loading) return _buildLoadingWidget();
+        if (result.hasException) return ErrorScreen();
+
+        final response = SymptomQuestionnaires.getQuestionnairesFromQueryResult(result);
+        final questionnaires = response.results;
+        final hasNoQuestionnaires = questionnaires?.length == 0;
+
+        if (hasNoQuestionnaires) return _NoQuestionnaireFound(refetch: refetch);
+
+        final questionnairesWidgets = questionnaires
+            .map((questionnaire) => _QuestionnaireListTile(
+                  name: questionnaire.nameForPresentation,
+                  questionCount: questionnaire.questions.length,
+                  onTap: () => _openQuestionnaire(questionnaire.id, context),
+                ))
+            .toList();
+
+        return SingleChildScrollView(
+          child: Column(
+            children: [
+              _Title(),
+              ...questionnairesWidgets,
+            ],
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _NoQuestionnaireFound extends StatelessWidget {
+  const _NoQuestionnaireFound({Key key, @required this.refetch}) : super(key: key);
+
+  final Future<QueryResult> Function() refetch;
+
+  @override
+  Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(30),
+          child: Text(
+            'Nenhum questionário disponível no momento',
+            textAlign: TextAlign.center,
+            style: textTheme.headline6,
+          ),
+        ),
+        FlatButton(
+          onPressed: () async {
+            showLoadingDialog(tapDismiss: false);
+            try {
+              await refetch();
+            } catch (e) {
+              print(e);
+            } finally {
+              hideLoadingDialog();
+            }
+          },
+          child: Text('Buscar novamente'),
+        ),
+      ],
     );
   }
 }
