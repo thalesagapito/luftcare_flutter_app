@@ -119,6 +119,41 @@ const _$SymptomQuestionnaireQuestionKindEnumMap = {
   SymptomQuestionnaireQuestionKind.artemisUnknown: 'ARTEMIS_UNKNOWN',
 };
 
+Questionnaire$Query$SymptomQuestionnaire$ScoreRanges
+    _$Questionnaire$Query$SymptomQuestionnaire$ScoreRangesFromJson(
+        Map<String, dynamic> json) {
+  return Questionnaire$Query$SymptomQuestionnaire$ScoreRanges()
+    ..id = json['id'] as String
+    ..title = json['title'] as String
+    ..description = json['description'] as String
+    ..color = _$enumDecodeNullable(
+        _$SymptomQuestionnaireScoreRangeColorEnumMap, json['color'],
+        unknownValue: SymptomQuestionnaireScoreRangeColor.artemisUnknown)
+    ..minScore = json['minScore'] as int
+    ..maxScore = json['maxScore'] as int;
+}
+
+Map<String, dynamic>
+    _$Questionnaire$Query$SymptomQuestionnaire$ScoreRangesToJson(
+            Questionnaire$Query$SymptomQuestionnaire$ScoreRanges instance) =>
+        <String, dynamic>{
+          'id': instance.id,
+          'title': instance.title,
+          'description': instance.description,
+          'color': _$SymptomQuestionnaireScoreRangeColorEnumMap[instance.color],
+          'minScore': instance.minScore,
+          'maxScore': instance.maxScore,
+        };
+
+const _$SymptomQuestionnaireScoreRangeColorEnumMap = {
+  SymptomQuestionnaireScoreRangeColor.green: 'GREEN',
+  SymptomQuestionnaireScoreRangeColor.greenYellow: 'GREEN_YELLOW',
+  SymptomQuestionnaireScoreRangeColor.yellow: 'YELLOW',
+  SymptomQuestionnaireScoreRangeColor.orange: 'ORANGE',
+  SymptomQuestionnaireScoreRangeColor.red: 'RED',
+  SymptomQuestionnaireScoreRangeColor.artemisUnknown: 'ARTEMIS_UNKNOWN',
+};
+
 Questionnaire$Query$SymptomQuestionnaire
     _$Questionnaire$Query$SymptomQuestionnaireFromJson(
         Map<String, dynamic> json) {
@@ -131,6 +166,12 @@ Questionnaire$Query$SymptomQuestionnaire
             ? null
             : Questionnaire$Query$SymptomQuestionnaire$Questions.fromJson(
                 e as Map<String, dynamic>))
+        ?.toList()
+    ..scoreRanges = (json['scoreRanges'] as List)
+        ?.map((e) => e == null
+            ? null
+            : Questionnaire$Query$SymptomQuestionnaire$ScoreRanges.fromJson(
+                e as Map<String, dynamic>))
         ?.toList();
 }
 
@@ -141,6 +182,7 @@ Map<String, dynamic> _$Questionnaire$Query$SymptomQuestionnaireToJson(
       'version': instance.version,
       'nameForPresentation': instance.nameForPresentation,
       'questions': instance.questions?.map((e) => e?.toJson())?.toList(),
+      'scoreRanges': instance.scoreRanges?.map((e) => e?.toJson())?.toList(),
     };
 
 Questionnaire$Query _$Questionnaire$QueryFromJson(Map<String, dynamic> json) {

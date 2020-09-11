@@ -128,8 +128,7 @@ class _PageHeaderTitle extends StatelessWidget {
       child: Text(
         'Agenda',
         textAlign: TextAlign.left,
-        style: theme.textTheme.headline4
-            .copyWith(color: Colors.white, fontWeight: FontWeight.w700),
+        style: theme.textTheme.headline4.copyWith(color: Colors.white, fontWeight: FontWeight.w700),
       ),
     );
 
@@ -137,8 +136,7 @@ class _PageHeaderTitle extends StatelessWidget {
     final subtitle = FittedBox(
       child: Text(
         '$today',
-        style: theme.textTheme.headline5
-            .copyWith(color: Colors.white, fontWeight: FontWeight.w500),
+        style: theme.textTheme.headline5.copyWith(color: Colors.white, fontWeight: FontWeight.w500),
       ),
     );
 
@@ -179,13 +177,11 @@ class __HorizontalDateCardsState extends State<_HorizontalDateCards> {
   static const CARD_LEFT_MARGIN = 0.6;
   static const CARD_COUNT = 15;
   static const SV_PADDING = 30.0;
-  static const CARDS_CONTAINER_WIDTH =
-      CARD_WIDTH * CARD_COUNT + (SV_PADDING * 2);
+  static const CARDS_CONTAINER_WIDTH = CARD_WIDTH * CARD_COUNT + (SV_PADDING * 2);
 
   var _scrollController = ScrollController(
-    initialScrollOffset: NUMBER_OF_PREVIOUS_DATES * CARD_WIDTH -
-        (CARD_WIDTH * CARD_LEFT_MARGIN) +
-        SV_PADDING,
+    initialScrollOffset:
+        NUMBER_OF_PREVIOUS_DATES * CARD_WIDTH - (CARD_WIDTH * CARD_LEFT_MARGIN) + SV_PADDING,
   );
 
   @override

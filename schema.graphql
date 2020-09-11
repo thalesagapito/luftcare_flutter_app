@@ -57,6 +57,26 @@ enum UserRole {
   NON_ADMIN
 }
 
+type ResponseScore {
+  """Numerical value."""
+  value: Int!
+  color: SymptomQuestionnaireScoreRangeColor!
+
+  """Title of this range to be shown to users. Could be "Good", "Bad", etc."""
+  title: String!
+
+  """Description of this range to be shown to users."""
+  description: String!
+}
+
+enum SymptomQuestionnaireScoreRangeColor {
+  GREEN
+  GREEN_YELLOW
+  YELLOW
+  ORANGE
+  RED
+}
+
 type SymptomQuestionnaire {
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -68,6 +88,7 @@ type SymptomQuestionnaire {
   isPublished: Boolean!
   questions: [SymptomQuestionnaireQuestion!]!
   responses: [SymptomQuestionnaireResponse!]!
+  scoreRanges: [SymptomQuestionnaireScoreRange!]!
 }
 
 type SymptomQuestionnaireQuestionChoice {
@@ -125,7 +146,7 @@ type SymptomQuestionnaireResponse {
   patient: User!
   questionnaire: SymptomQuestionnaire!
   questionAnswers: [SymptomQuestionnaireResponseAnswer!]!
-  score: Float!
+  score: ResponseScore!
 }
 
 type SymptomQuestionnaireResponseAnswer {
@@ -137,6 +158,31 @@ type SymptomQuestionnaireResponseAnswer {
   question: SymptomQuestionnaireQuestion!
   selectedChoice: SymptomQuestionnaireQuestionChoice
   writtenText: String
+}
+
+type SymptomQuestionnaireScoreRange {
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+  id: ID!
+  questionnaire: SymptomQuestionnaire!
+
+  """
+  Minimum score value in order for response to be included in this range.
+  """
+  minScore: Int!
+
+  """
+  Maximum score value in order for response to be included in this range.
+  """
+  maxScore: Int!
+  color: SymptomQuestionnaireScoreRangeColor!
+
+  """Title of this range to be shown to users. Could be "Good", "Bad", etc."""
+  title: String!
+
+  """Description of this range to be shown to users."""
+  description: String!
 }
 
 type TokenSet {
@@ -194,11 +240,24 @@ input SymptomQuestionnaireQuestionInput {
   presentationOrder: Int!
 }
 
+input SymptomQuestionnaireScoreRangeInput {
+  minScore: Int!
+  maxScore: Int!
+  color: SymptomQuestionnaireScoreRangeColor!
+
+  """maxLength: 500"""
+  title: String!
+
+  """maxLength: 2000"""
+  description: String!
+}
+
 input SymptomQuestionnaireInput {
   nameForManagement: String!
   nameForPresentation: String!
   isPublished: Boolean = false
   questions: [SymptomQuestionnaireQuestionInput!]!
+  scoreRanges: [SymptomQuestionnaireScoreRangeInput!]!
 }
 
 input SymptomQuestionnaireResponseAnswerInput {

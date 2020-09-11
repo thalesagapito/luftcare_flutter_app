@@ -91,6 +91,33 @@ class Questionnaire$Query$SymptomQuestionnaire$Questions with EquatableMixin {
 }
 
 @JsonSerializable(explicitToJson: true)
+class Questionnaire$Query$SymptomQuestionnaire$ScoreRanges with EquatableMixin {
+  Questionnaire$Query$SymptomQuestionnaire$ScoreRanges();
+
+  factory Questionnaire$Query$SymptomQuestionnaire$ScoreRanges.fromJson(
+          Map<String, dynamic> json) =>
+      _$Questionnaire$Query$SymptomQuestionnaire$ScoreRangesFromJson(json);
+
+  String id;
+
+  String title;
+
+  String description;
+
+  @JsonKey(unknownEnumValue: SymptomQuestionnaireScoreRangeColor.artemisUnknown)
+  SymptomQuestionnaireScoreRangeColor color;
+
+  int minScore;
+
+  int maxScore;
+
+  @override
+  List<Object> get props => [id, title, description, color, minScore, maxScore];
+  Map<String, dynamic> toJson() =>
+      _$Questionnaire$Query$SymptomQuestionnaire$ScoreRangesToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
 class Questionnaire$Query$SymptomQuestionnaire with EquatableMixin {
   Questionnaire$Query$SymptomQuestionnaire();
 
@@ -106,8 +133,11 @@ class Questionnaire$Query$SymptomQuestionnaire with EquatableMixin {
 
   List<Questionnaire$Query$SymptomQuestionnaire$Questions> questions;
 
+  List<Questionnaire$Query$SymptomQuestionnaire$ScoreRanges> scoreRanges;
+
   @override
-  List<Object> get props => [id, version, nameForPresentation, questions];
+  List<Object> get props =>
+      [id, version, nameForPresentation, questions, scoreRanges];
   Map<String, dynamic> toJson() =>
       _$Questionnaire$Query$SymptomQuestionnaireToJson(this);
 }
@@ -365,6 +395,20 @@ class SymptomQuestionnaireResponseInput with EquatableMixin {
       _$SymptomQuestionnaireResponseInputToJson(this);
 }
 
+enum SymptomQuestionnaireScoreRangeColor {
+  @JsonValue("GREEN")
+  green,
+  @JsonValue("GREEN_YELLOW")
+  greenYellow,
+  @JsonValue("YELLOW")
+  yellow,
+  @JsonValue("ORANGE")
+  orange,
+  @JsonValue("RED")
+  red,
+  @JsonValue("ARTEMIS_UNKNOWN")
+  artemisUnknown,
+}
 enum SymptomQuestionnaireQuestionKind {
   @JsonValue("MULTIPLE_CHOICE")
   multipleChoice,
@@ -585,6 +629,49 @@ class QuestionnaireQuery
                                 directives: [],
                                 selectionSet: null)
                           ]))
+                    ])),
+                FieldNode(
+                    name: NameNode(value: 'scoreRanges'),
+                    alias: null,
+                    arguments: [],
+                    directives: [],
+                    selectionSet: SelectionSetNode(selections: [
+                      FieldNode(
+                          name: NameNode(value: 'id'),
+                          alias: null,
+                          arguments: [],
+                          directives: [],
+                          selectionSet: null),
+                      FieldNode(
+                          name: NameNode(value: 'title'),
+                          alias: null,
+                          arguments: [],
+                          directives: [],
+                          selectionSet: null),
+                      FieldNode(
+                          name: NameNode(value: 'description'),
+                          alias: null,
+                          arguments: [],
+                          directives: [],
+                          selectionSet: null),
+                      FieldNode(
+                          name: NameNode(value: 'color'),
+                          alias: null,
+                          arguments: [],
+                          directives: [],
+                          selectionSet: null),
+                      FieldNode(
+                          name: NameNode(value: 'minScore'),
+                          alias: null,
+                          arguments: [],
+                          directives: [],
+                          selectionSet: null),
+                      FieldNode(
+                          name: NameNode(value: 'maxScore'),
+                          alias: null,
+                          arguments: [],
+                          directives: [],
+                          selectionSet: null)
                     ]))
               ]))
         ]))

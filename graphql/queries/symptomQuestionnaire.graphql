@@ -15,5 +15,13 @@ query questionnaire($id: ID!) {
                 presentationOrder
             }
         }
+        scoreRanges {
+            id
+            title
+            description
+            color
+            minScore
+            maxScore
+        }
     }
 }
