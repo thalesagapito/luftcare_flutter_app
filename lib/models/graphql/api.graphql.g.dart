@@ -6,6 +6,153 @@ part of 'api.graphql.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
+CreateResponse$Mutation$CreateSymptomQuestionnaireResponse$Score
+    _$CreateResponse$Mutation$CreateSymptomQuestionnaireResponse$ScoreFromJson(
+        Map<String, dynamic> json) {
+  return CreateResponse$Mutation$CreateSymptomQuestionnaireResponse$Score()
+    ..value = json['value'] as int
+    ..color = _$enumDecodeNullable(
+        _$SymptomQuestionnaireScoreRangeColorEnumMap, json['color'],
+        unknownValue: SymptomQuestionnaireScoreRangeColor.artemisUnknown)
+    ..title = json['title'] as String
+    ..description = json['description'] as String;
+}
+
+Map<String, dynamic>
+    _$CreateResponse$Mutation$CreateSymptomQuestionnaireResponse$ScoreToJson(
+            CreateResponse$Mutation$CreateSymptomQuestionnaireResponse$Score
+                instance) =>
+        <String, dynamic>{
+          'value': instance.value,
+          'color': _$SymptomQuestionnaireScoreRangeColorEnumMap[instance.color],
+          'title': instance.title,
+          'description': instance.description,
+        };
+
+T _$enumDecode<T>(
+  Map<T, dynamic> enumValues,
+  dynamic source, {
+  T unknownValue,
+}) {
+  if (source == null) {
+    throw ArgumentError('A value must be provided. Supported values: '
+        '${enumValues.values.join(', ')}');
+  }
+
+  final value = enumValues.entries
+      .singleWhere((e) => e.value == source, orElse: () => null)
+      ?.key;
+
+  if (value == null && unknownValue == null) {
+    throw ArgumentError('`$source` is not one of the supported values: '
+        '${enumValues.values.join(', ')}');
+  }
+  return value ?? unknownValue;
+}
+
+T _$enumDecodeNullable<T>(
+  Map<T, dynamic> enumValues,
+  dynamic source, {
+  T unknownValue,
+}) {
+  if (source == null) {
+    return null;
+  }
+  return _$enumDecode<T>(enumValues, source, unknownValue: unknownValue);
+}
+
+const _$SymptomQuestionnaireScoreRangeColorEnumMap = {
+  SymptomQuestionnaireScoreRangeColor.green: 'GREEN',
+  SymptomQuestionnaireScoreRangeColor.greenYellow: 'GREEN_YELLOW',
+  SymptomQuestionnaireScoreRangeColor.yellow: 'YELLOW',
+  SymptomQuestionnaireScoreRangeColor.orange: 'ORANGE',
+  SymptomQuestionnaireScoreRangeColor.red: 'RED',
+  SymptomQuestionnaireScoreRangeColor.artemisUnknown: 'ARTEMIS_UNKNOWN',
+};
+
+CreateResponse$Mutation$CreateSymptomQuestionnaireResponse
+    _$CreateResponse$Mutation$CreateSymptomQuestionnaireResponseFromJson(
+        Map<String, dynamic> json) {
+  return CreateResponse$Mutation$CreateSymptomQuestionnaireResponse()
+    ..id = json['id'] as String
+    ..score = json['score'] == null
+        ? null
+        : CreateResponse$Mutation$CreateSymptomQuestionnaireResponse$Score
+            .fromJson(json['score'] as Map<String, dynamic>);
+}
+
+Map<String,
+    dynamic> _$CreateResponse$Mutation$CreateSymptomQuestionnaireResponseToJson(
+        CreateResponse$Mutation$CreateSymptomQuestionnaireResponse instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'score': instance.score?.toJson(),
+    };
+
+CreateResponse$Mutation _$CreateResponse$MutationFromJson(
+    Map<String, dynamic> json) {
+  return CreateResponse$Mutation()
+    ..createSymptomQuestionnaireResponse = json[
+                'createSymptomQuestionnaireResponse'] ==
+            null
+        ? null
+        : CreateResponse$Mutation$CreateSymptomQuestionnaireResponse.fromJson(
+            json['createSymptomQuestionnaireResponse'] as Map<String, dynamic>);
+}
+
+Map<String, dynamic> _$CreateResponse$MutationToJson(
+        CreateResponse$Mutation instance) =>
+    <String, dynamic>{
+      'createSymptomQuestionnaireResponse':
+          instance.createSymptomQuestionnaireResponse?.toJson(),
+    };
+
+SymptomQuestionnaireResponseAnswerInput
+    _$SymptomQuestionnaireResponseAnswerInputFromJson(
+        Map<String, dynamic> json) {
+  return SymptomQuestionnaireResponseAnswerInput(
+    questionId: json['questionId'] as String,
+    choiceId: json['choiceId'] as String,
+    writtenText: json['writtenText'] as String,
+  );
+}
+
+Map<String, dynamic> _$SymptomQuestionnaireResponseAnswerInputToJson(
+        SymptomQuestionnaireResponseAnswerInput instance) =>
+    <String, dynamic>{
+      'questionId': instance.questionId,
+      'choiceId': instance.choiceId,
+      'writtenText': instance.writtenText,
+    };
+
+SymptomQuestionnaireResponseInput _$SymptomQuestionnaireResponseInputFromJson(
+    Map<String, dynamic> json) {
+  return SymptomQuestionnaireResponseInput(
+    responseDate:
+        fromGraphQLDateTimeToDartDateTime(json['responseDate'] as String),
+    userId: json['userId'] as String,
+    questionnaireId: json['questionnaireId'] as String,
+    questionnaireVersion: json['questionnaireVersion'] as int,
+    questionAnswers: (json['questionAnswers'] as List)
+        ?.map((e) => e == null
+            ? null
+            : SymptomQuestionnaireResponseAnswerInput.fromJson(
+                e as Map<String, dynamic>))
+        ?.toList(),
+  );
+}
+
+Map<String, dynamic> _$SymptomQuestionnaireResponseInputToJson(
+        SymptomQuestionnaireResponseInput instance) =>
+    <String, dynamic>{
+      'responseDate': fromDartDateTimeToGraphQLDateTime(instance.responseDate),
+      'userId': instance.userId,
+      'questionnaireId': instance.questionnaireId,
+      'questionnaireVersion': instance.questionnaireVersion,
+      'questionAnswers':
+          instance.questionAnswers?.map((e) => e?.toJson())?.toList(),
+    };
+
 Login$Mutation$Login _$Login$Mutation$LoginFromJson(Map<String, dynamic> json) {
   return Login$Mutation$Login()
     ..authorization = json['authorization'] as String
@@ -81,38 +228,6 @@ Map<String, dynamic> _$Questionnaire$Query$SymptomQuestionnaire$QuestionsToJson(
           instance.possibleChoices?.map((e) => e?.toJson())?.toList(),
     };
 
-T _$enumDecode<T>(
-  Map<T, dynamic> enumValues,
-  dynamic source, {
-  T unknownValue,
-}) {
-  if (source == null) {
-    throw ArgumentError('A value must be provided. Supported values: '
-        '${enumValues.values.join(', ')}');
-  }
-
-  final value = enumValues.entries
-      .singleWhere((e) => e.value == source, orElse: () => null)
-      ?.key;
-
-  if (value == null && unknownValue == null) {
-    throw ArgumentError('`$source` is not one of the supported values: '
-        '${enumValues.values.join(', ')}');
-  }
-  return value ?? unknownValue;
-}
-
-T _$enumDecodeNullable<T>(
-  Map<T, dynamic> enumValues,
-  dynamic source, {
-  T unknownValue,
-}) {
-  if (source == null) {
-    return null;
-  }
-  return _$enumDecode<T>(enumValues, source, unknownValue: unknownValue);
-}
-
 const _$SymptomQuestionnaireQuestionKindEnumMap = {
   SymptomQuestionnaireQuestionKind.multipleChoice: 'MULTIPLE_CHOICE',
   SymptomQuestionnaireQuestionKind.freeResponse: 'FREE_RESPONSE',
@@ -144,15 +259,6 @@ Map<String, dynamic>
           'minScore': instance.minScore,
           'maxScore': instance.maxScore,
         };
-
-const _$SymptomQuestionnaireScoreRangeColorEnumMap = {
-  SymptomQuestionnaireScoreRangeColor.green: 'GREEN',
-  SymptomQuestionnaireScoreRangeColor.greenYellow: 'GREEN_YELLOW',
-  SymptomQuestionnaireScoreRangeColor.yellow: 'YELLOW',
-  SymptomQuestionnaireScoreRangeColor.orange: 'ORANGE',
-  SymptomQuestionnaireScoreRangeColor.red: 'RED',
-  SymptomQuestionnaireScoreRangeColor.artemisUnknown: 'ARTEMIS_UNKNOWN',
-};
 
 Questionnaire$Query$SymptomQuestionnaire
     _$Questionnaire$Query$SymptomQuestionnaireFromJson(
@@ -349,82 +455,20 @@ Map<String, dynamic> _$CurrentUser$QueryToJson(CurrentUser$Query instance) =>
       'currentUser': instance.currentUser?.toJson(),
     };
 
-CreateResponse$Mutation$CreateSymptomQuestionnaireResponse
-    _$CreateResponse$Mutation$CreateSymptomQuestionnaireResponseFromJson(
-        Map<String, dynamic> json) {
-  return CreateResponse$Mutation$CreateSymptomQuestionnaireResponse()
-    ..userFriendlyMessage = json['userFriendlyMessage'] as String;
-}
-
-Map<String,
-    dynamic> _$CreateResponse$Mutation$CreateSymptomQuestionnaireResponseToJson(
-        CreateResponse$Mutation$CreateSymptomQuestionnaireResponse instance) =>
-    <String, dynamic>{
-      'userFriendlyMessage': instance.userFriendlyMessage,
-    };
-
-CreateResponse$Mutation _$CreateResponse$MutationFromJson(
+CreateResponseArguments _$CreateResponseArgumentsFromJson(
     Map<String, dynamic> json) {
-  return CreateResponse$Mutation()
-    ..createSymptomQuestionnaireResponse = json[
-                'createSymptomQuestionnaireResponse'] ==
-            null
+  return CreateResponseArguments(
+    response: json['response'] == null
         ? null
-        : CreateResponse$Mutation$CreateSymptomQuestionnaireResponse.fromJson(
-            json['createSymptomQuestionnaireResponse'] as Map<String, dynamic>);
-}
-
-Map<String, dynamic> _$CreateResponse$MutationToJson(
-        CreateResponse$Mutation instance) =>
-    <String, dynamic>{
-      'createSymptomQuestionnaireResponse':
-          instance.createSymptomQuestionnaireResponse?.toJson(),
-    };
-
-SymptomQuestionnaireResponseAnswerInput
-    _$SymptomQuestionnaireResponseAnswerInputFromJson(
-        Map<String, dynamic> json) {
-  return SymptomQuestionnaireResponseAnswerInput(
-    questionId: json['questionId'] as String,
-    choiceId: json['choiceId'] as String,
-    writtenText: json['writtenText'] as String,
+        : SymptomQuestionnaireResponseInput.fromJson(
+            json['response'] as Map<String, dynamic>),
   );
 }
 
-Map<String, dynamic> _$SymptomQuestionnaireResponseAnswerInputToJson(
-        SymptomQuestionnaireResponseAnswerInput instance) =>
+Map<String, dynamic> _$CreateResponseArgumentsToJson(
+        CreateResponseArguments instance) =>
     <String, dynamic>{
-      'questionId': instance.questionId,
-      'choiceId': instance.choiceId,
-      'writtenText': instance.writtenText,
-    };
-
-SymptomQuestionnaireResponseInput _$SymptomQuestionnaireResponseInputFromJson(
-    Map<String, dynamic> json) {
-  return SymptomQuestionnaireResponseInput(
-    responseDate:
-        fromGraphQLDateTimeToDartDateTime(json['responseDate'] as String),
-    userId: json['userId'] as String,
-    questionnaireId: json['questionnaireId'] as String,
-    questionnaireVersion: json['questionnaireVersion'] as int,
-    questionAnswers: (json['questionAnswers'] as List)
-        ?.map((e) => e == null
-            ? null
-            : SymptomQuestionnaireResponseAnswerInput.fromJson(
-                e as Map<String, dynamic>))
-        ?.toList(),
-  );
-}
-
-Map<String, dynamic> _$SymptomQuestionnaireResponseInputToJson(
-        SymptomQuestionnaireResponseInput instance) =>
-    <String, dynamic>{
-      'responseDate': fromDartDateTimeToGraphQLDateTime(instance.responseDate),
-      'userId': instance.userId,
-      'questionnaireId': instance.questionnaireId,
-      'questionnaireVersion': instance.questionnaireVersion,
-      'questionAnswers':
-          instance.questionAnswers?.map((e) => e?.toJson())?.toList(),
+      'response': instance.response?.toJson(),
     };
 
 LoginArguments _$LoginArgumentsFromJson(Map<String, dynamic> json) {
@@ -451,20 +495,4 @@ Map<String, dynamic> _$QuestionnaireArgumentsToJson(
         QuestionnaireArguments instance) =>
     <String, dynamic>{
       'id': instance.id,
-    };
-
-CreateResponseArguments _$CreateResponseArgumentsFromJson(
-    Map<String, dynamic> json) {
-  return CreateResponseArguments(
-    response: json['response'] == null
-        ? null
-        : SymptomQuestionnaireResponseInput.fromJson(
-            json['response'] as Map<String, dynamic>),
-  );
-}
-
-Map<String, dynamic> _$CreateResponseArgumentsToJson(
-        CreateResponseArguments instance) =>
-    <String, dynamic>{
-      'response': instance.response?.toJson(),
     };

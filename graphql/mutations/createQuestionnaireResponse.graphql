@@ -1,5 +1,11 @@
 mutation createResponse($response: SymptomQuestionnaireResponseInput!) {
     createSymptomQuestionnaireResponse(response: $response) {
-        userFriendlyMessage
+        id
+        score {
+            value
+            color
+            title
+            description
+        }
     }
 }

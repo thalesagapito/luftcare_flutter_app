@@ -317,6 +317,6 @@ type Mutation {
   unpublishSymptomQuestionnaire(id: ID!): GenericResponse!
   changeSymptomQuestionnairePublishStatus(isPublished: Boolean!, id: ID!): GenericResponse!
   deleteSymptomQuestionnaire(id: ID!): GenericResponse!
-  createSymptomQuestionnaireResponse(response: SymptomQuestionnaireResponseInput!): GenericResponse!
+  createSymptomQuestionnaireResponse(response: SymptomQuestionnaireResponseInput!): SymptomQuestionnaireResponse!
   registerUser(userData: RegisterUserInput!): User!
 }
