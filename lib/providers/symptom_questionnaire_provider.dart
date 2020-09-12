@@ -2,17 +2,17 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:luftcare_flutter_app/models/graphql/api.graphql.dart';
 
 class SymptomQuestionnaire {
-  Future<QueryResult> getQueryResult(GraphQLClient client, {String id}) {
+  static Future<QueryResult> getQueryResult(GraphQLClient client, {String id}) {
     final queryOptions = QueryOptions(
       documentNode: QuestionnaireQuery().document,
-      fetchPolicy: FetchPolicy.cacheFirst,
+      fetchPolicy: FetchPolicy.cacheAndNetwork,
       variables: {'id': id},
     );
 
     return client.query(queryOptions);
   }
 
-  Questionnaire$Query$SymptomQuestionnaire getQuestionnaireFromQueryResult(
+  static Questionnaire$Query$SymptomQuestionnaire getQuestionnaireFromQueryResult(
     QueryResult result,
   ) {
     if (result == null || result.data == null) return null;
@@ -20,7 +20,7 @@ class SymptomQuestionnaire {
     return Questionnaire$Query.fromJson(result.data).symptomQuestionnaire;
   }
 
-  Future<Questionnaire$Query$SymptomQuestionnaire> getQuestionnaire(
+  static Future<Questionnaire$Query$SymptomQuestionnaire> getQuestionnaire(
     GraphQLClient client, {
     String id,
   }) =>

@@ -80,6 +80,8 @@ class ErrorScreen extends StatelessWidget {
                     return RaisedButton(
                       onPressed: onButtonPressed ?? pushToHomeScreen,
                       child: Text(buttonText),
+                      highlightElevation: 1,
+                      elevation: 0,
                     );
                   },
                 ),

@@ -1,13 +1,14 @@
+import 'package:tuple/tuple.dart';
 import 'package:flutter/material.dart';
 import 'package:luftcare_flutter_app/models/graphql/api.graphql.dart';
 
 class SymptomQuestionnaireResponse {
-  bool hasAllAnswers(SymptomQuestionnaireResponseInput response) {
+  static bool hasAllAnswers(SymptomQuestionnaireResponseInput response) {
     final answers = response.questionAnswers;
     return answers.every((answer) => answer != null);
   }
 
-  String getSelectedChoiceId(SymptomQuestionnaireResponseInput response, String questionId) {
+  static String getSelectedChoiceId(SymptomQuestionnaireResponseInput response, String questionId) {
     final answers = response.questionAnswers;
     final questionAnswer = answers.firstWhere(
       (answer) => answer?.questionId == questionId,
@@ -16,7 +17,7 @@ class SymptomQuestionnaireResponse {
     return questionAnswer?.choiceId;
   }
 
-  SymptomQuestionnaireResponseInput getUpdatedResponseWithAnswer({
+  static SymptomQuestionnaireResponseInput getUpdatedResponseWithAnswer({
     @required SymptomQuestionnaireResponseInput response,
     @required int questionPresentationOrder,
     @required String questionId,
@@ -30,5 +31,32 @@ class SymptomQuestionnaireResponse {
 
     response.questionAnswers = updatedAnswers;
     return response;
+  }
+
+  static List<Tuple2<String, String>> getQuestionsAndAnswersList({
+    @required Questionnaire$Query$SymptomQuestionnaire questionnaire,
+    @required SymptomQuestionnaireResponseInput response,
+  }) {
+    final questions = questionnaire.questions ?? [];
+    final answers = response.questionAnswers ?? [];
+    return questions.map((question) {
+      final choices = question.possibleChoices ?? [];
+      final questionId = question.id;
+      final questionText = "${question.presentationOrder}. ${question.text}";
+      final questionAnswer = answers.firstWhere(
+        (answer) => answer.questionId == questionId,
+        orElse: () => null,
+      );
+
+      if (questionAnswer == null) return Tuple2(questionText, 'Resposta não encontrada');
+
+      if ((questionAnswer.writtenText ?? '').isNotEmpty)
+        return Tuple2(questionText, questionAnswer.writtenText);
+
+      final selectedChoice = choices.firstWhere((choice) => choice.id == questionAnswer.choiceId);
+      final answerText = selectedChoice.text;
+
+      return Tuple2(questionText, answerText);
+    }).toList();
   }
 }

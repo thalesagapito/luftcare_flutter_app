@@ -41,15 +41,8 @@ class RespondQuestionnaireScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final questionnaireId = _getQuestionnaireIdFromArgs(context);
 
-    return MultiProvider(
-      providers: [
-        Provider<SymptomQuestionnaire>(
-          create: (_) => SymptomQuestionnaire(),
-        ),
-        Provider<SymptomQuestionnaireResponse>(
-          create: (_) => SymptomQuestionnaireResponse(),
-        ),
-      ],
+    return Provider<SymptomQuestionnaire>(
+      create: (_) => SymptomQuestionnaire(),
       child: Scaffold(
         body: _RespondScreenBody(id: questionnaireId),
       ),
@@ -89,21 +82,27 @@ class __RespondScreenBodyState extends State<_RespondScreenBody> {
 
   void _onDiscardResponse(BuildContext ctx) => Navigator.pop(ctx);
 
-  void _onSubmitResponse(BuildContext ctx, SymptomQuestionnaireResponseInput responseInput) {
+  void _onSubmitResponse(
+    BuildContext ctx,
+    SymptomQuestionnaireResponseInput responseInput,
+    Questionnaire$Query$SymptomQuestionnaire questionnaire,
+  ) {
     final routeName = SubmitResponseScreen.RouteName;
-    final args = SubmitResponseScreenArgs(responseInput: responseInput);
+    final args = SubmitResponseScreenArgs(
+      responseInput: responseInput,
+      questionnaire: questionnaire,
+    );
 
-    Navigator.popAndPushNamed(ctx, routeName, arguments: args);
+    Navigator.pushNamed(ctx, routeName, arguments: args);
   }
 
   @override
   Widget build(BuildContext context) {
-    final questionnaireProvider = Provider.of<SymptomQuestionnaire>(context);
-    final currentUserProvider = Provider.of<CurrentUser>(context);
+    final currentUserProvider = Provider.of<CurrentUser>(context, listen: false);
 
     return GraphQLConsumer(
       builder: (client) {
-        final getQuestionnaire = questionnaireProvider.getQuestionnaire(client, id: widget.id);
+        final getQuestionnaire = SymptomQuestionnaire.getQuestionnaire(client, id: widget.id);
         final getCurrentUser = currentUserProvider.getAndUpdateUser(client);
 
         final questionnaireAndCurrentUser = Future.wait(
@@ -162,7 +161,8 @@ class __RespondScreenBodyState extends State<_RespondScreenBody> {
                     isChangingPages: _isChangingPages,
                     onPageAnimationEnd: _onPageAnimationEnd,
                     onDiscardResponse: () => _onDiscardResponse(context),
-                    onSubmitResponse: (responseInput) => _onSubmitResponse(context, responseInput),
+                    onSubmitResponse: (responseInput) =>
+                        _onSubmitResponse(context, responseInput, questionnaire),
                   ),
                 ],
               ),
