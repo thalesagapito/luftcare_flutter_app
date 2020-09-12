@@ -4,7 +4,7 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:luftcare_flutter_app/helpers/error_handlers.dart';
 import 'package:luftcare_flutter_app/widgets/atoms/centered_loading_indicator.dart';
 import 'package:luftcare_flutter_app/providers/symptom_questionnaires_provider.dart';
-import 'package:luftcare_flutter_app/screens/patient/respond_questionnaire_screen/respond_questionnaire_screen.dart';
+import 'package:luftcare_flutter_app/screens/patient/respond_questionnaire/respond_questionnaire_screen.dart';
 
 class AvailableQuestionnaires extends StatefulWidget {
   const AvailableQuestionnaires({Key key, DateTime selectedDate}) : super(key: key);
