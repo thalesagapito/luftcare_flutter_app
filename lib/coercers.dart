@@ -1,8 +1,11 @@
 import 'package:intl/intl.dart';
 
-final dateTimeFormatter = DateFormat('yyyy-MM-ddTHH:mm:ssZ');
+// The Z in the end means timezone
+// even though intl docs say it should work, it's not yet implemented
+// final dateTimeFormatter = DateFormat('yyyy-MM-ddTHH:mm:ssZ');
 
-DateTime fromGraphQLDateTimeToDartDateTime(String dateTime) =>
-    DateTime.parse(dateTime);
-String fromDartDateTimeToGraphQLDateTime(DateTime dateTime) =>
-    dateTimeFormatter.format(dateTime);
+// for now, we won't include a timezone
+final dateTimeFormatter = DateFormat('yyyy-MM-ddTHH:mm:ss');
+
+DateTime fromGraphQLDateTimeToDartDateTime(String dateTime) => DateTime.parse(dateTime);
+String fromDartDateTimeToGraphQLDateTime(DateTime dateTime) => dateTimeFormatter.format(dateTime);
