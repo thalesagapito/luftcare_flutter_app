@@ -7,10 +7,7 @@ import 'package:luftcare_flutter_app/providers/symptom_questionnaires_provider.d
 import 'package:luftcare_flutter_app/screens/patient/respond_questionnaire_screen/respond_questionnaire_screen.dart';
 
 class AvailableQuestionnaires extends StatefulWidget {
-  const AvailableQuestionnaires({
-    Key key,
-    DateTime selectedDate,
-  }) : super(key: key);
+  const AvailableQuestionnaires({Key key, DateTime selectedDate}) : super(key: key);
 
   @override
   _AvailableQuestionnairesState createState() => _AvailableQuestionnairesState();
@@ -32,7 +29,7 @@ class _AvailableQuestionnairesState extends State<AvailableQuestionnaires> {
   Widget build(BuildContext context) {
     return Query(
       options: QueryOptions(
-        documentNode: SymptomQuestionnaires.getDocumentNode(),
+        documentNode: SymptomQuestionnaires.questionnairesQueryDocumentNode,
         fetchPolicy: FetchPolicy.cacheAndNetwork,
       ),
       builder: (result, {fetchMore, refetch}) {

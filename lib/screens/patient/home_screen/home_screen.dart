@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
-import 'package:luftcare_flutter_app/providers/auth_provider.dart';
 import 'package:luftcare_flutter_app/widgets/organisms/layout/top_navbar.dart';
 import 'package:luftcare_flutter_app/widgets/organisms/layout/side_drawer.dart';
-import 'package:luftcare_flutter_app/screens/patient/home_screen/overview/overview.dart';
 import 'package:luftcare_flutter_app/widgets/organisms/layout/bottom_navbar.dart';
+import 'package:luftcare_flutter_app/screens/patient/home_screen/overview/overview.dart';
 
 class HomeScreen extends StatefulWidget {
   static const RouteName = '/home';
@@ -17,16 +15,6 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedNavbarIndex = 0;
-
-  @override
-  void didChangeDependencies() async {
-    super.didChangeDependencies();
-    final authProvider = Provider.of<Auth>(context);
-    final currentUser = authProvider.user;
-    if (currentUser == null) {
-      await authProvider.getUserFromApi(context);
-    }
-  }
 
   static const List<Widget> _widgetOptions = <Widget>[
     Overview(),
