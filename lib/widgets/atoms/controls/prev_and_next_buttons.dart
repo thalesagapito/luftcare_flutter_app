@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 
-class PreviousAndNextButtons extends StatelessWidget {
-  final bool isPreviousVisible;
-  final Function onPreviousTap;
+class PrevAndNextButtons extends StatelessWidget {
+  final bool isPrevVisible;
+  final Function onPrevTap;
   final Text prevText;
   final bool isNextVisible;
   final Function onNextTap;
   final Text nextText;
 
-  const PreviousAndNextButtons({
+  const PrevAndNextButtons({
     Key key,
     this.prevText = const Text('Anterior'),
-    this.isPreviousVisible = true,
-    this.onPreviousTap,
+    this.isPrevVisible = true,
+    this.onPrevTap,
     this.nextText = const Text('Próxima'),
     this.isNextVisible = true,
     this.onNextTap,
@@ -22,8 +22,8 @@ class PreviousAndNextButtons extends StatelessWidget {
   Widget build(BuildContext context) {
     final emptyBox = const SizedBox.shrink();
 
-    final prevButton = FlatButton(onPressed: onPreviousTap, child: prevText);
-    final previousWidget = isPreviousVisible ? prevButton : emptyBox;
+    final prevButton = FlatButton(onPressed: onPrevTap, child: prevText);
+    final PrevWidget = isPrevVisible ? prevButton : emptyBox;
 
     final nextButton = FlatButton(onPressed: onNextTap, child: nextText);
     final nextWidget = isNextVisible ? nextButton : emptyBox;
@@ -31,7 +31,7 @@ class PreviousAndNextButtons extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        previousWidget,
+        PrevWidget,
         nextWidget,
       ],
     );

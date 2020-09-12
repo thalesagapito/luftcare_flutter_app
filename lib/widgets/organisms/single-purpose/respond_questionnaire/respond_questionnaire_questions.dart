@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:luftcare_flutter_app/models/graphql/api.graphql.dart';
+import 'package:luftcare_flutter_app/widgets/atoms/controls/prev_and_next_buttons.dart';
 import 'package:luftcare_flutter_app/providers/symptom_questionnaire_response_provider.dart';
-import 'package:luftcare_flutter_app/widgets/atoms/controls/previous_and_next_buttons.dart';
 import 'package:luftcare_flutter_app/widgets/organisms/single-purpose/respond_questionnaire/respond_questionnaire_header.dart';
 import 'package:luftcare_flutter_app/widgets/organisms/single-purpose/respond_questionnaire/respond_questionnaire_question.dart';
+
+typedef GoToPageFunction = void Function(int page, {bool triggerIsChangingPages});
+typedef DiscardResponseFunction = void Function();
+typedef SubmitResponseFunction = void Function(SymptomQuestionnaireResponseInput responseInput);
 
 class RespondQuestionnaireQuestions extends StatefulWidget {
   RespondQuestionnaireQuestions({
@@ -16,18 +20,20 @@ class RespondQuestionnaireQuestions extends StatefulWidget {
     @required this.goToPage,
     @required this.onPageAnimationEnd,
     @required this.onDiscardResponse,
+    @required this.onSubmitResponse,
     @required this.userId,
     @required this.currentPage,
     @required this.isChangingPages,
   }) : super(key: key);
 
   final Questionnaire$Query$SymptomQuestionnaire questionnaire;
+  final DiscardResponseFunction onDiscardResponse;
+  final SubmitResponseFunction onSubmitResponse;
   final PageController pageController;
+  final GoToPageFunction goToPage;
   final void Function() goToNextPage;
   final void Function() goToPrevPage;
-  final void Function(int page, {bool triggerIsChangingPages}) goToPage;
   final void Function() onPageAnimationEnd;
-  final void Function() onDiscardResponse;
   final String userId;
   final int currentPage;
   final bool isChangingPages;
@@ -84,6 +90,7 @@ class _RespondQuestionnaireQuestionsState extends State<RespondQuestionnaireQues
     final questions = widget.questionnaire?.questions ?? [];
     final questionCount = questions.length;
     final isFirstQuestion = widget.currentPage == 0;
+    final isLastQuestion = widget.currentPage == questionCount - 1;
     final questionsWidgets = questions
         .map((question) => _buildQuestionWidget(
               responseProvider: responseProvider,
@@ -98,6 +105,8 @@ class _RespondQuestionnaireQuestionsState extends State<RespondQuestionnaireQues
       borderRadius: const BorderRadius.vertical(bottom: Radius.circular(20)),
     );
     final underlay = Container(decoration: underlayDecoration, height: 30);
+
+    final submitResponse = () => widget.onSubmitResponse(_response);
 
     return Expanded(
       child: SafeArea(
@@ -128,10 +137,11 @@ class _RespondQuestionnaireQuestionsState extends State<RespondQuestionnaireQues
                 ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
-                  child: PreviousAndNextButtons(
-                    onPreviousTap: isFirstQuestion ? widget.onDiscardResponse : widget.goToPrevPage,
+                  child: PrevAndNextButtons(
+                    onPrevTap: isFirstQuestion ? widget.onDiscardResponse : widget.goToPrevPage,
                     prevText: isFirstQuestion ? Text('Cancelar') : Text('Anterior'),
-                    onNextTap: widget.goToNextPage,
+                    onNextTap: isLastQuestion ? submitResponse : widget.goToNextPage,
+                    nextText: isLastQuestion ? Text('Enviar') : Text('Próxima'),
                   ),
                 )
               ],
