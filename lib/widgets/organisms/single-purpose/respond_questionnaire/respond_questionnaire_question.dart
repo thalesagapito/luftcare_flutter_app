@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:luftcare_flutter_app/models/graphql/api.graphql.dart';
-import 'package:luftcare_flutter_app/widgets/organisms/single-purpose/respond_questionnaire/RespondQuestionnaireQuestionChoice.dart';
+import 'package:luftcare_flutter_app/widgets/organisms/single-purpose/respond_questionnaire/respond_questionnaire_question_choice.dart';
 
 class RespondQuestionnaireQuestion extends StatelessWidget {
   const RespondQuestionnaireQuestion({

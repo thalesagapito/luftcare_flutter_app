@@ -9,8 +9,8 @@ import 'package:luftcare_flutter_app/providers/symptom_questionnaire_provider.da
 import 'package:luftcare_flutter_app/widgets/atoms/centered_loading_indicator.dart';
 import 'package:luftcare_flutter_app/widgets/atoms/controls/previous_and_next_buttons.dart';
 import 'package:luftcare_flutter_app/providers/symptom_questionnaire_response_provider.dart';
-import 'package:luftcare_flutter_app/widgets/organisms/single-purpose/respond_questionnaire/RespondQuestionnaireHeader.dart';
-import 'package:luftcare_flutter_app/widgets/organisms/single-purpose/respond_questionnaire/RespondQuestionnaireQuestion.dart';
+import 'package:luftcare_flutter_app/widgets/organisms/single-purpose/respond_questionnaire/respond_questionnaire_header.dart';
+import 'package:luftcare_flutter_app/widgets/organisms/single-purpose/respond_questionnaire/respond_questionnaire_question.dart';
 
 class RespondQuestionnaireScreenArgs {
   final String questionnaireId;
