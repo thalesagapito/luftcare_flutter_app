@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:luftcare_flutter_app/providers/auth_provider.dart';
+import 'package:luftcare_flutter_app/screens/guest/guest_welcome_screen.dart';
 import 'package:luftcare_flutter_app/secure_storage.dart';
+
+final OptimisticCache cache = OptimisticCache(dataIdFromObject: uuidFromObject);
 
 String uuidFromObject(Object object) {
   if (object is Map<String, Object>) {
@@ -13,32 +17,34 @@ String uuidFromObject(Object object) {
   return null;
 }
 
-final OptimisticCache cache = OptimisticCache(
-  dataIdFromObject: uuidFromObject,
-);
+Future<String> getToken() async {
+  final token = await SecureStorage().read(SecureStorageKey.API_AUTH_TOKEN);
+  return 'Bearer $token';
+}
+
+Future<void> errorHandler(ErrorResponse error, GlobalKey<NavigatorState> navigatorKey) async {
+  final graphqlErrors = error?.exception?.graphqlErrors ?? [];
+
+  if (graphqlErrors.isEmpty) return;
+
+  final firstErrorMessage = graphqlErrors[0].message;
+
+  if (firstErrorMessage.contains("Access denied")) {
+    final predicate = (_) => false;
+    final routeName = GuestWelcomeScreen.RouteName;
+    await navigatorKey.currentState.pushNamedAndRemoveUntil(routeName, predicate);
+  }
+}
 
 ValueNotifier<GraphQLClient> clientFor({
   @required String uri,
-  String subscriptionUri,
+  @required GlobalKey<NavigatorState> navigatorKey,
 }) {
-  Link link = HttpLink(uri: uri);
-  // if has subscriptionUri should concat a websocket link
-  if (subscriptionUri != null) {
-    final WebSocketLink websocketLink = WebSocketLink(
-      url: subscriptionUri,
-      config: SocketClientConfig(
-        autoReconnect: true,
-        inactivityTimeout: Duration(seconds: 30),
-      ),
-    );
+  final HttpLink httpLink = HttpLink(uri: uri);
+  final AuthLink authLink = AuthLink(getToken: getToken);
+  final ErrorLink errorLink = ErrorLink(errorHandler: (error) => errorHandler(error, navigatorKey));
 
-    link = link.concat(websocketLink);
-  }
-  AuthLink authLink = AuthLink(getToken: () async {
-    final token = await SecureStorage().read(SecureStorageKey.API_AUTH_TOKEN);
-    return 'Bearer $token';
-  });
-  link = authLink.concat(link);
+  final link = Link.from([authLink, errorLink, httpLink]);
 
   return ValueNotifier<GraphQLClient>(
     GraphQLClient(
@@ -52,20 +58,14 @@ class GraphqlProvider extends StatelessWidget {
   GraphqlProvider({
     @required this.child,
     @required String uri,
-    String subscriptionUri,
-  }) : client = clientFor(
-          uri: uri,
-          subscriptionUri: subscriptionUri,
-        );
+    @required GlobalKey<NavigatorState> navigatorKey,
+  }) : client = clientFor(uri: uri, navigatorKey: navigatorKey);
 
   final Widget child;
   final ValueNotifier<GraphQLClient> client;
 
   @override
   Widget build(BuildContext context) {
-    return GraphQLProvider(
-      client: client,
-      child: child,
-    );
+    return GraphQLProvider(client: client, child: child);
   }
 }

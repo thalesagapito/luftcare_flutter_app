@@ -11,6 +11,7 @@ import 'package:luftcare_flutter_app/routes.dart';
 import 'package:luftcare_flutter_app/secure_storage.dart';
 import 'package:luftcare_flutter_app/graphql_provider.dart';
 import 'package:luftcare_flutter_app/providers/auth_provider.dart';
+import 'package:luftcare_flutter_app/providers/current_user_provider.dart';
 import 'package:luftcare_flutter_app/screens/guest/guest_welcome_screen.dart';
 import 'package:luftcare_flutter_app/screens/patient/home_screen/home_screen.dart';
 import 'package:luftcare_flutter_app/widgets/atoms/centered_loading_indicator.dart';
@@ -30,10 +31,10 @@ void main() async {
   await initializeDateFormatting('pt_BR');
   Intl.defaultLocale = 'pt_BR';
 
-  final isLoggedIn = await SecureStorage().isLoggedIn;
   final loggedInRoute = HomeScreen.RouteName;
   final notLoggedInRoute = GuestWelcomeScreen.RouteName;
-  final initialRoute = isLoggedIn ? loggedInRoute : notLoggedInRoute;
+  final hasAuthToken = await SecureStorage().hasAuthToken;
+  final initialRoute = hasAuthToken ? loggedInRoute : notLoggedInRoute;
 
   runApp(MyApp(initialRoute: initialRoute));
 }
@@ -44,6 +45,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final navigatorKey = GlobalKey<NavigatorState>();
+
     final loadingTheme = LoadingThemeData(
       loadingBackgroundColor: Colors.transparent,
       backgroundColor: Colors.white70,
@@ -51,8 +54,12 @@ class MyApp extends StatelessWidget {
 
     return GraphqlProvider(
       uri: graphqlEndpoint,
-      child: ChangeNotifierProvider(
-        create: (ctx) => Auth(),
+      navigatorKey: navigatorKey,
+      child: MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => Auth()),
+          ChangeNotifierProvider(create: (_) => CurrentUser()),
+        ],
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
           color: Colors.indigo[400],
@@ -61,6 +68,7 @@ class MyApp extends StatelessWidget {
           darkTheme: AppTheme.dark,
           themeMode: ThemeMode.light,
           initialRoute: initialRoute,
+          navigatorKey: navigatorKey,
           routes: routes,
           builder: (context, child) => LoadingProvider(
             loadingWidgetBuilder: (context, data) => CenteredLoadingIndicator(),

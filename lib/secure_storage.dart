@@ -31,20 +31,20 @@ class SecureStorage {
     await _storage.delete(key: key.toString());
   }
 
-  Future<void> login({@required String auth, @required String refresh}) async {
+  Future<void> saveApiTokens({@required String auth, @required String refresh}) async {
     Future.wait([
       write(key: SecureStorageKey.API_AUTH_TOKEN, value: auth),
       write(key: SecureStorageKey.API_REFRESH_TOKEN, value: refresh),
-    ]);
+    ]).catchError((_) => Future.error('Erro interno ao salvar tokens'));
   }
 
-  Future<void> logout() async {
+  Future<void> clearApiTokens() async {
     Future.wait([
       delete(SecureStorageKey.API_AUTH_TOKEN),
       delete(SecureStorageKey.API_REFRESH_TOKEN),
-    ]);
+    ]).catchError((_) => Future.error('Erro interno ao remover tokens'));
   }
 
-  Future<bool> get isLoggedIn => read(SecureStorageKey.API_AUTH_TOKEN)
-      .then((token) => (token ?? '').isNotEmpty);
+  Future<bool> get hasAuthToken =>
+      read(SecureStorageKey.API_AUTH_TOKEN).then((token) => (token ?? '').isNotEmpty);
 }

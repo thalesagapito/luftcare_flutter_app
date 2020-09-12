@@ -1,26 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:luftcare_flutter_app/providers/auth_provider.dart';
+import 'package:luftcare_flutter_app/secure_storage.dart';
 import 'package:luftcare_flutter_app/screens/guest/guest_welcome_screen.dart';
 import 'package:luftcare_flutter_app/screens/patient/home_screen/home_screen.dart';
-import 'package:provider/provider.dart';
 
 class ErrorHandlers {
-  static void handleQueryResultException(
-      BuildContext context, QueryResult result) {
-    if (result.hasException) {
-      final OperationException exception = result?.exception;
-      final GraphQLError error = exception?.graphqlErrors[0];
-      final String message = error?.message ?? 'Erro interno';
-
-      throw Exception(message);
-    }
+  static void showErrorSnackbar(ScaffoldState scaffold, dynamic errorMessage) {
+    final snackBar = SnackBar(content: Text(errorMessage));
+    scaffold.showSnackBar(snackBar);
   }
 
-  static void showErrorSnackbar(ScaffoldState scaffold, String errorMessage) {
-    final snackBar = SnackBar(content: Text(errorMessage));
+  static String getErrorFromQueryResult(QueryResult result) {
+    final exception = result.exception;
+    final graphqlErrors = exception?.graphqlErrors ?? [];
 
-    scaffold.showSnackBar(snackBar);
+    if (graphqlErrors.isEmpty) {
+      final exceptionMessage = exception?.clientException?.message;
+
+      if (exceptionMessage.isEmpty) return 'Erro interno';
+      return exceptionMessage;
+    }
+
+    final exceptionMessages = graphqlErrors.map((e) => e.message);
+    return exceptionMessages.join('\n');
   }
 }
 
@@ -41,13 +43,9 @@ class ErrorScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final navigator = Navigator.of(context);
-    final isUserLoggedIn = Provider.of<Auth>(context).isLoggedIn;
-
+    final hasAuthToken = SecureStorage().hasAuthToken;
     final loggedInRouteName = HomeScreen.RouteName;
     final guestRouteName = GuestWelcomeScreen.RouteName;
-    final routeName = isUserLoggedIn ? loggedInRouteName : guestRouteName;
-    final predicate = ModalRoute.withName(routeName);
-    final pushToHomeScreen = () => navigator.popUntil(predicate);
 
     final theme = Theme.of(context);
     final titleStyle = theme.textTheme.headline5;
@@ -69,9 +67,21 @@ class ErrorScreen extends StatelessWidget {
                   textAlign: TextAlign.center,
                 ),
                 SizedBox(height: 35),
-                RaisedButton(
-                  onPressed: onButtonPressed ?? pushToHomeScreen,
-                  child: Text(buttonText),
+                FutureBuilder(
+                  future: hasAuthToken,
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) return SizedBox.shrink();
+
+                    final predicate = (_) => false;
+                    final routeName = snapshot.data ? loggedInRouteName : guestRouteName;
+                    final pushToHomeScreen =
+                        () => navigator.pushNamedAndRemoveUntil(routeName, predicate);
+
+                    return RaisedButton(
+                      onPressed: onButtonPressed ?? pushToHomeScreen,
+                      child: Text(buttonText),
+                    );
+                  },
                 ),
               ],
             ),
