@@ -106,6 +106,8 @@ class _RespondQuestionnaireQuestionsState extends State<RespondQuestionnaireQues
     );
     final underlay = Container(decoration: underlayDecoration, height: 30);
 
+    final hasEveryAnswer = responseProvider.hasAllAnswers(_response);
+    final canSubmitResponse = isLastQuestion && hasEveryAnswer;
     final submitResponse = () => widget.onSubmitResponse(_response);
 
     return Expanded(
@@ -140,7 +142,7 @@ class _RespondQuestionnaireQuestionsState extends State<RespondQuestionnaireQues
                   child: PrevAndNextButtons(
                     onPrevTap: isFirstQuestion ? widget.onDiscardResponse : widget.goToPrevPage,
                     prevText: isFirstQuestion ? Text('Cancelar') : Text('Anterior'),
-                    onNextTap: isLastQuestion ? submitResponse : widget.goToNextPage,
+                    onNextTap: canSubmitResponse ? submitResponse : widget.goToNextPage,
                     nextText: isLastQuestion ? Text('Enviar') : Text('Próxima'),
                   ),
                 )

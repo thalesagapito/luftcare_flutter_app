@@ -9,6 +9,7 @@ import 'package:luftcare_flutter_app/providers/current_user_provider.dart';
 import 'package:luftcare_flutter_app/providers/symptom_questionnaire_provider.dart';
 import 'package:luftcare_flutter_app/widgets/atoms/centered_loading_indicator.dart';
 import 'package:luftcare_flutter_app/providers/symptom_questionnaire_response_provider.dart';
+import 'package:luftcare_flutter_app/screens/patient/respond_questionnaire/submit_response_screen.dart';
 import 'package:luftcare_flutter_app/widgets/organisms/single-purpose/respond_questionnaire/respond_questionnaire_header.dart';
 import 'package:luftcare_flutter_app/widgets/organisms/single-purpose/respond_questionnaire/respond_questionnaire_questions.dart';
 
@@ -88,6 +89,13 @@ class __RespondScreenBodyState extends State<_RespondScreenBody> {
 
   void _onDiscardResponse(BuildContext ctx) => Navigator.pop(ctx);
 
+  void _onSubmitResponse(BuildContext ctx, SymptomQuestionnaireResponseInput responseInput) {
+    final routeName = SubmitResponseScreen.RouteName;
+    final args = SubmitResponseScreenArgs(responseInput: responseInput);
+
+    Navigator.popAndPushNamed(ctx, routeName, arguments: args);
+  }
+
   @override
   Widget build(BuildContext context) {
     final questionnaireProvider = Provider.of<SymptomQuestionnaire>(context);
@@ -154,6 +162,7 @@ class __RespondScreenBodyState extends State<_RespondScreenBody> {
                     isChangingPages: _isChangingPages,
                     onPageAnimationEnd: _onPageAnimationEnd,
                     onDiscardResponse: () => _onDiscardResponse(context),
+                    onSubmitResponse: (responseInput) => _onSubmitResponse(context, responseInput),
                   ),
                 ],
               ),

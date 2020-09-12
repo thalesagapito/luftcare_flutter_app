@@ -30,14 +30,13 @@ class SubmitResponseScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final authProvider = Provider.of<Auth>(context, listen: false);
     final responseInput = _getResponseInputFromArgs(context);
-    print(responseInput);
-    final goToHomeScreen = () => Provider.of<Auth>(context).pushToLoggedInHome(context);
+    final goToHomeScreen = () => authProvider.pushToLoggedInHome(context);
 
     return Scaffold(
       body: Column(
         children: [
-          Text('aaaaa'),
           Text(responseInput.toJson().toString()),
           FlatButton(onPressed: goToHomeScreen, child: Text('OK!')),
         ],

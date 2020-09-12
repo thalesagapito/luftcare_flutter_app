@@ -2,6 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:luftcare_flutter_app/models/graphql/api.graphql.dart';
 
 class SymptomQuestionnaireResponse {
+  bool hasAllAnswers(SymptomQuestionnaireResponseInput response) {
+    final answers = response.questionAnswers;
+    return answers.every((answer) => answer != null);
+  }
+
   String getSelectedChoiceId(SymptomQuestionnaireResponseInput response, String questionId) {
     final answers = response.questionAnswers;
     final questionAnswer = answers.firstWhere(
