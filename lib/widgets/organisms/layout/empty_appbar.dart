@@ -16,7 +16,6 @@ class EmptyAppbar extends StatelessWidget implements PreferredSizeWidget {
     );
   }
 
-  // 44 is a constant: kMinInteractiveDimensionCupertino
   @override
   Size get preferredSize => new Size.fromHeight(0);
 }

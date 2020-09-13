@@ -10,10 +10,10 @@ class Validators {
   }
 
   static String _sanitizePassword(String value) => trim(value);
-  static String passwordValidator(String value) {
+  static String passwordValidator(String value, [shouldValidateLength = false]) {
     final sanitizedPassword = _sanitizePassword(value);
     if (sanitizedPassword.isEmpty) return 'Insira uma senha';
-    if (sanitizedPassword.length < 6)
+    if (shouldValidateLength && sanitizedPassword.length < 6)
       return 'Senha deve ter pelo menos 6 caracteres';
 
     return null;

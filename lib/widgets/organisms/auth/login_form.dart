@@ -49,9 +49,7 @@ class _LoginFormState extends State<LoginForm> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           _buildTitle(theme),
-
           SizedBox(height: 20),
-
           AuthInput(
             CupertinoIcons.mail,
             TextFormField(
@@ -66,9 +64,7 @@ class _LoginFormState extends State<LoginForm> {
               decoration: AuthInput.decoration('Endereço de email', theme),
             ),
           ),
-
           SizedBox(height: 20),
-
           AuthInput(
             CupertinoIcons.padlock,
             TextFormField(
@@ -79,15 +75,11 @@ class _LoginFormState extends State<LoginForm> {
               keyboardAppearance: theme.brightness,
               textInputAction: TextInputAction.done,
               validator: Validators.passwordValidator,
-              // onEditingComplete: _validateAndSubmitIfValid,
               decoration: AuthInput.decoration('Senha', theme),
             ),
           ),
-
           SizedBox(height: 30),
-
           AuthButton(onPressed: _validateAndSubmitIfValid)
-          // _LoginSubmitButton
         ],
       ),
     );
