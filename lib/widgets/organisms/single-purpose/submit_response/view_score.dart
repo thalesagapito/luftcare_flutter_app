@@ -3,10 +3,27 @@ import 'package:provider/provider.dart';
 import 'package:luftcare_flutter_app/models/graphql/api.graphql.dart';
 import 'package:luftcare_flutter_app/providers/auth_provider.dart';
 
-class ViewScore extends StatelessWidget {
+class ViewScore extends StatefulWidget {
   const ViewScore({@required this.score, Key key}) : super(key: key);
 
   final CreateResponse$Mutation$CreateSymptomQuestionnaireResponse$Score score;
+
+  @override
+  _ViewScoreState createState() => _ViewScoreState();
+}
+
+class _ViewScoreState extends State<ViewScore> {
+  bool _isScoreVisible = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => setState(() {
+        _isScoreVisible = true;
+      }),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -15,6 +32,7 @@ class ViewScore extends StatelessWidget {
     final textTheme = theme.textTheme;
     final mediaQuery = MediaQuery.of(context);
     final screenWidth = mediaQuery.size.width;
+    final scoreColor = getValueContainerColor(widget.score.color);
     final authProvider = Provider.of<Auth>(context, listen: false);
     final goToHomeScreen = () => authProvider.pushToLoggedInHome(context);
 
@@ -26,16 +44,24 @@ class ViewScore extends StatelessWidget {
             padding: const EdgeInsets.all(padding),
             child: Row(
               children: [
-                Container(
-                  constraints: BoxConstraints(maxWidth: screenWidth - (padding * 3)),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _buildScoreValue(),
-                      _buildScoreTitle(textTheme),
-                      _buildScoreDescription(textTheme),
-                    ],
+                AnimatedOpacity(
+                  duration: Duration(milliseconds: 500),
+                  opacity: _isScoreVisible ? 1 : 0,
+                  child: Container(
+                    constraints: BoxConstraints(maxWidth: screenWidth - (padding * 3)),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 8),
+                          child: Text('Sua pontuação foi:', style: textTheme.headline6),
+                        ),
+                        _buildScoreValue(scoreColor),
+                        _buildScoreTitle(textTheme),
+                        _buildScoreDescription(textTheme),
+                      ],
+                    ),
                   ),
                 ),
               ],
@@ -57,13 +83,15 @@ class ViewScore extends StatelessWidget {
   }
 
   Color getValueContainerColor(SymptomQuestionnaireScoreRangeColor scoreColor) {
+    if (!_isScoreVisible) return Colors.white;
+
     switch (scoreColor) {
       case SymptomQuestionnaireScoreRangeColor.green:
         return Colors.green[500];
       case SymptomQuestionnaireScoreRangeColor.greenYellow:
-        return Colors.lightGreen[400];
+        return Colors.lime[500];
       case SymptomQuestionnaireScoreRangeColor.yellow:
-        return Colors.amber[200];
+        return Colors.amber[400];
       case SymptomQuestionnaireScoreRangeColor.orange:
         return Colors.orange[400];
       case SymptomQuestionnaireScoreRangeColor.red:
@@ -72,18 +100,40 @@ class ViewScore extends StatelessWidget {
     }
   }
 
-  Widget _buildScoreValue() => Container(
-        width: 120,
-        height: 120,
+  Curve getValueContainerCurve(SymptomQuestionnaireScoreRangeColor scoreColor) {
+    switch (scoreColor) {
+      case SymptomQuestionnaireScoreRangeColor.green:
+      case SymptomQuestionnaireScoreRangeColor.greenYellow:
+        return Curves.easeOutBack;
+      case SymptomQuestionnaireScoreRangeColor.yellow:
+      case SymptomQuestionnaireScoreRangeColor.orange:
+      case SymptomQuestionnaireScoreRangeColor.red:
+      default:
+        return Curves.easeOutCubic;
+    }
+  }
+
+  Widget _buildScoreValue(Color color) => AnimatedContainer(
+        duration: Duration(milliseconds: 500),
+        curve: getValueContainerCurve(widget.score.color),
+        width: _isScoreVisible ? 120 : 0,
+        height: _isScoreVisible ? 120 : 0,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: getValueContainerColor(score.color),
+          color: color,
+          boxShadow: [
+            BoxShadow(
+              blurRadius: 5,
+              offset: Offset.fromDirection(90, 3),
+              color: color.withOpacity(0.4),
+            ),
+          ],
         ),
         child: Align(
           alignment: Alignment.center,
           child: FittedBox(
             child: Text(
-              score.value.toString(),
+              widget.score.value.toString(),
               style: TextStyle(fontSize: 72, fontWeight: FontWeight.w400, color: Colors.white),
             ),
           ),
@@ -93,7 +143,7 @@ class ViewScore extends StatelessWidget {
   Widget _buildScoreTitle(TextTheme textTheme) => Padding(
         padding: const EdgeInsets.fromLTRB(10, 10, 0, 5),
         child: Text(
-          score.title,
+          widget.score.title,
           textAlign: TextAlign.left,
           style: textTheme.headline3,
         ),
@@ -102,7 +152,7 @@ class ViewScore extends StatelessWidget {
   Widget _buildScoreDescription(TextTheme textTheme) => Padding(
         padding: const EdgeInsets.only(left: 10),
         child: Text(
-          score.description,
+          widget.score.description,
           softWrap: true,
           textAlign: TextAlign.left,
           style: textTheme.headline5,
