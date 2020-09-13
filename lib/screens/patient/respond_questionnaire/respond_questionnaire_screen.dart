@@ -6,9 +6,9 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:luftcare_flutter_app/helpers/error_handlers.dart';
 import 'package:luftcare_flutter_app/models/graphql/api.graphql.dart';
 import 'package:luftcare_flutter_app/providers/current_user_provider.dart';
+import 'package:luftcare_flutter_app/widgets/organisms/layout/empty_appbar.dart';
 import 'package:luftcare_flutter_app/providers/symptom_questionnaire_provider.dart';
 import 'package:luftcare_flutter_app/widgets/atoms/centered_loading_indicator.dart';
-import 'package:luftcare_flutter_app/providers/symptom_questionnaire_response_provider.dart';
 import 'package:luftcare_flutter_app/screens/patient/respond_questionnaire/submit_response_screen.dart';
 import 'package:luftcare_flutter_app/widgets/organisms/single-purpose/respond_questionnaire/respond_questionnaire_header.dart';
 import 'package:luftcare_flutter_app/widgets/organisms/single-purpose/respond_questionnaire/respond_questionnaire_questions.dart';
@@ -44,6 +44,8 @@ class RespondQuestionnaireScreen extends StatelessWidget {
     return Provider<SymptomQuestionnaire>(
       create: (_) => SymptomQuestionnaire(),
       child: Scaffold(
+        appBar: EmptyAppbar(brightness: Brightness.dark),
+        extendBodyBehindAppBar: true,
         body: _RespondScreenBody(id: questionnaireId),
       ),
     );

@@ -46,6 +46,7 @@ class SubmitResponseScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: EmptyAppbar(brightness: Brightness.light),
+      extendBodyBehindAppBar: true,
       body: SafeArea(
         child: Mutation(
           options: MutationOptions(
