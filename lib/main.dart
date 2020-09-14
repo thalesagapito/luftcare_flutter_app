@@ -31,22 +31,22 @@ void main() async {
   await initializeDateFormatting('pt_BR');
   Intl.defaultLocale = 'pt_BR';
 
+  final navigatorKey = GlobalKey<NavigatorState>();
   final loggedInRoute = HomeScreen.RouteName;
   final notLoggedInRoute = GuestWelcomeScreen.RouteName;
   final hasAuthToken = await SecureStorage().hasAuthToken;
   final initialRoute = hasAuthToken ? loggedInRoute : notLoggedInRoute;
 
-  runApp(MyApp(initialRoute: initialRoute));
+  runApp(MyApp(initialRoute: initialRoute, navigatorKey: navigatorKey));
 }
 
 class MyApp extends StatelessWidget {
   final String initialRoute;
-  MyApp({this.initialRoute});
+  final GlobalKey<NavigatorState> navigatorKey;
+  MyApp({this.initialRoute, this.navigatorKey});
 
   @override
   Widget build(BuildContext context) {
-    final navigatorKey = GlobalKey<NavigatorState>();
-
     final loadingTheme = LoadingThemeData(
       loadingBackgroundColor: Colors.transparent,
       backgroundColor: Colors.white70,

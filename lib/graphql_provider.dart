@@ -30,6 +30,7 @@ Future<void> errorHandler(ErrorResponse error, GlobalKey<NavigatorState> navigat
   final firstErrorMessage = graphqlErrors[0].message;
 
   if (firstErrorMessage.contains("Access denied")) {
+    await SecureStorage().clearApiTokens();
     final predicate = (_) => false;
     final routeName = GuestWelcomeScreen.RouteName;
     await navigatorKey.currentState.pushNamedAndRemoveUntil(routeName, predicate);
