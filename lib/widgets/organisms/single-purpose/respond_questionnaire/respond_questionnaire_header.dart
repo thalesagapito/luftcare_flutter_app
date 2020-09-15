@@ -27,11 +27,14 @@ class RespondQuestionnaireHeader extends StatelessWidget {
       width: double.infinity,
       child: SafeArea(
         bottom: false,
-        child: Column(
-          children: [
-            _buildTitle(questionnaireName, theme),
-            _buildQuestionButtons(),
-          ],
+        child: Padding(
+          padding: const EdgeInsets.only(bottom: 10),
+          child: Column(
+            children: [
+              _buildTitle(questionnaireName, theme),
+              if (questionCount > 1) _buildQuestionButtons(),
+            ],
+          ),
         ),
       ),
     );
@@ -39,7 +42,7 @@ class RespondQuestionnaireHeader extends StatelessWidget {
 
   Widget _buildTitle(String questionnaireName, ThemeData theme) {
     final text = questionnaireName ?? '';
-    final padding = const EdgeInsets.fromLTRB(20, 8, 20, 5);
+    final padding = const EdgeInsets.fromLTRB(20, 16, 20, 12);
     return Padding(
       padding: padding,
       child: Text(
@@ -80,8 +83,7 @@ class RespondQuestionnaireHeader extends StatelessWidget {
 
         return Container(
           width: 56,
-          height: 64,
-          padding: const EdgeInsets.fromLTRB(0, 5, 0, 10),
+          height: 48,
           child: ToggleableContainer(
             isToggled: isToggled,
             borderRadius: borderRadius,
@@ -97,7 +99,7 @@ class RespondQuestionnaireHeader extends StatelessWidget {
         width: constraints.maxWidth,
         child: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
-          padding: const EdgeInsets.fromLTRB(10, 0, 10, 5),
+          padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
           scrollDirection: Axis.horizontal,
           child: ConstrainedBox(
             constraints: BoxConstraints(minWidth: constraints.maxWidth),

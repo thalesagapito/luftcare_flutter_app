@@ -71,13 +71,10 @@ class _QuestionText extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    final number = (questionNumber ?? 0).toString();
-    final text = '$number. $questionText';
-
     return Align(
       alignment: Alignment.topLeft,
       child: Text(
-        text,
+        questionText,
         textAlign: TextAlign.justify,
         style: theme.textTheme.headline6,
       ),

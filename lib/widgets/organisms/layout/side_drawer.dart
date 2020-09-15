@@ -26,7 +26,6 @@ class SideDrawer extends StatelessWidget {
           SliverList(
             delegate: SliverChildListDelegate.fixed(
               [
-                Placeholder(fallbackHeight: 50),
                 ListTile(
                   title: Text('Logout'),
                   onTap: logout,

@@ -103,7 +103,10 @@ class _ConfirmSubmitScreen extends StatelessWidget {
         children: [
           Padding(
             padding: const EdgeInsets.all(16.0),
-            child: Text('Resumo do questionário', style: Theme.of(context).textTheme.headline5),
+            child: Text(
+              'Resumo do Questionário',
+              style: Theme.of(context).textTheme.headline5.copyWith(fontWeight: FontWeight.w700),
+            ),
           ),
           Expanded(child: ListView(children: questionsAndAnswersList)),
           Row(
@@ -135,8 +138,16 @@ class _QuestionAndAnswerTile extends StatelessWidget {
     final textTheme = theme.textTheme;
 
     return ListTile(
-      title: Text(questionText, style: theme.textTheme.headline6),
-      subtitle: Text(answerText, style: textTheme.button.copyWith(color: theme.primaryColor)),
+      contentPadding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
+      enabled: true,
+      title: Padding(
+        padding: const EdgeInsets.only(bottom: 10),
+        child: Text(questionText, style: theme.textTheme.button),
+      ),
+      subtitle: Text(
+        answerText,
+        style: textTheme.button.copyWith(color: theme.primaryColor, fontWeight: FontWeight.w700),
+      ),
       dense: false,
     );
   }
