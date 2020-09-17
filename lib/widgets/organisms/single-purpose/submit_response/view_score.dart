@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:luftcare_flutter_app/models/graphql/api.graphql.dart';
+import 'package:luftcare_flutter_app/helpers/score_colors.dart';
 import 'package:luftcare_flutter_app/providers/auth_provider.dart';
+import 'package:luftcare_flutter_app/models/graphql/api.graphql.dart';
 
 class ViewScore extends StatefulWidget {
   const ViewScore({@required this.score, Key key}) : super(key: key);
@@ -42,7 +43,9 @@ class _ViewScoreState extends State<ViewScore> {
         Expanded(
           child: Container(
             padding: const EdgeInsets.all(padding),
-            child: Row(
+            child: ListView(
+              reverse: true,
+              padding: const EdgeInsets.only(bottom: 20),
               children: [
                 AnimatedOpacity(
                   duration: Duration(milliseconds: 500),
@@ -84,20 +87,7 @@ class _ViewScoreState extends State<ViewScore> {
 
   Color getValueContainerColor(SymptomQuestionnaireScoreRangeColor scoreColor) {
     if (!_isScoreVisible) return Colors.white;
-
-    switch (scoreColor) {
-      case SymptomQuestionnaireScoreRangeColor.green:
-        return Colors.green[500];
-      case SymptomQuestionnaireScoreRangeColor.greenYellow:
-        return Colors.lime[500];
-      case SymptomQuestionnaireScoreRangeColor.yellow:
-        return Colors.amber[400];
-      case SymptomQuestionnaireScoreRangeColor.orange:
-        return Colors.orange[400];
-      case SymptomQuestionnaireScoreRangeColor.red:
-      default:
-        return Colors.red[400];
-    }
+    return ScoreColors.getColorFromEnum(scoreColor);
   }
 
   Curve getValueContainerCurve(SymptomQuestionnaireScoreRangeColor scoreColor) {
