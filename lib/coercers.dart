@@ -6,6 +6,18 @@ import 'package:intl/intl.dart';
 
 // for now, we won't include a timezone
 final dateTimeFormatter = DateFormat('yyyy-MM-ddTHH:mm:ss');
+final localDateTime = DateTime.now();
+final timeZoneOffset = localDateTime.timeZoneOffset;
 
-DateTime fromGraphQLDateTimeToDartDateTime(String dateTime) => DateTime.parse(dateTime);
-String fromDartDateTimeToGraphQLDateTime(DateTime dateTime) => dateTimeFormatter.format(dateTime);
+// a workaround is to subtract the user's timezoneOffset from the datetimes that we get from the api
+DateTime fromGraphQLDateTimeToDartDateTime(String dateTime) {
+  final parsedDateTime = DateTime.parse(dateTime);
+  final timeZoneAdjustedDateTime = parsedDateTime.subtract(timeZoneOffset);
+  return timeZoneAdjustedDateTime;
+}
+
+String fromDartDateTimeToGraphQLDateTime(DateTime dateTime) {
+  final timeZoneAdjustedDateTime = dateTime.add(timeZoneOffset);
+  final formattedDateTime = dateTimeFormatter.format(timeZoneAdjustedDateTime);
+  return formattedDateTime;
+}
