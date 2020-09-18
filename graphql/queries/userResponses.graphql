@@ -1,0 +1,35 @@
+query responses($id: ID!, $responseDateAfter: DateTime, $responseDateBefore: DateTime) {
+    symptomQuestionnaireResponses(
+        userId: $id
+        pageNumber: 1
+        resultsPerPage: 100
+        responseDateAfter: $responseDateAfter
+        responseDateBefore: $responseDateBefore
+        orderBy: [{ columnName: "responseDate", direction: DESC }]
+    ) {
+        results {
+            id
+            responseDate
+            questionnaire {
+                id
+                nameForPresentation
+            }
+            questionAnswers {
+                question {
+                    id
+                    text
+                }
+                selectedChoice {
+                    id
+                    text
+                }
+                writtenText
+            }
+            score {
+                value
+                color
+                title
+            }
+        }
+    }
+}

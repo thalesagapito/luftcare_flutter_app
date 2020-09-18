@@ -455,6 +455,172 @@ Map<String, dynamic> _$CurrentUser$QueryToJson(CurrentUser$Query instance) =>
       'currentUser': instance.currentUser?.toJson(),
     };
 
+Responses$Query$SymptomQuestionnaireResponses$Results$Questionnaire
+    _$Responses$Query$SymptomQuestionnaireResponses$Results$QuestionnaireFromJson(
+        Map<String, dynamic> json) {
+  return Responses$Query$SymptomQuestionnaireResponses$Results$Questionnaire()
+    ..id = json['id'] as String
+    ..nameForPresentation = json['nameForPresentation'] as String;
+}
+
+Map<String, dynamic>
+    _$Responses$Query$SymptomQuestionnaireResponses$Results$QuestionnaireToJson(
+            Responses$Query$SymptomQuestionnaireResponses$Results$Questionnaire
+                instance) =>
+        <String, dynamic>{
+          'id': instance.id,
+          'nameForPresentation': instance.nameForPresentation,
+        };
+
+Responses$Query$SymptomQuestionnaireResponses$Results$QuestionAnswers$Question
+    _$Responses$Query$SymptomQuestionnaireResponses$Results$QuestionAnswers$QuestionFromJson(
+        Map<String, dynamic> json) {
+  return Responses$Query$SymptomQuestionnaireResponses$Results$QuestionAnswers$Question()
+    ..id = json['id'] as String
+    ..text = json['text'] as String;
+}
+
+Map<String, dynamic>
+    _$Responses$Query$SymptomQuestionnaireResponses$Results$QuestionAnswers$QuestionToJson(
+            Responses$Query$SymptomQuestionnaireResponses$Results$QuestionAnswers$Question
+                instance) =>
+        <String, dynamic>{
+          'id': instance.id,
+          'text': instance.text,
+        };
+
+Responses$Query$SymptomQuestionnaireResponses$Results$QuestionAnswers$SelectedChoice
+    _$Responses$Query$SymptomQuestionnaireResponses$Results$QuestionAnswers$SelectedChoiceFromJson(
+        Map<String, dynamic> json) {
+  return Responses$Query$SymptomQuestionnaireResponses$Results$QuestionAnswers$SelectedChoice()
+    ..id = json['id'] as String
+    ..text = json['text'] as String;
+}
+
+Map<String, dynamic>
+    _$Responses$Query$SymptomQuestionnaireResponses$Results$QuestionAnswers$SelectedChoiceToJson(
+            Responses$Query$SymptomQuestionnaireResponses$Results$QuestionAnswers$SelectedChoice
+                instance) =>
+        <String, dynamic>{
+          'id': instance.id,
+          'text': instance.text,
+        };
+
+Responses$Query$SymptomQuestionnaireResponses$Results$QuestionAnswers
+    _$Responses$Query$SymptomQuestionnaireResponses$Results$QuestionAnswersFromJson(
+        Map<String, dynamic> json) {
+  return Responses$Query$SymptomQuestionnaireResponses$Results$QuestionAnswers()
+    ..question = json['question'] == null
+        ? null
+        : Responses$Query$SymptomQuestionnaireResponses$Results$QuestionAnswers$Question
+            .fromJson(json['question'] as Map<String, dynamic>)
+    ..selectedChoice = json['selectedChoice'] == null
+        ? null
+        : Responses$Query$SymptomQuestionnaireResponses$Results$QuestionAnswers$SelectedChoice
+            .fromJson(json['selectedChoice'] as Map<String, dynamic>)
+    ..writtenText = json['writtenText'] as String;
+}
+
+Map<String, dynamic>
+    _$Responses$Query$SymptomQuestionnaireResponses$Results$QuestionAnswersToJson(
+            Responses$Query$SymptomQuestionnaireResponses$Results$QuestionAnswers
+                instance) =>
+        <String, dynamic>{
+          'question': instance.question?.toJson(),
+          'selectedChoice': instance.selectedChoice?.toJson(),
+          'writtenText': instance.writtenText,
+        };
+
+Responses$Query$SymptomQuestionnaireResponses$Results$Score
+    _$Responses$Query$SymptomQuestionnaireResponses$Results$ScoreFromJson(
+        Map<String, dynamic> json) {
+  return Responses$Query$SymptomQuestionnaireResponses$Results$Score()
+    ..value = json['value'] as int
+    ..color = _$enumDecodeNullable(
+        _$SymptomQuestionnaireScoreRangeColorEnumMap, json['color'],
+        unknownValue: SymptomQuestionnaireScoreRangeColor.artemisUnknown)
+    ..title = json['title'] as String;
+}
+
+Map<String, dynamic>
+    _$Responses$Query$SymptomQuestionnaireResponses$Results$ScoreToJson(
+            Responses$Query$SymptomQuestionnaireResponses$Results$Score
+                instance) =>
+        <String, dynamic>{
+          'value': instance.value,
+          'color': _$SymptomQuestionnaireScoreRangeColorEnumMap[instance.color],
+          'title': instance.title,
+        };
+
+Responses$Query$SymptomQuestionnaireResponses$Results
+    _$Responses$Query$SymptomQuestionnaireResponses$ResultsFromJson(
+        Map<String, dynamic> json) {
+  return Responses$Query$SymptomQuestionnaireResponses$Results()
+    ..id = json['id'] as String
+    ..responseDate =
+        fromGraphQLDateTimeToDartDateTime(json['responseDate'] as String)
+    ..questionnaire = json['questionnaire'] == null
+        ? null
+        : Responses$Query$SymptomQuestionnaireResponses$Results$Questionnaire
+            .fromJson(json['questionnaire'] as Map<String, dynamic>)
+    ..questionAnswers = (json['questionAnswers'] as List)
+        ?.map((e) => e == null
+            ? null
+            : Responses$Query$SymptomQuestionnaireResponses$Results$QuestionAnswers
+                .fromJson(e as Map<String, dynamic>))
+        ?.toList()
+    ..score = json['score'] == null
+        ? null
+        : Responses$Query$SymptomQuestionnaireResponses$Results$Score.fromJson(
+            json['score'] as Map<String, dynamic>);
+}
+
+Map<String, dynamic>
+    _$Responses$Query$SymptomQuestionnaireResponses$ResultsToJson(
+            Responses$Query$SymptomQuestionnaireResponses$Results instance) =>
+        <String, dynamic>{
+          'id': instance.id,
+          'responseDate':
+              fromDartDateTimeToGraphQLDateTime(instance.responseDate),
+          'questionnaire': instance.questionnaire?.toJson(),
+          'questionAnswers':
+              instance.questionAnswers?.map((e) => e?.toJson())?.toList(),
+          'score': instance.score?.toJson(),
+        };
+
+Responses$Query$SymptomQuestionnaireResponses
+    _$Responses$Query$SymptomQuestionnaireResponsesFromJson(
+        Map<String, dynamic> json) {
+  return Responses$Query$SymptomQuestionnaireResponses()
+    ..results = (json['results'] as List)
+        ?.map((e) => e == null
+            ? null
+            : Responses$Query$SymptomQuestionnaireResponses$Results.fromJson(
+                e as Map<String, dynamic>))
+        ?.toList();
+}
+
+Map<String, dynamic> _$Responses$Query$SymptomQuestionnaireResponsesToJson(
+        Responses$Query$SymptomQuestionnaireResponses instance) =>
+    <String, dynamic>{
+      'results': instance.results?.map((e) => e?.toJson())?.toList(),
+    };
+
+Responses$Query _$Responses$QueryFromJson(Map<String, dynamic> json) {
+  return Responses$Query()
+    ..symptomQuestionnaireResponses =
+        json['symptomQuestionnaireResponses'] == null
+            ? null
+            : Responses$Query$SymptomQuestionnaireResponses.fromJson(
+                json['symptomQuestionnaireResponses'] as Map<String, dynamic>);
+}
+
+Map<String, dynamic> _$Responses$QueryToJson(Responses$Query instance) =>
+    <String, dynamic>{
+      'symptomQuestionnaireResponses':
+          instance.symptomQuestionnaireResponses?.toJson(),
+    };
+
 CreateResponseArguments _$CreateResponseArgumentsFromJson(
     Map<String, dynamic> json) {
   return CreateResponseArguments(
@@ -495,4 +661,23 @@ Map<String, dynamic> _$QuestionnaireArgumentsToJson(
         QuestionnaireArguments instance) =>
     <String, dynamic>{
       'id': instance.id,
+    };
+
+ResponsesArguments _$ResponsesArgumentsFromJson(Map<String, dynamic> json) {
+  return ResponsesArguments(
+    id: json['id'] as String,
+    responseDateAfter:
+        fromGraphQLDateTimeToDartDateTime(json['responseDateAfter'] as String),
+    responseDateBefore:
+        fromGraphQLDateTimeToDartDateTime(json['responseDateBefore'] as String),
+  );
+}
+
+Map<String, dynamic> _$ResponsesArgumentsToJson(ResponsesArguments instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'responseDateAfter':
+          fromDartDateTimeToGraphQLDateTime(instance.responseDateAfter),
+      'responseDateBefore':
+          fromDartDateTimeToGraphQLDateTime(instance.responseDateBefore),
     };

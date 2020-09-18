@@ -423,6 +423,179 @@ class CurrentUser$Query with EquatableMixin {
   Map<String, dynamic> toJson() => _$CurrentUser$QueryToJson(this);
 }
 
+@JsonSerializable(explicitToJson: true)
+class Responses$Query$SymptomQuestionnaireResponses$Results$Questionnaire
+    with EquatableMixin {
+  Responses$Query$SymptomQuestionnaireResponses$Results$Questionnaire();
+
+  factory Responses$Query$SymptomQuestionnaireResponses$Results$Questionnaire.fromJson(
+          Map<String, dynamic> json) =>
+      _$Responses$Query$SymptomQuestionnaireResponses$Results$QuestionnaireFromJson(
+          json);
+
+  String id;
+
+  String nameForPresentation;
+
+  @override
+  List<Object> get props => [id, nameForPresentation];
+  Map<String, dynamic> toJson() =>
+      _$Responses$Query$SymptomQuestionnaireResponses$Results$QuestionnaireToJson(
+          this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class Responses$Query$SymptomQuestionnaireResponses$Results$QuestionAnswers$Question
+    with EquatableMixin {
+  Responses$Query$SymptomQuestionnaireResponses$Results$QuestionAnswers$Question();
+
+  factory Responses$Query$SymptomQuestionnaireResponses$Results$QuestionAnswers$Question.fromJson(
+          Map<String, dynamic> json) =>
+      _$Responses$Query$SymptomQuestionnaireResponses$Results$QuestionAnswers$QuestionFromJson(
+          json);
+
+  String id;
+
+  String text;
+
+  @override
+  List<Object> get props => [id, text];
+  Map<String, dynamic> toJson() =>
+      _$Responses$Query$SymptomQuestionnaireResponses$Results$QuestionAnswers$QuestionToJson(
+          this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class Responses$Query$SymptomQuestionnaireResponses$Results$QuestionAnswers$SelectedChoice
+    with EquatableMixin {
+  Responses$Query$SymptomQuestionnaireResponses$Results$QuestionAnswers$SelectedChoice();
+
+  factory Responses$Query$SymptomQuestionnaireResponses$Results$QuestionAnswers$SelectedChoice.fromJson(
+          Map<String, dynamic> json) =>
+      _$Responses$Query$SymptomQuestionnaireResponses$Results$QuestionAnswers$SelectedChoiceFromJson(
+          json);
+
+  String id;
+
+  String text;
+
+  @override
+  List<Object> get props => [id, text];
+  Map<String, dynamic> toJson() =>
+      _$Responses$Query$SymptomQuestionnaireResponses$Results$QuestionAnswers$SelectedChoiceToJson(
+          this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class Responses$Query$SymptomQuestionnaireResponses$Results$QuestionAnswers
+    with EquatableMixin {
+  Responses$Query$SymptomQuestionnaireResponses$Results$QuestionAnswers();
+
+  factory Responses$Query$SymptomQuestionnaireResponses$Results$QuestionAnswers.fromJson(
+          Map<String, dynamic> json) =>
+      _$Responses$Query$SymptomQuestionnaireResponses$Results$QuestionAnswersFromJson(
+          json);
+
+  Responses$Query$SymptomQuestionnaireResponses$Results$QuestionAnswers$Question
+      question;
+
+  Responses$Query$SymptomQuestionnaireResponses$Results$QuestionAnswers$SelectedChoice
+      selectedChoice;
+
+  String writtenText;
+
+  @override
+  List<Object> get props => [question, selectedChoice, writtenText];
+  Map<String, dynamic> toJson() =>
+      _$Responses$Query$SymptomQuestionnaireResponses$Results$QuestionAnswersToJson(
+          this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class Responses$Query$SymptomQuestionnaireResponses$Results$Score
+    with EquatableMixin {
+  Responses$Query$SymptomQuestionnaireResponses$Results$Score();
+
+  factory Responses$Query$SymptomQuestionnaireResponses$Results$Score.fromJson(
+          Map<String, dynamic> json) =>
+      _$Responses$Query$SymptomQuestionnaireResponses$Results$ScoreFromJson(
+          json);
+
+  int value;
+
+  @JsonKey(unknownEnumValue: SymptomQuestionnaireScoreRangeColor.artemisUnknown)
+  SymptomQuestionnaireScoreRangeColor color;
+
+  String title;
+
+  @override
+  List<Object> get props => [value, color, title];
+  Map<String, dynamic> toJson() =>
+      _$Responses$Query$SymptomQuestionnaireResponses$Results$ScoreToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class Responses$Query$SymptomQuestionnaireResponses$Results
+    with EquatableMixin {
+  Responses$Query$SymptomQuestionnaireResponses$Results();
+
+  factory Responses$Query$SymptomQuestionnaireResponses$Results.fromJson(
+          Map<String, dynamic> json) =>
+      _$Responses$Query$SymptomQuestionnaireResponses$ResultsFromJson(json);
+
+  String id;
+
+  @JsonKey(
+    fromJson: fromGraphQLDateTimeToDartDateTime,
+    toJson: fromDartDateTimeToGraphQLDateTime,
+  )
+  DateTime responseDate;
+
+  Responses$Query$SymptomQuestionnaireResponses$Results$Questionnaire
+      questionnaire;
+
+  List<Responses$Query$SymptomQuestionnaireResponses$Results$QuestionAnswers>
+      questionAnswers;
+
+  Responses$Query$SymptomQuestionnaireResponses$Results$Score score;
+
+  @override
+  List<Object> get props =>
+      [id, responseDate, questionnaire, questionAnswers, score];
+  Map<String, dynamic> toJson() =>
+      _$Responses$Query$SymptomQuestionnaireResponses$ResultsToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class Responses$Query$SymptomQuestionnaireResponses with EquatableMixin {
+  Responses$Query$SymptomQuestionnaireResponses();
+
+  factory Responses$Query$SymptomQuestionnaireResponses.fromJson(
+          Map<String, dynamic> json) =>
+      _$Responses$Query$SymptomQuestionnaireResponsesFromJson(json);
+
+  List<Responses$Query$SymptomQuestionnaireResponses$Results> results;
+
+  @override
+  List<Object> get props => [results];
+  Map<String, dynamic> toJson() =>
+      _$Responses$Query$SymptomQuestionnaireResponsesToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class Responses$Query with EquatableMixin {
+  Responses$Query();
+
+  factory Responses$Query.fromJson(Map<String, dynamic> json) =>
+      _$Responses$QueryFromJson(json);
+
+  Responses$Query$SymptomQuestionnaireResponses symptomQuestionnaireResponses;
+
+  @override
+  List<Object> get props => [symptomQuestionnaireResponses];
+  Map<String, dynamic> toJson() => _$Responses$QueryToJson(this);
+}
+
 enum SymptomQuestionnaireScoreRangeColor {
   @JsonValue("GREEN")
   green,
@@ -1022,4 +1195,230 @@ class CurrentUserQuery
   @override
   CurrentUser$Query parse(Map<String, dynamic> json) =>
       CurrentUser$Query.fromJson(json);
+}
+
+@JsonSerializable(explicitToJson: true)
+class ResponsesArguments extends JsonSerializable with EquatableMixin {
+  ResponsesArguments(
+      {@required this.id, this.responseDateAfter, this.responseDateBefore});
+
+  factory ResponsesArguments.fromJson(Map<String, dynamic> json) =>
+      _$ResponsesArgumentsFromJson(json);
+
+  final String id;
+
+  @JsonKey(
+    fromJson: fromGraphQLDateTimeToDartDateTime,
+    toJson: fromDartDateTimeToGraphQLDateTime,
+  )
+  final DateTime responseDateAfter;
+
+  @JsonKey(
+    fromJson: fromGraphQLDateTimeToDartDateTime,
+    toJson: fromDartDateTimeToGraphQLDateTime,
+  )
+  final DateTime responseDateBefore;
+
+  @override
+  List<Object> get props => [id, responseDateAfter, responseDateBefore];
+  Map<String, dynamic> toJson() => _$ResponsesArgumentsToJson(this);
+}
+
+class ResponsesQuery extends GraphQLQuery<Responses$Query, ResponsesArguments> {
+  ResponsesQuery({this.variables});
+
+  @override
+  final DocumentNode document = DocumentNode(definitions: [
+    OperationDefinitionNode(
+        type: OperationType.query,
+        name: NameNode(value: 'responses'),
+        variableDefinitions: [
+          VariableDefinitionNode(
+              variable: VariableNode(name: NameNode(value: 'id')),
+              type: NamedTypeNode(name: NameNode(value: 'ID'), isNonNull: true),
+              defaultValue: DefaultValueNode(value: null),
+              directives: []),
+          VariableDefinitionNode(
+              variable:
+                  VariableNode(name: NameNode(value: 'responseDateAfter')),
+              type: NamedTypeNode(
+                  name: NameNode(value: 'DateTime'), isNonNull: false),
+              defaultValue: DefaultValueNode(value: null),
+              directives: []),
+          VariableDefinitionNode(
+              variable:
+                  VariableNode(name: NameNode(value: 'responseDateBefore')),
+              type: NamedTypeNode(
+                  name: NameNode(value: 'DateTime'), isNonNull: false),
+              defaultValue: DefaultValueNode(value: null),
+              directives: [])
+        ],
+        directives: [],
+        selectionSet: SelectionSetNode(selections: [
+          FieldNode(
+              name: NameNode(value: 'symptomQuestionnaireResponses'),
+              alias: null,
+              arguments: [
+                ArgumentNode(
+                    name: NameNode(value: 'userId'),
+                    value: VariableNode(name: NameNode(value: 'id'))),
+                ArgumentNode(
+                    name: NameNode(value: 'pageNumber'),
+                    value: IntValueNode(value: '1')),
+                ArgumentNode(
+                    name: NameNode(value: 'resultsPerPage'),
+                    value: IntValueNode(value: '100')),
+                ArgumentNode(
+                    name: NameNode(value: 'responseDateAfter'),
+                    value: VariableNode(
+                        name: NameNode(value: 'responseDateAfter'))),
+                ArgumentNode(
+                    name: NameNode(value: 'responseDateBefore'),
+                    value: VariableNode(
+                        name: NameNode(value: 'responseDateBefore'))),
+                ArgumentNode(
+                    name: NameNode(value: 'orderBy'),
+                    value: ListValueNode(values: [
+                      ObjectValueNode(fields: [
+                        ObjectFieldNode(
+                            name: NameNode(value: 'columnName'),
+                            value: StringValueNode(
+                                value: 'responseDate', isBlock: false)),
+                        ObjectFieldNode(
+                            name: NameNode(value: 'direction'),
+                            value: EnumValueNode(name: NameNode(value: 'DESC')))
+                      ])
+                    ]))
+              ],
+              directives: [],
+              selectionSet: SelectionSetNode(selections: [
+                FieldNode(
+                    name: NameNode(value: 'results'),
+                    alias: null,
+                    arguments: [],
+                    directives: [],
+                    selectionSet: SelectionSetNode(selections: [
+                      FieldNode(
+                          name: NameNode(value: 'id'),
+                          alias: null,
+                          arguments: [],
+                          directives: [],
+                          selectionSet: null),
+                      FieldNode(
+                          name: NameNode(value: 'responseDate'),
+                          alias: null,
+                          arguments: [],
+                          directives: [],
+                          selectionSet: null),
+                      FieldNode(
+                          name: NameNode(value: 'questionnaire'),
+                          alias: null,
+                          arguments: [],
+                          directives: [],
+                          selectionSet: SelectionSetNode(selections: [
+                            FieldNode(
+                                name: NameNode(value: 'id'),
+                                alias: null,
+                                arguments: [],
+                                directives: [],
+                                selectionSet: null),
+                            FieldNode(
+                                name: NameNode(value: 'nameForPresentation'),
+                                alias: null,
+                                arguments: [],
+                                directives: [],
+                                selectionSet: null)
+                          ])),
+                      FieldNode(
+                          name: NameNode(value: 'questionAnswers'),
+                          alias: null,
+                          arguments: [],
+                          directives: [],
+                          selectionSet: SelectionSetNode(selections: [
+                            FieldNode(
+                                name: NameNode(value: 'question'),
+                                alias: null,
+                                arguments: [],
+                                directives: [],
+                                selectionSet: SelectionSetNode(selections: [
+                                  FieldNode(
+                                      name: NameNode(value: 'id'),
+                                      alias: null,
+                                      arguments: [],
+                                      directives: [],
+                                      selectionSet: null),
+                                  FieldNode(
+                                      name: NameNode(value: 'text'),
+                                      alias: null,
+                                      arguments: [],
+                                      directives: [],
+                                      selectionSet: null)
+                                ])),
+                            FieldNode(
+                                name: NameNode(value: 'selectedChoice'),
+                                alias: null,
+                                arguments: [],
+                                directives: [],
+                                selectionSet: SelectionSetNode(selections: [
+                                  FieldNode(
+                                      name: NameNode(value: 'id'),
+                                      alias: null,
+                                      arguments: [],
+                                      directives: [],
+                                      selectionSet: null),
+                                  FieldNode(
+                                      name: NameNode(value: 'text'),
+                                      alias: null,
+                                      arguments: [],
+                                      directives: [],
+                                      selectionSet: null)
+                                ])),
+                            FieldNode(
+                                name: NameNode(value: 'writtenText'),
+                                alias: null,
+                                arguments: [],
+                                directives: [],
+                                selectionSet: null)
+                          ])),
+                      FieldNode(
+                          name: NameNode(value: 'score'),
+                          alias: null,
+                          arguments: [],
+                          directives: [],
+                          selectionSet: SelectionSetNode(selections: [
+                            FieldNode(
+                                name: NameNode(value: 'value'),
+                                alias: null,
+                                arguments: [],
+                                directives: [],
+                                selectionSet: null),
+                            FieldNode(
+                                name: NameNode(value: 'color'),
+                                alias: null,
+                                arguments: [],
+                                directives: [],
+                                selectionSet: null),
+                            FieldNode(
+                                name: NameNode(value: 'title'),
+                                alias: null,
+                                arguments: [],
+                                directives: [],
+                                selectionSet: null)
+                          ]))
+                    ]))
+              ]))
+        ]))
+  ]);
+
+  @override
+  final String operationName = 'responses';
+
+  @override
+  final ResponsesArguments variables;
+
+  @override
+  List<Object> get props => [document, operationName, variables];
+  @override
+  Responses$Query parse(Map<String, dynamic> json) =>
+      Responses$Query.fromJson(json);
 }
