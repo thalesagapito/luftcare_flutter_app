@@ -112,8 +112,8 @@ class _ConfirmSubmitScreen extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              FlatButton(onPressed: goBack, child: Text('Voltar')),
-              FlatButton(onPressed: onSubmit, child: Text('Enviar')),
+              FlatButton(onPressed: goBack, child: const Text('Voltar')),
+              FlatButton(onPressed: onSubmit, child: const Text('Enviar')),
             ],
           )
         ],

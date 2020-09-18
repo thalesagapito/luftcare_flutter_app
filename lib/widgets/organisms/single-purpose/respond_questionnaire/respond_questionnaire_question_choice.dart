@@ -31,7 +31,7 @@ class RespondQuestionnaireQuestionChoice extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _buildChoiceText(theme),
+                Expanded(child: _buildChoiceText(theme)),
                 _buildSelectedIndicator(theme),
               ],
             ),
@@ -73,6 +73,7 @@ class RespondQuestionnaireQuestionChoice extends StatelessWidget {
     return Container(
       width: 20,
       height: 20,
+      margin: const EdgeInsets.only(left: 10),
       decoration: BoxDecoration(
         color: bgColor,
         borderRadius: BorderRadius.circular(20),

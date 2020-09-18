@@ -23,7 +23,8 @@ class RespondQuestionnaireQuestion extends StatelessWidget {
       decoration: _getFloatingCardDecoration(theme),
       margin: const EdgeInsets.fromLTRB(10, 0, 10, 10),
       padding: const EdgeInsets.all(20),
-      child: Column(
+      child: ListView(
+        padding: const EdgeInsets.all(0),
         children: [
           _QuestionText(
             questionText: question.text,
