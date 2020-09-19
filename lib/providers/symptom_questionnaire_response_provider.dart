@@ -59,4 +59,16 @@ class SymptomQuestionnaireResponse {
       return Tuple2(questionText, answerText);
     }).toList();
   }
+
+  static List<Tuple2<String, String>> getResponseSummary({
+    @required Responses$Query$SymptomQuestionnaireResponses$Results response,
+  }) {
+    final answers = response.questionAnswers ?? [];
+    return answers.map((answer) {
+      final selectedChoiceText = answer?.selectedChoice?.text;
+      final writtenText = answer?.writtenText;
+      final answerText = writtenText == null ? selectedChoiceText : writtenText;
+      return Tuple2(answer.question.text, answerText);
+    }).toList();
+  }
 }
