@@ -5,12 +5,12 @@ import 'package:luftcare_flutter_app/helpers/error_handlers.dart';
 import 'package:luftcare_flutter_app/models/graphql/api.graphql.dart';
 import 'package:luftcare_flutter_app/widgets/organisms/layout/empty_appbar.dart';
 import 'package:luftcare_flutter_app/widgets/atoms/centered_loading_indicator.dart';
-import 'package:luftcare_flutter_app/providers/symptom_questionnaire_response_provider.dart';
+import 'package:luftcare_flutter_app/providers/questionnaire_response_provider.dart';
 import 'package:luftcare_flutter_app/widgets/organisms/single-purpose/submit_response/view_score.dart';
 
 class SubmitResponseScreenArgs {
-  final SymptomQuestionnaireResponseInput responseInput;
-  final Questionnaire$Query$SymptomQuestionnaire questionnaire;
+  final QuestionnaireResponseInput responseInput;
+  final Questionnaire$Query$Questionnaire questionnaire;
 
   SubmitResponseScreenArgs({
     @required this.responseInput,
@@ -22,12 +22,12 @@ class SubmitResponseScreenArgs {
     return route.settings.arguments;
   }
 
-  static Questionnaire$Query$SymptomQuestionnaire getQuestionnaire(SubmitResponseScreenArgs args) {
+  static Questionnaire$Query$Questionnaire getQuestionnaire(SubmitResponseScreenArgs args) {
     if (args.questionnaire == null) throw new ArgumentError.notNull('questionnaire');
     return args.questionnaire;
   }
 
-  static SymptomQuestionnaireResponseInput getResponseInput(SubmitResponseScreenArgs args) {
+  static QuestionnaireResponseInput getResponseInput(SubmitResponseScreenArgs args) {
     if (args.responseInput == null) throw new ArgumentError.notNull('responseInput');
     return args.responseInput;
   }
@@ -68,7 +68,7 @@ class SubmitResponseScreen extends StatelessWidget {
               );
 
             final data = CreateResponse$Mutation.fromJson(result.data);
-            final score = data.createSymptomQuestionnaireResponse.score;
+            final score = data.createQuestionnaireResponse.score;
             return ViewScore(score: score);
           },
         ),
@@ -85,13 +85,13 @@ class _ConfirmSubmitScreen extends StatelessWidget {
   });
 
   final void Function() onSubmit;
-  final SymptomQuestionnaireResponseInput responseInput;
-  final Questionnaire$Query$SymptomQuestionnaire questionnaire;
+  final QuestionnaireResponseInput responseInput;
+  final Questionnaire$Query$Questionnaire questionnaire;
 
   @override
   Widget build(BuildContext context) {
     final goBack = () => Navigator.of(context).pop();
-    final questionsAndAnswersList = SymptomQuestionnaireResponse.getQuestionsAndAnswersList(
+    final questionsAndAnswersList = QuestionnaireResponse.getQuestionsAndAnswersList(
       questionnaire: questionnaire,
       response: responseInput,
     ).map((qa) => _QuestionAndAnswerTile(questionText: qa.item1, answerText: qa.item2)).toList();

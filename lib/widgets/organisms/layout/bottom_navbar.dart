@@ -10,9 +10,9 @@ class BottomNavbar extends StatelessWidget {
 
   static const _items = [
     BottomNavigationBarItem(
-      title: Text('Início'),
-      icon: Icon(CupertinoIcons.home),
-      activeIcon: Icon(CustomIcons.home_filled),
+      title: Text('Agenda'),
+      icon: Icon(CupertinoIcons.book),
+      activeIcon: Icon(CupertinoIcons.book_solid),
     ),
     BottomNavigationBarItem(
       title: Text('Questionários'),

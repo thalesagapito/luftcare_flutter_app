@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:luftcare_flutter_app/helpers/score_colors.dart';
 import 'package:luftcare_flutter_app/models/graphql/api.graphql.dart';
+import 'package:luftcare_flutter_app/providers/questionnaire_response_provider.dart';
+import 'package:luftcare_flutter_app/providers/questionnaire_responses_provider.dart';
 import 'package:luftcare_flutter_app/widgets/atoms/layout/rounded_list_tile_wrapper.dart';
 import 'package:luftcare_flutter_app/widgets/organisms/helpers/current_user_builder.dart';
-import 'package:luftcare_flutter_app/providers/symptom_questionnaire_response_provider.dart';
-import 'package:luftcare_flutter_app/providers/symptom_questionnaire_responses_provider.dart';
 import 'package:luftcare_flutter_app/screens/patient/home_screen/overview/overview_list.dart';
 
 class AnsweredQuestionnaires extends StatelessWidget {
@@ -20,11 +20,11 @@ class AnsweredQuestionnaires extends StatelessWidget {
   DateTime _getBeforeMidnightDateTime(DateTime dateTime) =>
       new DateTime(dateTime.year, dateTime.month, dateTime.day, 23, 59, 59);
 
-  String _getTrailingText(Responses$Query$SymptomQuestionnaireResponses$Results response) {
+  String _getTrailingText(Responses$Query$QuestionnaireResponses$Results response) {
     return DateFormat.Hm().format(response.responseDate);
   }
 
-  _showDialog(Responses$Query$SymptomQuestionnaireResponses$Results response, BuildContext ctx) {
+  _showDialog(Responses$Query$QuestionnaireResponses$Results response, BuildContext ctx) {
     final closeText = const Text('Fechar');
     final title = const Text('Resumo da resposta');
     final onClose = () => Navigator.of(ctx).pop();
@@ -43,8 +43,8 @@ class AnsweredQuestionnaires extends StatelessWidget {
     );
   }
 
-  _getQuestionsAndAnswersList(Responses$Query$SymptomQuestionnaireResponses$Results response) {
-    return SymptomQuestionnaireResponse.getResponseSummary(response: response)
+  _getQuestionsAndAnswersList(Responses$Query$QuestionnaireResponses$Results response) {
+    return QuestionnaireResponse.getResponseSummary(response: response)
         .map((qa) => _QuestionAndAnswerTile(questionText: qa.item1, answerText: qa.item2))
         .toList();
   }
@@ -53,7 +53,7 @@ class AnsweredQuestionnaires extends StatelessWidget {
   Widget build(BuildContext context) {
     return CurrentUserBuilder(
       builder: (currentUser) {
-        final documentNode = SymptomQuestionnaireResponses.responsesQueryDocumentNode;
+        final documentNode = QuestionnaireResponses.responsesQueryDocumentNode;
         final queryVariables = ResponsesArguments(
           id: currentUser.id,
           responseDateAfter: _getMidnightDateTime(selectedDate),
@@ -64,7 +64,7 @@ class AnsweredQuestionnaires extends StatelessWidget {
         return Query(
           options: queryOptions,
           builder: (result, {fetchMore, refetch}) {
-            final response = SymptomQuestionnaireResponses.getResponsesFromQueryResult(result);
+            final response = QuestionnaireResponses.getResponsesFromQueryResult(result);
             final questionnaireResponses = response?.results ?? [];
 
             final responseTiles = questionnaireResponses
@@ -100,7 +100,7 @@ class AnsweredQuestionnaires extends StatelessWidget {
 
 class _ScoreBadge extends StatelessWidget {
   const _ScoreBadge(this.response);
-  final Responses$Query$SymptomQuestionnaireResponses$Results response;
+  final Responses$Query$QuestionnaireResponses$Results response;
 
   @override
   Widget build(BuildContext context) {

@@ -2,13 +2,13 @@ import 'package:tuple/tuple.dart';
 import 'package:flutter/material.dart';
 import 'package:luftcare_flutter_app/models/graphql/api.graphql.dart';
 
-class SymptomQuestionnaireResponse {
-  static bool hasAllAnswers(SymptomQuestionnaireResponseInput response) {
+class QuestionnaireResponse {
+  static bool hasAllAnswers(QuestionnaireResponseInput response) {
     final answers = response.questionAnswers;
     return answers.every((answer) => answer != null);
   }
 
-  static String getSelectedChoiceId(SymptomQuestionnaireResponseInput response, String questionId) {
+  static String getSelectedChoiceId(QuestionnaireResponseInput response, String questionId) {
     final answers = response.questionAnswers;
     final questionAnswer = answers.firstWhere(
       (answer) => answer?.questionId == questionId,
@@ -17,16 +17,15 @@ class SymptomQuestionnaireResponse {
     return questionAnswer?.choiceId;
   }
 
-  static SymptomQuestionnaireResponseInput getUpdatedResponseWithAnswer({
-    @required SymptomQuestionnaireResponseInput response,
+  static QuestionnaireResponseInput getUpdatedResponseWithAnswer({
+    @required QuestionnaireResponseInput response,
     @required int questionPresentationOrder,
     @required String questionId,
     @required String choiceId,
   }) {
     final index = questionPresentationOrder - 1;
     final updatedAnswers = response.questionAnswers ?? [];
-    final answer =
-        SymptomQuestionnaireResponseAnswerInput(questionId: questionId, choiceId: choiceId);
+    final answer = QuestionnaireResponseAnswerInput(questionId: questionId, choiceId: choiceId);
     updatedAnswers[index] = answer;
 
     response.questionAnswers = updatedAnswers;
@@ -34,8 +33,8 @@ class SymptomQuestionnaireResponse {
   }
 
   static List<Tuple2<String, String>> getQuestionsAndAnswersList({
-    @required Questionnaire$Query$SymptomQuestionnaire questionnaire,
-    @required SymptomQuestionnaireResponseInput response,
+    @required Questionnaire$Query$Questionnaire questionnaire,
+    @required QuestionnaireResponseInput response,
   }) {
     final questions = questionnaire.questions ?? [];
     final answers = response.questionAnswers ?? [];
@@ -61,7 +60,7 @@ class SymptomQuestionnaireResponse {
   }
 
   static List<Tuple2<String, String>> getResponseSummary({
-    @required Responses$Query$SymptomQuestionnaireResponses$Results response,
+    @required Responses$Query$QuestionnaireResponses$Results response,
   }) {
     final answers = response.questionAnswers ?? [];
     return answers.map((answer) {

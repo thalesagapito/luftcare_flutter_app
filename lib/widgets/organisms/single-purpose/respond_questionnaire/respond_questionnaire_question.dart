@@ -10,7 +10,7 @@ class RespondQuestionnaireQuestion extends StatelessWidget {
     @required this.onChoiceSelected,
   }) : super(key: key);
 
-  final Questionnaire$Query$SymptomQuestionnaire$Questions question;
+  final Questionnaire$Query$Questionnaire$Questions question;
   final void Function(String choiceId) onChoiceSelected;
   final String selectedChoiceId;
 

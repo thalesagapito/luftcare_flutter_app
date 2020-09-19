@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:luftcare_flutter_app/models/graphql/api.graphql.dart';
+import 'package:luftcare_flutter_app/providers/questionnaire_response_provider.dart';
 import 'package:luftcare_flutter_app/widgets/atoms/controls/prev_and_next_buttons.dart';
-import 'package:luftcare_flutter_app/providers/symptom_questionnaire_response_provider.dart';
 import 'package:luftcare_flutter_app/widgets/organisms/single-purpose/respond_questionnaire/respond_questionnaire_header.dart';
 import 'package:luftcare_flutter_app/widgets/organisms/single-purpose/respond_questionnaire/respond_questionnaire_question.dart';
 
 typedef GoToPageFunction = void Function(int page, {bool triggerIsChangingPages});
 typedef DiscardResponseFunction = void Function();
-typedef SubmitResponseFunction = void Function(SymptomQuestionnaireResponseInput responseInput);
+typedef SubmitResponseFunction = void Function(QuestionnaireResponseInput responseInput);
 
 class RespondQuestionnaireQuestions extends StatefulWidget {
   RespondQuestionnaireQuestions({
@@ -25,7 +25,7 @@ class RespondQuestionnaireQuestions extends StatefulWidget {
     @required this.isChangingPages,
   }) : super(key: key);
 
-  final Questionnaire$Query$SymptomQuestionnaire questionnaire;
+  final Questionnaire$Query$Questionnaire questionnaire;
   final DiscardResponseFunction onDiscardResponse;
   final SubmitResponseFunction onSubmitResponse;
   final PageController pageController;
@@ -42,13 +42,13 @@ class RespondQuestionnaireQuestions extends StatefulWidget {
 }
 
 class _RespondQuestionnaireQuestionsState extends State<RespondQuestionnaireQuestions> {
-  SymptomQuestionnaireResponseInput _response;
+  QuestionnaireResponseInput _response;
 
   @override
   void initState() {
     super.initState();
     final questionCount = widget.questionnaire.questions.length;
-    _response = SymptomQuestionnaireResponseInput(
+    _response = QuestionnaireResponseInput(
       userId: widget.userId,
       questionAnswers: List.filled(questionCount, null),
       responseDate: DateTime.now(),
@@ -58,12 +58,11 @@ class _RespondQuestionnaireQuestionsState extends State<RespondQuestionnaireQues
   }
 
   Widget _buildQuestionWidget({
-    @required Questionnaire$Query$SymptomQuestionnaire$Questions question,
+    @required Questionnaire$Query$Questionnaire$Questions question,
     @required int questionCount,
   }) {
     final updateResponse = (updatedResponse) => setState(() => _response = updatedResponse);
-    final selectedChoiceId =
-        SymptomQuestionnaireResponse.getSelectedChoiceId(_response, question.id);
+    final selectedChoiceId = QuestionnaireResponse.getSelectedChoiceId(_response, question.id);
     final isNotLastQuestion = question.presentationOrder < questionCount;
     final shouldGoToNextPage = selectedChoiceId == null && isNotLastQuestion;
 
@@ -72,7 +71,7 @@ class _RespondQuestionnaireQuestionsState extends State<RespondQuestionnaireQues
         key: Key(question.id),
         selectedChoiceId: selectedChoiceId,
         onChoiceSelected: (choiceId) {
-          final updatedResponse = SymptomQuestionnaireResponse.getUpdatedResponseWithAnswer(
+          final updatedResponse = QuestionnaireResponse.getUpdatedResponseWithAnswer(
             questionPresentationOrder: question.presentationOrder,
             questionId: question.id,
             response: _response,
@@ -103,7 +102,7 @@ class _RespondQuestionnaireQuestionsState extends State<RespondQuestionnaireQues
     );
     final underlay = Container(decoration: underlayDecoration, height: 30);
 
-    final hasEveryAnswer = SymptomQuestionnaireResponse.hasAllAnswers(_response);
+    final hasEveryAnswer = QuestionnaireResponse.hasAllAnswers(_response);
     final canSubmitResponse = isLastQuestion && hasEveryAnswer;
     final submitResponse = () => widget.onSubmitResponse(_response);
 

@@ -6,8 +6,8 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:luftcare_flutter_app/helpers/error_handlers.dart';
 import 'package:luftcare_flutter_app/models/graphql/api.graphql.dart';
 import 'package:luftcare_flutter_app/providers/current_user_provider.dart';
+import 'package:luftcare_flutter_app/providers/questionnaire_provider.dart';
 import 'package:luftcare_flutter_app/widgets/organisms/layout/empty_appbar.dart';
-import 'package:luftcare_flutter_app/providers/symptom_questionnaire_provider.dart';
 import 'package:luftcare_flutter_app/widgets/atoms/centered_loading_indicator.dart';
 import 'package:luftcare_flutter_app/screens/patient/respond_questionnaire/submit_response_screen.dart';
 import 'package:luftcare_flutter_app/widgets/organisms/single-purpose/respond_questionnaire/respond_questionnaire_header.dart';
@@ -41,8 +41,8 @@ class RespondQuestionnaireScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final questionnaireId = _getQuestionnaireIdFromArgs(context);
 
-    return Provider<SymptomQuestionnaire>(
-      create: (_) => SymptomQuestionnaire(),
+    return Provider<Questionnaire>(
+      create: (_) => Questionnaire(),
       child: Scaffold(
         appBar: EmptyAppbar(brightness: Brightness.dark),
         extendBodyBehindAppBar: true,
@@ -86,8 +86,8 @@ class __RespondScreenBodyState extends State<_RespondScreenBody> {
 
   void _onSubmitResponse(
     BuildContext ctx,
-    SymptomQuestionnaireResponseInput responseInput,
-    Questionnaire$Query$SymptomQuestionnaire questionnaire,
+    QuestionnaireResponseInput responseInput,
+    Questionnaire$Query$Questionnaire questionnaire,
   ) {
     final routeName = SubmitResponseScreen.RouteName;
     final args = SubmitResponseScreenArgs(
@@ -104,22 +104,22 @@ class __RespondScreenBodyState extends State<_RespondScreenBody> {
 
     return GraphQLConsumer(
       builder: (client) {
-        final getQuestionnaire = SymptomQuestionnaire.getQuestionnaire(client, id: widget.id);
+        final getQuestionnaire = Questionnaire.getQuestionnaire(client, id: widget.id);
         final getCurrentUser = currentUserProvider.getAndUpdateUser(client);
 
         final questionnaireAndCurrentUser = Future.wait(
           [getQuestionnaire, getCurrentUser],
         ).then(
-          (data) => Tuple2<Questionnaire$Query$SymptomQuestionnaire,
-              CurrentUser$Query$CurrentUser>.fromList(data),
+          (data) =>
+              Tuple2<Questionnaire$Query$Questionnaire, CurrentUser$Query$CurrentUser>.fromList(
+                  data),
         );
 
         return FutureBuilder(
           future: questionnaireAndCurrentUser,
           builder: (
             BuildContext context,
-            AsyncSnapshot<
-                    Tuple2<Questionnaire$Query$SymptomQuestionnaire, CurrentUser$Query$CurrentUser>>
+            AsyncSnapshot<Tuple2<Questionnaire$Query$Questionnaire, CurrentUser$Query$CurrentUser>>
                 snapshot,
           ) {
             if (snapshot.hasError) return ErrorScreen(errorDescription: snapshot.error.toString());

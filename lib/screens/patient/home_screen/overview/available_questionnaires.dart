@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:luftcare_flutter_app/providers/symptom_questionnaires_provider.dart';
+import 'package:luftcare_flutter_app/providers/questionnaires_provider.dart';
 import 'package:luftcare_flutter_app/widgets/atoms/layout/rounded_list_tile_wrapper.dart';
 import 'package:luftcare_flutter_app/screens/patient/home_screen/overview/overview_list.dart';
 import 'package:luftcare_flutter_app/screens/patient/respond_questionnaire/respond_questionnaire_screen.dart';
@@ -16,14 +16,14 @@ class AvailableQuestionnaires extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final documentNode = SymptomQuestionnaires.questionnairesQueryDocumentNode;
+    final documentNode = Questionnaires.questionnairesQueryDocumentNode;
     final queryOptions = QueryOptions(documentNode: documentNode);
 
     return SingleChildScrollView(
       child: Query(
         options: queryOptions,
         builder: (result, {fetchMore, refetch}) {
-          final response = SymptomQuestionnaires.getQuestionnairesFromQueryResult(result);
+          final response = Questionnaires.getQuestionnairesFromQueryResult(result);
           final questionnaires = response?.results ?? [];
 
           final questionnaireTiles = questionnaires.map((questionnaire) {

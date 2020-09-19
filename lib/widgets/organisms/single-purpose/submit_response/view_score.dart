@@ -7,7 +7,7 @@ import 'package:luftcare_flutter_app/models/graphql/api.graphql.dart';
 class ViewScore extends StatefulWidget {
   const ViewScore({@required this.score, Key key}) : super(key: key);
 
-  final CreateResponse$Mutation$CreateSymptomQuestionnaireResponse$Score score;
+  final CreateResponse$Mutation$CreateQuestionnaireResponse$Score score;
 
   @override
   _ViewScoreState createState() => _ViewScoreState();
@@ -85,19 +85,19 @@ class _ViewScoreState extends State<ViewScore> {
     );
   }
 
-  Color getValueContainerColor(SymptomQuestionnaireScoreRangeColor scoreColor) {
+  Color getValueContainerColor(QuestionnaireScoreRangeColor scoreColor) {
     if (!_isScoreVisible) return Colors.white;
     return ScoreColors.getColorFromEnum(scoreColor);
   }
 
-  Curve getValueContainerCurve(SymptomQuestionnaireScoreRangeColor scoreColor) {
+  Curve getValueContainerCurve(QuestionnaireScoreRangeColor scoreColor) {
     switch (scoreColor) {
-      case SymptomQuestionnaireScoreRangeColor.green:
-      case SymptomQuestionnaireScoreRangeColor.greenYellow:
+      case QuestionnaireScoreRangeColor.green:
+      case QuestionnaireScoreRangeColor.greenYellow:
         return Curves.easeOutBack;
-      case SymptomQuestionnaireScoreRangeColor.yellow:
-      case SymptomQuestionnaireScoreRangeColor.orange:
-      case SymptomQuestionnaireScoreRangeColor.red:
+      case QuestionnaireScoreRangeColor.yellow:
+      case QuestionnaireScoreRangeColor.orange:
+      case QuestionnaireScoreRangeColor.red:
       default:
         return Curves.easeOutCubic;
     }

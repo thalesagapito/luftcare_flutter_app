@@ -2,13 +2,12 @@ import 'package:gql/ast.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:luftcare_flutter_app/models/graphql/api.graphql.dart';
 
-class SymptomQuestionnaires {
+class Questionnaires {
   static DocumentNode get questionnairesQueryDocumentNode => QuestionnairesQuery().document;
 
-  static Questionnaires$Query$SymptomQuestionnaires getQuestionnairesFromQueryResult(
-      QueryResult result) {
+  static Questionnaires$Query$Questionnaires getQuestionnairesFromQueryResult(QueryResult result) {
     if (result == null || result.data == null) return null;
-    if (result.data is Questionnaires$Query$SymptomQuestionnaires) return result.data;
-    return Questionnaires$Query.fromJson(result.data).symptomQuestionnaires;
+    if (result.data is Questionnaires$Query$Questionnaires) return result.data;
+    return Questionnaires$Query.fromJson(result.data).questionnaires;
   }
 }
