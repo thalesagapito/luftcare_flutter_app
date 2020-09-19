@@ -22,7 +22,7 @@ class RespondQuestionnaireQuestionChoice extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      margin: EdgeInsets.only(bottom: 10),
+      margin: const EdgeInsets.only(bottom: 10),
       decoration: decoration,
       child: Material(
         type: MaterialType.transparency,
@@ -35,7 +35,7 @@ class RespondQuestionnaireQuestionChoice extends StatelessWidget {
                 _buildSelectedIndicator(theme),
               ],
             ),
-            padding: EdgeInsets.all(18),
+            padding: const EdgeInsets.all(18),
           ),
           onTap: onTap,
           borderRadius: _borderRadius,

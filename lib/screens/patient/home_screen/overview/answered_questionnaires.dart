@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';

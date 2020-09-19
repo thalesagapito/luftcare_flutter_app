@@ -41,7 +41,7 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
-    const pagePadding = EdgeInsets.fromLTRB(30, 30, 30, 0);
+    const pagePadding = const EdgeInsets.fromLTRB(30, 30, 30, 0);
     final pageConstraints = BoxConstraints(
       maxHeight: mediaQuery.size.height - mediaQuery.padding.vertical,
       maxWidth: mediaQuery.size.width,
@@ -76,7 +76,7 @@ class LoginScreen extends StatelessWidget {
   List<Widget> _buildFormWrapper({BoxConstraints constraints, Widget child}) {
     const topPadding = 10;
     const logoHeight = 32.0;
-    const scrollViewPadding = EdgeInsets.only(bottom: 20);
+    const scrollViewPadding = const EdgeInsets.only(bottom: 20);
     final containerMaxHeight = constraints.maxHeight - logoHeight - topPadding;
 
     return [
