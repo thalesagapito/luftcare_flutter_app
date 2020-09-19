@@ -1,23 +1,6 @@
-import 'package:intl/intl.dart';
+// all the server's dateTimes are in UTC, how do we work with them?
 
-// The Z in the end means timezone
-// even though intl docs say it should work, it's not yet implemented
-// final dateTimeFormatter = DateFormat('yyyy-MM-ddTHH:mm:ssZ');
-
-// for now, we won't include a timezone
-final dateTimeFormatter = DateFormat('yyyy-MM-ddTHH:mm:ss');
-final localDateTime = DateTime.now();
-final timeZoneOffset = localDateTime.timeZoneOffset;
-
-// a workaround is to subtract the user's timezoneOffset from the datetimes that we get from the api
-DateTime fromGraphQLDateTimeToDartDateTime(String dateTime) {
-  final parsedDateTime = DateTime.parse(dateTime);
-  final timeZoneAdjustedDateTime = parsedDateTime.subtract(timeZoneOffset);
-  return timeZoneAdjustedDateTime;
-}
-
-String fromDartDateTimeToGraphQLDateTime(DateTime dateTime) {
-  final timeZoneAdjustedDateTime = dateTime.add(timeZoneOffset);
-  final formattedDateTime = dateTimeFormatter.format(timeZoneAdjustedDateTime);
-  return formattedDateTime;
-}
+// when we get DateTimes from the server we parse them and run `toLocal`, to make sure they use the current user's timezone
+DateTime fromGraphQLDateTimeToDartDateTime(String dateTime) => DateTime.parse(dateTime).toLocal();
+// and before we send any DateTimes to the server we convert them to UTC and then to an ISO8601 string
+String fromDartDateTimeToGraphQLDateTime(DateTime dateTime) => dateTime.toUtc().toIso8601String();
