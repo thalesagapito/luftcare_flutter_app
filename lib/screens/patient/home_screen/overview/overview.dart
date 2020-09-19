@@ -16,6 +16,10 @@ class _OverviewState extends State<Overview> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final now = DateTime.now();
+    final isSelectedDateInThePast = now.difference(_selectedDate).inHours >= 24;
+    final isSelectedDateInTheFuture = now.difference(_selectedDate).inHours <= -23;
+    final isSelectedDateToday = !isSelectedDateInThePast && !isSelectedDateInTheFuture;
     final backgroundColor = theme.primaryColor.withOpacity(0.04);
 
     return LayoutBuilder(
@@ -25,17 +29,20 @@ class _OverviewState extends State<Overview> {
           children: <Widget>[
             OverviewPageHeader(
               selectedDate: _selectedDate,
-              onSelectedDateChange: (selectedDate) {
-                setState(() => _selectedDate = selectedDate);
-              },
+              onSelectedDateChange: (selectedDate) => setState(() => _selectedDate = selectedDate),
             ),
             Expanded(
-              child: SingleChildScrollView(
-                child: Column(
+              child: RefreshIndicator(
+                displacement: 0,
+                onRefresh: () => Future.delayed(Duration(milliseconds: 0), () => setState(() {})),
+                child: ListView(
+                  padding: const EdgeInsets.all(0),
                   children: [
-                    AnsweredQuestionnaires(),
-                    SizedBox(height: 5),
-                    AvailableQuestionnaires(),
+                    SizedBox(height: 10),
+                    if (!isSelectedDateInTheFuture)
+                      AnsweredQuestionnaires(selectedDate: _selectedDate),
+                    SizedBox(height: 15),
+                    if (isSelectedDateToday) AvailableQuestionnaires(),
                   ],
                 ),
               ),
