@@ -17,8 +17,8 @@ import 'package:luftcare_flutter_app/screens/patient/home_screen/home_screen.dar
 import 'package:luftcare_flutter_app/widgets/atoms/centered_loading_indicator.dart';
 
 String get host => Platform.isAndroid ? '10.0.2.2' : '192.168.0.14';
-final String graphqlEndpoint = 'http://$host:5000';
-// final String graphqlEndpoint = 'https://luftcare.com.br/api';
+// final String graphqlEndpoint = 'http://$host:5000';
+final String graphqlEndpoint = 'https://luftcare.com.br/api';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
