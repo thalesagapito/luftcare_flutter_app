@@ -18,13 +18,11 @@ import 'package:luftcare_flutter_app/widgets/atoms/centered_loading_indicator.da
 
 String get host => Platform.isAndroid ? '10.0.2.2' : '192.168.0.14';
 final String graphqlEndpoint = 'http://$host:5000';
+// final String graphqlEndpoint = 'https://luftcare.com.br/api';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitDown,
-    DeviceOrientation.portraitUp,
-  ]);
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   SystemChrome.setSystemUIOverlayStyle(
     SystemUiOverlayStyle(statusBarBrightness: Brightness.light),
   );
