@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:luftcare_flutter_app/models/graphql/api.graphql.dart';
 import 'package:luftcare_flutter_app/providers/questionnaire_response_provider.dart';
 import 'package:luftcare_flutter_app/widgets/atoms/controls/prev_and_next_buttons.dart';
-import 'package:luftcare_flutter_app/widgets/organisms/single-purpose/respond_questionnaire/respond_questionnaire_header.dart';
 import 'package:luftcare_flutter_app/widgets/organisms/single-purpose/respond_questionnaire/respond_questionnaire_question.dart';
 
 typedef GoToPageFunction = void Function(int page, {bool triggerIsChangingPages});
@@ -95,13 +94,6 @@ class _RespondQuestionnaireQuestionsState extends State<RespondQuestionnaireQues
             ))
         .toList();
 
-    final headerColor = RespondQuestionnaireHeader.getHeaderColor(context);
-    final underlayDecoration = BoxDecoration(
-      color: headerColor,
-      borderRadius: const BorderRadius.vertical(bottom: Radius.circular(20)),
-    );
-    final underlay = Container(decoration: underlayDecoration, height: 30);
-
     final hasEveryAnswer = QuestionnaireResponse.hasAllAnswers(_response);
     final canSubmitResponse = isLastQuestion && hasEveryAnswer;
     final submitResponse = () => widget.onSubmitResponse(_response);
@@ -109,41 +101,36 @@ class _RespondQuestionnaireQuestionsState extends State<RespondQuestionnaireQues
     return Expanded(
       child: SafeArea(
         top: false,
-        child: Stack(
+        child: Column(
           children: [
-            underlay,
-            Column(
-              children: [
-                Expanded(
-                  child: PageView(
-                    physics: widget.isChangingPages
-                        ? NeverScrollableScrollPhysics()
-                        : BouncingScrollPhysics(),
-                    onPageChanged: (pageChangedTo) {
-                      final isChangingPages = widget.isChangingPages;
-                      final currentPageFromParent = widget.currentPage;
-                      final hasArrivedAtPageFromParent = pageChangedTo == currentPageFromParent;
-                      if (isChangingPages) {
-                        if (hasArrivedAtPageFromParent) widget.onPageAnimationEnd();
-                        return;
-                      }
-                      widget.goToPage(pageChangedTo, triggerIsChangingPages: false);
-                    },
-                    controller: widget.pageController,
-                    children: questionsWidgets,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
-                  child: PrevAndNextButtons(
-                    onPrevTap: isFirstQuestion ? widget.onDiscardResponse : widget.goToPrevPage,
-                    prevText: isFirstQuestion ? Text('Cancelar') : Text('Anterior'),
-                    onNextTap: canSubmitResponse ? submitResponse : widget.goToNextPage,
-                    nextText: isLastQuestion ? Text('Prosseguir') : Text('Próxima'),
-                  ),
-                )
-              ],
+            Expanded(
+              child: PageView(
+                physics: widget.isChangingPages
+                    ? NeverScrollableScrollPhysics()
+                    : BouncingScrollPhysics(),
+                onPageChanged: (pageChangedTo) {
+                  final isChangingPages = widget.isChangingPages;
+                  final currentPageFromParent = widget.currentPage;
+                  final hasArrivedAtPageFromParent = pageChangedTo == currentPageFromParent;
+                  if (isChangingPages) {
+                    if (hasArrivedAtPageFromParent) widget.onPageAnimationEnd();
+                    return;
+                  }
+                  widget.goToPage(pageChangedTo, triggerIsChangingPages: false);
+                },
+                controller: widget.pageController,
+                children: questionsWidgets,
+              ),
             ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 5, 20, 10),
+              child: PrevAndNextButtons(
+                onPrevTap: isFirstQuestion ? widget.onDiscardResponse : widget.goToPrevPage,
+                prevText: isFirstQuestion ? Text('Cancelar') : Text('Anterior'),
+                onNextTap: canSubmitResponse ? submitResponse : widget.goToNextPage,
+                nextText: isLastQuestion ? Text('Prosseguir') : Text('Próxima'),
+              ),
+            )
           ],
         ),
       ),

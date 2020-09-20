@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:intl/intl.dart';
@@ -46,6 +47,7 @@ class OverviewPageHeader extends StatelessWidget {
         children: <Widget>[
           _PageHeaderTitle(color: headerColor),
           Container(
+            transform: Platform.isIOS ? null : Matrix4.translationValues(0, -0.1, 0),
             child: Stack(
               children: [
                 Container(height: 40, decoration: decoration),

@@ -36,7 +36,7 @@ class _OverviewState extends State<Overview> {
                 displacement: 0,
                 onRefresh: () => Future.delayed(Duration(milliseconds: 0), () => setState(() {})),
                 child: ListView(
-                  padding: const EdgeInsets.all(0),
+                  padding: const EdgeInsets.only(bottom: 30),
                   children: [
                     SizedBox(height: 10),
                     if (!isSelectedDateInTheFuture)

@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:luftcare_flutter_app/widgets/atoms/toggleable_container.dart';
 
@@ -22,19 +23,31 @@ class RespondQuestionnaireHeader extends StatelessWidget {
     final theme = Theme.of(context);
     final headerColor = getHeaderColor(context);
 
+    final underlayDecoration = BoxDecoration(
+      color: headerColor,
+      borderRadius: const BorderRadius.vertical(bottom: Radius.circular(20)),
+    );
+    final underlay = Container(
+      height: Platform.isIOS ? 0 : 0.1,
+      child: OverflowBox(
+        maxHeight: 30,
+        alignment: Alignment.topCenter,
+        child: Container(decoration: underlayDecoration),
+      ),
+    );
+
     return Container(
       decoration: BoxDecoration(color: headerColor),
       width: double.infinity,
       child: SafeArea(
         bottom: false,
-        child: Padding(
-          padding: const EdgeInsets.only(bottom: 10),
-          child: Column(
-            children: [
-              _buildTitle(questionnaireName, theme),
-              if (questionCount > 1) _buildQuestionButtons(),
-            ],
-          ),
+        child: Column(
+          children: [
+            _buildTitle(questionnaireName, theme),
+            if (questionCount > 1) _buildQuestionButtons(),
+            SizedBox(height: 10),
+            underlay,
+          ],
         ),
       ),
     );
