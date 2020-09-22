@@ -64,7 +64,7 @@ class _RespondScreenBody extends StatefulWidget {
 class __RespondScreenBodyState extends State<_RespondScreenBody> {
   var _currentPage = 0;
   var _isChangingPages = false;
-  var _pageController = PageController(viewportFraction: 0.9);
+  var _pageController = PageController(viewportFraction: 0.91);
 
   void _goToPage(int page, {bool triggerIsChangingPages = true}) {
     const curve = Curves.easeOutQuart;

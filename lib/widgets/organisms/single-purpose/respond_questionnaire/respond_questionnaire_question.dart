@@ -20,27 +20,33 @@ class RespondQuestionnaireQuestion extends StatelessWidget {
     final choices = question.possibleChoices ?? [];
 
     return Container(
-      decoration: _getFloatingCardDecoration(theme),
-      margin: const EdgeInsets.fromLTRB(10, 0, 10, 10),
-      padding: const EdgeInsets.all(20),
-      child: ListView(
-        padding: const EdgeInsets.all(0),
-        children: [
-          _QuestionText(
-            questionText: question.text,
-            questionNumber: question.presentationOrder,
-          ),
-          SizedBox(height: 15),
-          ...choices
-              .map((c) => RespondQuestionnaireQuestionChoice(
-                    text: c.text,
-                    onTap: () => onChoiceSelected(c.id),
-                    isSelected: c.id == selectedChoiceId,
-                  ))
-              .toList(),
-        ],
-      ),
-    );
+        decoration: _getFloatingCardDecoration(theme),
+        margin: const EdgeInsets.fromLTRB(6, 0, 6, 10),
+        padding: const EdgeInsets.all(5),
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(12),
+              child: _QuestionText(
+                questionText: question.text,
+                questionNumber: question.presentationOrder,
+              ),
+            ),
+            Expanded(
+              child: ListView(
+                physics: ClampingScrollPhysics(),
+                padding: const EdgeInsets.symmetric(horizontal: 5),
+                children: choices
+                    .map((c) => RespondQuestionnaireQuestionChoice(
+                          text: c.text,
+                          onTap: () => onChoiceSelected(c.id),
+                          isSelected: c.id == selectedChoiceId,
+                        ))
+                    .toList(),
+              ),
+            ),
+          ],
+        ));
   }
 
   BoxDecoration _getFloatingCardDecoration(ThemeData theme) {
@@ -77,7 +83,7 @@ class _QuestionText extends StatelessWidget {
       child: Text(
         questionText,
         textAlign: TextAlign.justify,
-        style: theme.textTheme.headline6,
+        style: theme.textTheme.headline6.copyWith(fontSize: 18, fontWeight: FontWeight.w500),
       ),
     );
   }
