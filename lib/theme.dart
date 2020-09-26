@@ -24,12 +24,20 @@ class AppTheme {
     errorColor: _coral,
     visualDensity: VisualDensity.adaptivePlatformDensity,
     textTheme: TextTheme(
-      button: TextStyle(fontSize: 16),
-      headline4: TextStyle(
-        fontSize: 36,
-        color: Colors.black87,
-        fontWeight: FontWeight.bold,
-      ),
+      // descending font size
+      headline1: TextStyle(),
+      headline2: TextStyle(),
+      headline3: TextStyle(),
+      headline4: TextStyle(),
+      headline5: TextStyle(),
+      headline6: TextStyle(),
+      bodyText1: TextStyle(),
+      bodyText2: TextStyle(),
+      subtitle1: TextStyle(),
+      subtitle2: TextStyle(),
+      button: TextStyle(),
+      overline: TextStyle(),
+      caption: TextStyle(),
     ),
     buttonTheme: _buttonTheme,
     snackBarTheme: SnackBarThemeData(
@@ -45,11 +53,6 @@ class AppTheme {
     // highlightColor: Color(0xFF895CC4),
     errorColor: _coral,
     visualDensity: VisualDensity.adaptivePlatformDensity,
-
-    textTheme: TextTheme(
-      button: TextStyle(fontSize: 16),
-    ),
-
     buttonTheme: _buttonTheme,
   );
 }

@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:luftcare_flutter_app/widgets/atoms/toggleable_container.dart';
 
@@ -21,32 +20,23 @@ class RespondQuestionnaireHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final textTheme = theme.textTheme;
     final headerColor = getHeaderColor(context);
 
-    final underlayDecoration = BoxDecoration(
-      color: headerColor,
-      borderRadius: const BorderRadius.vertical(bottom: Radius.circular(20)),
-    );
-    final underlay = Container(
-      height: Platform.isIOS ? 0 : 0.1,
-      child: OverflowBox(
-        maxHeight: 30,
-        alignment: Alignment.topCenter,
-        child: Container(decoration: underlayDecoration),
-      ),
-    );
-
     return Container(
-      decoration: BoxDecoration(color: headerColor),
+      decoration: BoxDecoration(
+        color: headerColor,
+        borderRadius: const BorderRadius.vertical(bottom: Radius.circular(20)),
+      ),
+      padding: const EdgeInsets.only(bottom: 30),
       width: double.infinity,
       child: SafeArea(
         bottom: false,
         child: Column(
           children: [
             _buildTitle(questionnaireName, theme),
-            if (questionCount > 1) _buildQuestionButtons(),
+            if (questionCount > 1) _buildQuestionButtons(textTheme),
             SizedBox(height: 10),
-            underlay,
           ],
         ),
       ),
@@ -58,19 +48,21 @@ class RespondQuestionnaireHeader extends StatelessWidget {
     final padding = const EdgeInsets.fromLTRB(20, 16, 20, 12);
     return Padding(
       padding: padding,
-      child: Text(
-        text,
-        textAlign: TextAlign.center,
-        style: theme.textTheme.headline5.copyWith(
-          fontWeight: FontWeight.w600,
-          color: Colors.white,
+      child: FittedBox(
+        child: Text(
+          text,
+          textAlign: TextAlign.center,
+          style: theme.textTheme.headline5.copyWith(
+            fontWeight: FontWeight.w600,
+            color: Colors.white,
+          ),
         ),
       ),
     );
   }
 
   BorderRadius _getButtonBorderRadius({bool isFirst, bool isLast}) {
-    const roundedRadius = const Radius.circular(15);
+    const roundedRadius = const Radius.circular(12);
 
     if (isFirst && isLast) return BorderRadius.all(roundedRadius);
     if (isFirst) return BorderRadius.horizontal(left: roundedRadius);
@@ -78,7 +70,7 @@ class RespondQuestionnaireHeader extends StatelessWidget {
     return BorderRadius.circular(0);
   }
 
-  Widget _buildQuestionButtons() {
+  Widget _buildQuestionButtons(TextTheme textTheme) {
     final buttons = List.generate(
       questionCount,
       (index) {
@@ -88,14 +80,13 @@ class RespondQuestionnaireHeader extends StatelessWidget {
           isFirst: index == 0,
           isLast: index == questionCount - 1,
         );
-        final textStyle = TextStyle(
-          fontSize: 20,
+        final textStyle = textTheme.headline6.copyWith(
           color: isToggled ? Colors.white : Colors.black87,
           fontWeight: isToggled ? FontWeight.w700 : FontWeight.w500,
         );
 
         return Container(
-          width: 56,
+          width: 50,
           height: 48,
           child: ToggleableContainer(
             isToggled: isToggled,
@@ -111,8 +102,8 @@ class RespondQuestionnaireHeader extends StatelessWidget {
       builder: (context, constraints) => Container(
         width: constraints.maxWidth,
         child: SingleChildScrollView(
-          physics: const AlwaysScrollableScrollPhysics(),
-          padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
+          physics: const ClampingScrollPhysics(),
+          padding: const EdgeInsets.only(bottom: 10),
           scrollDirection: Axis.horizontal,
           child: ConstrainedBox(
             constraints: BoxConstraints(minWidth: constraints.maxWidth),

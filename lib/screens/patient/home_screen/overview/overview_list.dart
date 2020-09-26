@@ -53,7 +53,11 @@ class _Title extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 0, 50, 10),
       child: FittedBox(
-        child: Text(text, textAlign: TextAlign.left, style: theme.textTheme.headline4),
+        child: Text(
+          text,
+          textAlign: TextAlign.left,
+          style: theme.textTheme.headline4.copyWith(fontWeight: FontWeight.w600),
+        ),
       ),
     );
   }

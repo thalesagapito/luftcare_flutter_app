@@ -79,11 +79,12 @@ class _QuestionText extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Align(
-      alignment: Alignment.topLeft,
+      alignment: Alignment.topCenter,
       child: Text(
         questionText,
+        textScaleFactor: 1.2,
         textAlign: TextAlign.justify,
-        style: theme.textTheme.headline6.copyWith(fontSize: 18, fontWeight: FontWeight.w500),
+        style: theme.textTheme.bodyText1.copyWith(fontWeight: FontWeight.w600),
       ),
     );
   }

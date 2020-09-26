@@ -88,9 +88,6 @@ class _LoginFormState extends State<LoginForm> {
   Widget _buildTitle(ThemeData theme) => Text(
         'Bem vindo!',
         textAlign: TextAlign.left,
-        style: theme.textTheme.headline5.copyWith(
-          fontWeight: FontWeight.w500,
-          fontSize: 28,
-        ),
+        style: theme.textTheme.headline5.copyWith(fontWeight: FontWeight.w500),
       );
 }

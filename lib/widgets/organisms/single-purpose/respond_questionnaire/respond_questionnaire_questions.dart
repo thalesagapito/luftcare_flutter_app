@@ -98,42 +98,36 @@ class _RespondQuestionnaireQuestionsState extends State<RespondQuestionnaireQues
     final canSubmitResponse = isLastQuestion && hasEveryAnswer;
     final submitResponse = () => widget.onSubmitResponse(_response);
 
-    return Expanded(
-      child: SafeArea(
-        top: false,
-        child: Column(
-          children: [
-            Expanded(
-              child: PageView(
-                physics: widget.isChangingPages
-                    ? NeverScrollableScrollPhysics()
-                    : BouncingScrollPhysics(),
-                onPageChanged: (pageChangedTo) {
-                  final isChangingPages = widget.isChangingPages;
-                  final currentPageFromParent = widget.currentPage;
-                  final hasArrivedAtPageFromParent = pageChangedTo == currentPageFromParent;
-                  if (isChangingPages) {
-                    if (hasArrivedAtPageFromParent) widget.onPageAnimationEnd();
-                    return;
-                  }
-                  widget.goToPage(pageChangedTo, triggerIsChangingPages: false);
-                },
-                controller: widget.pageController,
-                children: questionsWidgets,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 5, 20, 10),
-              child: PrevAndNextButtons(
-                onPrevTap: isFirstQuestion ? widget.onDiscardResponse : widget.goToPrevPage,
-                prevText: isFirstQuestion ? Text('Cancelar') : Text('Anterior'),
-                onNextTap: canSubmitResponse ? submitResponse : widget.goToNextPage,
-                nextText: isLastQuestion ? Text('Prosseguir') : Text('Próxima'),
-              ),
-            )
-          ],
+    return Column(
+      children: [
+        Expanded(
+          child: PageView(
+            physics:
+                widget.isChangingPages ? NeverScrollableScrollPhysics() : BouncingScrollPhysics(),
+            onPageChanged: (pageChangedTo) {
+              final isChangingPages = widget.isChangingPages;
+              final currentPageFromParent = widget.currentPage;
+              final hasArrivedAtPageFromParent = pageChangedTo == currentPageFromParent;
+              if (isChangingPages) {
+                if (hasArrivedAtPageFromParent) widget.onPageAnimationEnd();
+                return;
+              }
+              widget.goToPage(pageChangedTo, triggerIsChangingPages: false);
+            },
+            controller: widget.pageController,
+            children: questionsWidgets,
+          ),
         ),
-      ),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(20, 5, 20, 10),
+          child: PrevAndNextButtons(
+            onPrevTap: isFirstQuestion ? widget.onDiscardResponse : widget.goToPrevPage,
+            prevText: isFirstQuestion ? Text('Cancelar') : Text('Anterior'),
+            onNextTap: canSubmitResponse ? submitResponse : widget.goToNextPage,
+            nextText: isLastQuestion ? Text('Prosseguir') : Text('Próxima'),
+          ),
+        )
+      ],
     );
   }
 }

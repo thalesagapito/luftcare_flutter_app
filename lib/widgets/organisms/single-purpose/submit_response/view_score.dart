@@ -60,7 +60,7 @@ class _ViewScoreState extends State<ViewScore> {
                           padding: const EdgeInsets.only(bottom: 8),
                           child: Text('Sua pontuação foi:', style: textTheme.headline6),
                         ),
-                        _buildScoreValue(scoreColor),
+                        _buildScoreValue(scoreColor, textTheme),
                         _buildScoreTitle(textTheme),
                         _buildScoreDescription(textTheme),
                       ],
@@ -103,7 +103,7 @@ class _ViewScoreState extends State<ViewScore> {
     }
   }
 
-  Widget _buildScoreValue(Color color) => AnimatedContainer(
+  Widget _buildScoreValue(Color color, TextTheme textTheme) => AnimatedContainer(
         duration: Duration(milliseconds: 500),
         curve: getValueContainerCurve(widget.score.color),
         width: _isScoreVisible ? 120 : 0,
@@ -124,7 +124,7 @@ class _ViewScoreState extends State<ViewScore> {
           child: FittedBox(
             child: Text(
               widget.score.value.toString(),
-              style: TextStyle(fontSize: 72, fontWeight: FontWeight.w400, color: Colors.white),
+              style: textTheme.headline2.copyWith(fontWeight: FontWeight.w400, color: Colors.white),
             ),
           ),
         ),

@@ -42,10 +42,7 @@ class GuestWelcomeScreen extends StatelessWidget {
       child: Text(
         'Ainda estamos\nem fase de testes',
         textAlign: TextAlign.left,
-        style: theme.textTheme.headline5.copyWith(
-          fontWeight: FontWeight.w500,
-          fontSize: 28,
-        ),
+        style: theme.textTheme.headline5.copyWith(fontWeight: FontWeight.w500),
       ),
     );
   }
@@ -58,7 +55,7 @@ class GuestWelcomeScreen extends StatelessWidget {
             'Caso tenha uma conta, entre normalmente e podemos começar.\n' +
             'Se não, entre em contato com a gente e solicite um acesso.',
         textAlign: TextAlign.left,
-        style: theme.textTheme.subtitle1.copyWith(fontSize: 18),
+        style: theme.textTheme.subtitle1,
       ),
     );
   }
