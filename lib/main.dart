@@ -1,5 +1,5 @@
 import 'dart:io';
-
+import 'package:flutter/foundation.dart' as Foundation;
 import 'package:intl/intl.dart';
 import 'package:load/load.dart';
 import 'package:flutter/material.dart';
@@ -16,16 +16,14 @@ import 'package:luftcare_flutter_app/screens/guest/guest_welcome_screen.dart';
 import 'package:luftcare_flutter_app/screens/patient/home_screen/home_screen.dart';
 import 'package:luftcare_flutter_app/widgets/atoms/centered_loading_indicator.dart';
 
-String get host => Platform.isAndroid ? '10.0.2.2' : '192.168.0.14';
-// final String graphqlEndpoint = 'http://$host:5000';
-final String graphqlEndpoint = 'https://luftcare.com.br/api';
+String get host => Platform.isAndroid ? '10.0.2.2' : 'localhost';
+final String graphqlEndpoint =
+    Foundation.kDebugMode ? 'http://$host:5000' : 'https://luftcare.com.br/api';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-  SystemChrome.setSystemUIOverlayStyle(
-    SystemUiOverlayStyle(statusBarBrightness: Brightness.light),
-  );
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarBrightness: Brightness.light));
   await initializeDateFormatting('pt_BR');
   Intl.defaultLocale = 'pt_BR';
 
