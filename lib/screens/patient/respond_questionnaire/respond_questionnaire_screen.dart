@@ -9,6 +9,7 @@ import 'package:luftcare_flutter_app/providers/current_user_provider.dart';
 import 'package:luftcare_flutter_app/providers/questionnaire_provider.dart';
 import 'package:luftcare_flutter_app/widgets/organisms/layout/empty_appbar.dart';
 import 'package:luftcare_flutter_app/widgets/atoms/centered_loading_indicator.dart';
+import 'package:luftcare_flutter_app/widgets/organisms/helpers/fixed_height_translated_container.dart';
 import 'package:luftcare_flutter_app/screens/patient/respond_questionnaire/submit_response_screen.dart';
 import 'package:luftcare_flutter_app/widgets/organisms/single-purpose/respond_questionnaire/respond_questionnaire_header.dart';
 import 'package:luftcare_flutter_app/widgets/organisms/single-purpose/respond_questionnaire/respond_questionnaire_questions.dart';
@@ -100,76 +101,81 @@ class __RespondScreenBodyState extends State<_RespondScreenBody> {
 
   @override
   Widget build(BuildContext context) {
+    final client = GraphQLProvider.of(context).value;
     final currentUserProvider = Provider.of<CurrentUser>(context, listen: false);
 
-    return GraphQLConsumer(
-      builder: (client) {
-        final getQuestionnaire = Questionnaire.getQuestionnaire(client, id: widget.id);
-        final getCurrentUser = currentUserProvider.getAndUpdateUser(client);
+    final getCurrentUser = currentUserProvider.getAndUpdateUser(client);
+    final getQuestionnaire = Questionnaire.getQuestionnaire(client, id: widget.id);
 
-        final questionnaireAndCurrentUser = Future.wait(
-          [getQuestionnaire, getCurrentUser],
-        ).then(
-          (data) =>
-              Tuple2<Questionnaire$Query$Questionnaire, CurrentUser$Query$CurrentUser>.fromList(
-                  data),
-        );
+    final questionnaireAndCurrentUser = Future.wait([getCurrentUser, getQuestionnaire]).then(
+      (data) =>
+          Tuple2<CurrentUser$Query$CurrentUser, Questionnaire$Query$Questionnaire>.fromList(data),
+    );
 
-        return FutureBuilder(
-          future: questionnaireAndCurrentUser,
-          builder: (
-            BuildContext context,
-            AsyncSnapshot<Tuple2<Questionnaire$Query$Questionnaire, CurrentUser$Query$CurrentUser>>
-                snapshot,
-          ) {
-            if (snapshot.hasError) return ErrorScreen(errorDescription: snapshot.error.toString());
-            if (!snapshot.hasData) return CenteredLoadingIndicator();
+    return FutureBuilder(
+      future: questionnaireAndCurrentUser,
+      builder: (
+        BuildContext context,
+        AsyncSnapshot<Tuple2<CurrentUser$Query$CurrentUser, Questionnaire$Query$Questionnaire>>
+            snapshot,
+      ) {
+        if (snapshot.hasError) return ErrorScreen(errorDescription: snapshot.error.toString());
+        if (!snapshot.hasData) return CenteredLoadingIndicator();
 
-            final results = snapshot.data;
-            final questionnaire = results.item1;
-            final currentUser = results.item2;
+        final results = snapshot.data;
+        final currentUser = results.item1;
+        final questionnaire = results.item2;
 
-            final hasErrors = questionnaire == null || currentUser == null;
-            if (hasErrors) return ErrorScreen();
+        final hasErrors = currentUser == null || questionnaire == null;
+        if (hasErrors) return ErrorScreen();
 
-            final questions = questionnaire.questions ?? [];
-            final questionCount = questions.length;
-            final questionnaireName = questionnaire.nameForPresentation;
+        final questions = questionnaire.questions ?? [];
+        final questionCount = questions.length;
+        final questionnaireName = questionnaire.nameForPresentation;
 
-            final hasPreviousPage = _currentPage > 0;
-            final goToPrevPage = hasPreviousPage ? _goToPrevPage : null;
+        final hasPreviousPage = _currentPage > 0;
+        final goToPrevPage = hasPreviousPage ? _goToPrevPage : null;
 
-            final hasNextPage = _currentPage < questionCount - 1;
-            final goToNextPage = hasNextPage ? _goToNextPage : null;
+        final hasNextPage = _currentPage < questionCount - 1;
+        final goToNextPage = hasNextPage ? _goToNextPage : null;
 
-            return WillPopScope(
-              onWillPop: () async => false,
-              child: Column(
-                children: [
-                  RespondQuestionnaireHeader(
-                    goToPage: _goToPage,
-                    currentPage: _currentPage,
-                    questionCount: questionCount,
-                    questionnaireName: questionnaireName,
+        return WillPopScope(
+          onWillPop: () async => false,
+          child: SafeArea(
+            top: false,
+            child: Column(
+              children: [
+                RespondQuestionnaireHeader(
+                  goToPage: _goToPage,
+                  currentPage: _currentPage,
+                  questionCount: questionCount,
+                  questionnaireName: questionnaireName,
+                ),
+                Expanded(
+                  child: LayoutBuilder(
+                    builder: (_, BoxConstraints constraints) => FixedHeightTranslatedContainer(
+                      maxHeight: constraints.maxHeight,
+                      yTranslate: -30,
+                      child: RespondQuestionnaireQuestions(
+                        goToPage: _goToPage,
+                        goToNextPage: goToNextPage,
+                        goToPrevPage: goToPrevPage,
+                        currentPage: _currentPage,
+                        pageController: _pageController,
+                        questionnaire: questionnaire,
+                        userId: currentUser.id,
+                        isChangingPages: _isChangingPages,
+                        onPageAnimationEnd: _onPageAnimationEnd,
+                        onDiscardResponse: () => _onDiscardResponse(context),
+                        onSubmitResponse: (responseInput) =>
+                            _onSubmitResponse(context, responseInput, questionnaire),
+                      ),
+                    ),
                   ),
-                  RespondQuestionnaireQuestions(
-                    goToPage: _goToPage,
-                    goToNextPage: goToNextPage,
-                    goToPrevPage: goToPrevPage,
-                    currentPage: _currentPage,
-                    pageController: _pageController,
-                    questionnaire: questionnaire,
-                    userId: currentUser.id,
-                    isChangingPages: _isChangingPages,
-                    onPageAnimationEnd: _onPageAnimationEnd,
-                    onDiscardResponse: () => _onDiscardResponse(context),
-                    onSubmitResponse: (responseInput) =>
-                        _onSubmitResponse(context, responseInput, questionnaire),
-                  ),
-                ],
-              ),
-            );
-          },
+                ),
+              ],
+            ),
+          ),
         );
       },
     );
