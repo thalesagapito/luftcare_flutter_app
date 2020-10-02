@@ -33,6 +33,7 @@ class OverviewList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _Title(text: title),
         ..._getVisibleWidget(),
@@ -53,6 +54,7 @@ class _Title extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 0, 50, 10),
       child: FittedBox(
+        fit: BoxFit.scaleDown,
         child: Text(
           text,
           textAlign: TextAlign.left,
