@@ -55,7 +55,7 @@ class AnsweredQuestionnaires extends StatelessWidget {
       builder: (currentUser) {
         final documentNode = QuestionnaireResponses.responsesQueryDocumentNode;
         final queryVariables = ResponsesArguments(
-          id: currentUser.id,
+          id: currentUser?.id,
           responseDateAfter: _getMidnightDateTime(selectedDate),
           responseDateBefore: _getBeforeMidnightDateTime(selectedDate),
         ).toJson();

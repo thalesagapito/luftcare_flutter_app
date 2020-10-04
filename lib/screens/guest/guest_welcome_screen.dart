@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:luftcare_flutter_app/widgets/atoms/brand_logo.dart';
 import 'package:luftcare_flutter_app/screens/guest/login_screen.dart';
 import 'package:luftcare_flutter_app/widgets/organisms/layout/empty_appbar.dart';
@@ -81,12 +82,27 @@ class GuestWelcomeScreen extends StatelessWidget {
       child: FlatButton(
         textColor: theme.primaryColor,
         color: theme.primaryColor.withOpacity(0.15),
-        onPressed: () {},
+        onPressed: openChat,
         child: Text(
           'Quero solicitar acesso',
           style: TextStyle(fontWeight: FontWeight.w600),
         ),
       ),
     );
+  }
+
+  void openChat() async {
+    const phone = '5541998792942';
+    const message =
+        "Olá! Fiz o download do aplicativo Luftcare e gostaria de participar dos testes iniciais";
+    final encodedMessage = Uri.encodeComponent(message);
+    final url = 'https://wa.me/$phone?text=$encodedMessage';
+    final canLaunchUrl = await canLaunch(url);
+
+    print('try to launch url $url');
+    if (canLaunchUrl)
+      await launch(url);
+    else
+      print('could not launch url $url');
   }
 }
