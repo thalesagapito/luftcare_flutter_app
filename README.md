@@ -26,3 +26,11 @@ apollo client:download-schema --endpoint=http://localhost:5000 schema.graphql
 ```bash
 flutter pub run build_runner build --delete-conflicting-outputs
 ```
+
+## Generating the Android App Bundle
+
+```bash
+flutter build appbundle
+```
+
+Then go to https://play.google.com/console and upload the App Bundle generated in build/app/outputs/bundle/release/app-release.aab.
